@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Contact from './pages/Contact.jsx'
 import Navbar from './components/Navbar.jsx'
-import About from './pages/about.jsx'
+import About from './pages/Abouts.jsx'
 import Services from './pages/Services.jsx'
 import Research from './pages/Research.jsx'
 import Community from './pages/Community.jsx'
@@ -18,7 +18,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/contact' element={<Contact/>}/>
-        <Route path='/about' element={<About/>}/>
+        <Route path='/about' element={<Abouts/>}/>
         <Route path='/services' element={<Services/>}/>
         <Route path='/research' element={<Research/>}/>
         <Route path='/community' element={<Community/>}/>

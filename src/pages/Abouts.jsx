@@ -1,7 +1,7 @@
 // About.jsx
 import { Target, Eye, History, Award, Users, Globe } from 'lucide-react';
 
-const about = () => {
+const Abouts = () => {
   const values = [
     { icon: <Target />, title: "Mission", description: "To accelerate Africa's technological sovereignty through cutting-edge research and accessible innovation." },
     { icon: <Eye />, title: "Vision", description: "A continent where local research drives global technological advancement and sustainable development." },
@@ -90,4 +90,4 @@ const about = () => {
   );
 };
 
-export default about;
+export default Abouts;

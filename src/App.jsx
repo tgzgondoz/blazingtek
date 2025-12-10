@@ -1,7 +1,6 @@
 import React from 'react'
 import{ BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom'
 import Home from './pages/Home.jsx'
-import About from './pages/about.jsx'
 import Contact from './pages/Contact.jsx'
 import Navbar from './components/Navbar.jsx'
 
@@ -11,7 +10,6 @@ const App = () => {
     <Navbar/>
      <Routes>
        <Route path='/' element={<Home/>}/>
-       <Route path='/about' element={<About/>}/>
        <Route path='/contact' element={<Contact/>}/>
      </Routes>
     </BrowserRouter>

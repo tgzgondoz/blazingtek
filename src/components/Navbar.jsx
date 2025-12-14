@@ -52,7 +52,7 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo - Clean and Visible */}
+          {/* Logo - Increased Size */}
           <motion.div 
             className="flex items-center"
             whileHover={{ scale: 1.02 }}
@@ -60,7 +60,7 @@ const Navbar = () => {
           >
             <Link to="/" className="flex items-center gap-4 group">
               <div className="relative">
-                {/* Glow effect */}
+                {/* Glow effect - Larger */}
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-cyan-400/30 to-purple-500/30 rounded-2xl blur-xl"
                   animate={{
@@ -73,12 +73,12 @@ const Navbar = () => {
                     ease: "easeInOut"
                   }}
                 />
-                {/* Logo Container */}
+                {/* Logo Container - Larger */}
                 <div className="relative rounded-xl overflow-hidden">
                   <img 
                     src={logo} 
                     alt="BlazingTek Logo" 
-                    className="h-10 w-10 object-contain bg-transparent"
+                    className="h-12 w-12 object-contain bg-transparent" // Increased from h-10 w-10 to h-12 w-12
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E";
@@ -117,7 +117,7 @@ const Navbar = () => {
             </Link>
           </motion.div>
 
-          {/* Desktop Navigation - Professional Layout */}
+          {/* Desktop Navigation with Better Button Alignment */}
           <div className="hidden lg:flex items-center space-x-1">
             {navItems.map((item, index) => (
               item.dropdown ? (
@@ -217,26 +217,24 @@ const Navbar = () => {
               )
             ))}
             
-            {/* CTA Button */}
+            {/* CTA Button - Better Alignment with Navbar */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              className="flex items-center"
             >
+              <div className="h-8 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent mx-4" />
               <Link
                 to="/contact"
-                className="ml-3 relative group"
+                className="relative group"
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-70 transition duration-300" />
-                <div className="relative px-6 py-3 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-white/10 overflow-hidden">
+                <div className="relative px-6 py-3 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl border border-white/10 overflow-hidden flex items-center gap-2">
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-cyan-400/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="relative flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-cyan-300" />
-                    <span className="font-semibold text-white">Join Research</span>
-                    <ArrowUpRight className="h-3 w-3 text-gray-400 group-hover:text-cyan-300 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
-                  </div>
+                  <Sparkles className="h-4 w-4 text-cyan-300 relative z-10" />
+                  <span className="font-semibold text-white relative z-10">Join Research</span>
+                  <ArrowUpRight className="h-3 w-3 text-gray-400 group-hover:text-cyan-300 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 relative z-10" />
                 </div>
               </Link>
             </motion.div>

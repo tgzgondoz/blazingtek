@@ -14,21 +14,29 @@ import {
   MessageCircle,
   ChevronRight,
   Globe,
-  Target
+  Target,
+  Sparkles,
+  Send,
+  Clock,
+  ArrowRight,
+  Eye,
+  Heart
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const News = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [savedArticles, setSavedArticles] = useState([]);
   
   const newsCategories = [
-    { id: 'all', name: 'All News', count: 28 },
-    { id: 'research', name: 'Research Breakthroughs', count: 12 },
-    { id: 'events', name: 'Events & Conferences', count: 8 },
-    { id: 'partnerships', name: 'Partnerships', count: 5 },
-    { id: 'awards', name: 'Awards & Recognition', count: 3 },
-    { id: 'thought', name: 'Thought Leadership', count: 7 },
+    { id: 'all', name: 'All News', count: 28, color: 'from-gray-500 to-gray-700' },
+    { id: 'research', name: 'Research Breakthroughs', count: 12, color: 'from-blue-500 to-cyan-500' },
+    { id: 'events', name: 'Events & Conferences', count: 8, color: 'from-purple-500 to-pink-500' },
+    { id: 'partnerships', name: 'Partnerships', count: 5, color: 'from-emerald-500 to-green-500' },
+    { id: 'awards', name: 'Awards & Recognition', count: 3, color: 'from-amber-500 to-orange-500' },
+    { id: 'thought', name: 'Thought Leadership', count: 7, color: 'from-indigo-500 to-blue-500' },
   ];
 
   const featuredArticle = {
@@ -39,8 +47,11 @@ const News = () => {
     readTime: "5 min read",
     author: "Dr. Amina Diallo",
     authorRole: "Lead AI Researcher",
+    views: "2.4K",
+    likes: 156,
     image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800",
-    tags: ["AI", "Agriculture", "Robotics", "Sustainability"]
+    tags: ["AI", "Agriculture", "Robotics", "Sustainability"],
+    gradient: "from-blue-500 via-cyan-500 to-emerald-500"
   };
 
   const newsArticles = [
@@ -53,7 +64,9 @@ const News = () => {
       type: "article",
       readTime: "3 min read",
       author: "Fatima Bello",
-      tags: ["Award", "AI", "Assistive Tech"]
+      tags: ["Award", "AI", "Assistive Tech"],
+      views: "1.8K",
+      gradient: "from-amber-500 to-orange-500"
     },
     {
       id: 2,
@@ -64,7 +77,9 @@ const News = () => {
       type: "video",
       readTime: "8 min watch",
       author: "Kwame Osei",
-      tags: ["Partnership", "Research", "Sustainability"]
+      tags: ["Partnership", "Research", "Sustainability"],
+      views: "3.2K",
+      gradient: "from-emerald-500 to-green-500"
     },
     {
       id: 3,
@@ -75,7 +90,9 @@ const News = () => {
       type: "podcast",
       readTime: "45 min listen",
       author: "David Chen",
-      tags: ["Innovation", "Future Tech", "Africa"]
+      tags: ["Innovation", "Future Tech", "Africa"],
+      views: "5.1K",
+      gradient: "from-indigo-500 to-purple-500"
     },
     {
       id: 4,
@@ -86,7 +103,9 @@ const News = () => {
       type: "article",
       readTime: "4 min read",
       author: "Maria Rodriguez",
-      tags: ["Education", "STEM", "Workshop"]
+      tags: ["Education", "STEM", "Workshop"],
+      views: "1.2K",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       id: 5,
@@ -97,7 +116,9 @@ const News = () => {
       type: "article",
       readTime: "6 min read",
       author: "Dr. Samuel Adeyemi",
-      tags: ["Patent", "Solar", "Navigation"]
+      tags: ["Patent", "Solar", "Navigation"],
+      views: "2.9K",
+      gradient: "from-cyan-500 to-teal-500"
     },
     {
       id: 6,
@@ -108,7 +129,9 @@ const News = () => {
       type: "video",
       readTime: "12 min watch",
       author: "Dr. Amina Diallo",
-      tags: ["UN", "Innovation", "Social Good"]
+      tags: ["UN", "Innovation", "Social Good"],
+      views: "4.3K",
+      gradient: "from-purple-500 to-pink-500"
     }
   ];
 
@@ -118,31 +141,34 @@ const News = () => {
       date: "April 15-17, 2024",
       location: "Kigali, Rwanda",
       type: "Conference",
-      speaker: "Kwame Osei"
+      speaker: "Kwame Osei",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       title: "Women in AI Africa Conference",
       date: "May 8, 2024",
       location: "Virtual",
       type: "Webinar",
-      speaker: "Dr. Amina Diallo"
+      speaker: "Dr. Amina Diallo",
+      gradient: "from-purple-500 to-pink-500"
     },
     {
       title: "IEEE Robotics Symposium",
       date: "June 20-22, 2024",
       location: "Cape Town, South Africa",
       type: "Symposium",
-      speaker: "Dr. Samuel Adeyemi"
+      speaker: "Dr. Samuel Adeyemi",
+      gradient: "from-emerald-500 to-green-500"
     }
   ];
 
   const mediaFeatures = [
-    { name: "TechCrunch", logo: "TC", date: "Feb 2024" },
-    { name: "BBC Future", logo: "BBC", date: "Jan 2024" },
-    { name: "Nature", logo: "N", date: "Dec 2023" },
-    { name: "Forbes Africa", logo: "FA", date: "Nov 2023" },
-    { name: "MIT Technology Review", logo: "MIT", date: "Oct 2023" },
-    { name: "African Business", logo: "AB", date: "Sep 2023" },
+    { name: "TechCrunch", logo: "TC", date: "Feb 2024", gradient: "from-gray-800 to-gray-900" },
+    { name: "BBC Future", logo: "BBC", date: "Jan 2024", gradient: "from-red-600 to-red-800" },
+    { name: "Nature", logo: "N", date: "Dec 2023", gradient: "from-blue-600 to-blue-800" },
+    { name: "Forbes Africa", logo: "FA", date: "Nov 2023", gradient: "from-green-600 to-emerald-800" },
+    { name: "MIT Technology Review", logo: "MIT", date: "Oct 2023", gradient: "from-red-500 to-red-700" },
+    { name: "African Business", logo: "AB", date: "Sep 2023", gradient: "from-amber-600 to-orange-700" },
   ];
 
   const getTypeIcon = (type) => {
@@ -153,326 +179,492 @@ const News = () => {
     }
   };
 
+  const toggleSaveArticle = (articleId) => {
+    if (savedArticles.includes(articleId)) {
+      setSavedArticles(savedArticles.filter(id => id !== articleId));
+    } else {
+      setSavedArticles([...savedArticles, articleId]);
+    }
+  };
+
   const filteredArticles = activeCategory === 'all' 
     ? newsArticles 
     : newsArticles.filter(article => article.category === activeCategory);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-900 to-purple-900 text-white py-24">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-24">
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full blur-3xl"></div>
+        </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        >
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="flex items-center mb-6">
-                <Newspaper className="h-12 w-12 text-blue-300 mr-4" />
-                <h1 className="text-5xl md:text-6xl font-bold">
-                  News & <span className="text-blue-300">Updates</span>
-                </h1>
+              <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/20 backdrop-blur-sm">
+                <Newspaper className="h-4 w-4 text-cyan-400" />
+                <span className="text-sm font-medium text-cyan-300">Latest Updates</span>
               </div>
-              <p className="text-xl mb-8">
+              
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                  News &
+                </span>
+                <br />
+                <motion.span 
+                  className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
+                  animate={{
+                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  style={{ backgroundSize: '200% 200%' }}
+                >
+                  Insights
+                </motion.span>
+              </h1>
+              
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl"
+              >
                 Stay updated with our latest research breakthroughs, events, 
                 and thought leadership in emerging technologies.
-              </p>
+              </motion.p>
+              
               <div className="flex flex-wrap gap-4">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center">
-                  Subscribe to Newsletter
-                </button>
-                <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center">
-                  <Podcast className="mr-2 h-5 w-5" />
-                  Listen to Podcast
-                </button>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <button className="group bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 flex items-center gap-3">
+                    <span>Subscribe to Newsletter</span>
+                    <Send className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <button className="group bg-transparent border-2 border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm hover:bg-white/5 flex items-center gap-3">
+                    <Podcast className="h-5 w-5" />
+                    <span>Listen to Podcast</span>
+                  </button>
+                </motion.div>
               </div>
             </div>
-            <div className="relative">
-              <div className="absolute -top-4 -right-4 bg-yellow-500 text-yellow-900 px-4 py-2 rounded-full font-bold text-sm">
-                Featured Story
-              </div>
-              <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-                <div className="h-48 bg-gradient-to-r from-green-500 to-blue-500"></div>
-                <div className="p-6">
-                  <div className="flex items-center mb-3">
-                    <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-                      {featuredArticle.category}
-                    </span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-gray-500 text-sm">{featuredArticle.date}</span>
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl overflow-hidden">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
+                  Featured Story
+                </div>
+                
+                <div className={`h-48 bg-gradient-to-r ${featuredArticle.gradient} rounded-xl mb-6 relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                    <span className="text-white text-sm font-medium">{featuredArticle.category}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Clock className="h-4 w-4 text-gray-300" />
+                      <span className="text-sm text-gray-300">{featuredArticle.readTime}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Eye className="h-4 w-4 text-gray-300" />
+                        <span className="text-sm text-gray-300">{featuredArticle.views}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-4 w-4 text-rose-400" />
+                        <span className="text-sm text-gray-300">{featuredArticle.likes}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-white line-clamp-2">
                     {featuredArticle.title}
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
+                  
+                  <p className="text-gray-300 leading-relaxed line-clamp-2">
                     {featuredArticle.excerpt}
                   </p>
-                  <div className="flex items-center justify-between">
+                  
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
                     <div className="flex items-center">
-                      <User className="h-5 w-5 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-600">{featuredArticle.author}</span>
+                      <User className="h-5 w-5 text-gray-300 mr-2" />
+                      <div>
+                        <div className="text-sm text-white">{featuredArticle.author}</div>
+                        <div className="text-xs text-gray-400">{featuredArticle.authorRole}</div>
+                      </div>
                     </div>
-                    <Link to="/news/featured" className="text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center text-sm">
-                      Read Full Story
-                      <ChevronRight className="ml-1 h-4 w-4" />
+                    <Link 
+                      to="/news/featured" 
+                      className="group text-cyan-400 hover:text-cyan-300 font-semibold inline-flex items-center"
+                    >
+                      <span>Read Full Story</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Categories */}
-      <section className="py-8 bg-gray-50 border-b">
+      <section className="py-12 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-2 justify-center"
+          >
             {newsCategories.map((category) => (
-              <button
+              <motion.button
                 key={category.id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveCategory(category.id)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeCategory === category.id
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                    ? `bg-gradient-to-r ${category.color} text-white shadow-lg`
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
                 }`}
               >
                 {category.name}
-                <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-sm">
+                <span className={`px-2 py-0.5 rounded-full text-sm ${
+                  activeCategory === category.id 
+                    ? 'bg-white/20' 
+                    : 'bg-white/80'
+                }`}>
                   {category.count}
                 </span>
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* News Grid */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-12">
             {/* Main News Column */}
             <div className="lg:col-span-2">
-              <div className="grid md:grid-cols-2 gap-6">
-                {filteredArticles.map((article) => (
-                  <article 
+              <div className="grid md:grid-cols-2 gap-8">
+                {filteredArticles.map((article, index) => (
+                  <motion.article
                     key={article.id}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -10 }}
+                    className="group relative"
                   >
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center">
-                          {getTypeIcon(article.type)}
-                          <span className="ml-2 text-sm text-gray-500">{article.type}</span>
+                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${article.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
+                    <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                      <div className="p-8">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center gap-2">
+                            {getTypeIcon(article.type)}
+                            <span className="text-sm text-gray-500 font-medium">{article.type}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Clock className="h-4 w-4" />
+                            {article.readTime}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-500">{article.readTime}</div>
-                      </div>
-                      
-                      <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                        {article.category}
-                      </span>
-                      
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                        {article.title}
-                      </h3>
-                      
-                      <p className="text-gray-600 mb-4 line-clamp-3">
-                        {article.excerpt}
-                      </p>
-                      
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="text-sm text-gray-600">{article.author}</span>
+                        
+                        <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r ${article.gradient} text-white mb-4`}>
+                          {article.category}
+                        </span>
+                        
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                          {article.title}
+                        </h3>
+                        
+                        <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
+                          {article.excerpt}
+                        </p>
+                        
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"></div>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{article.author}</div>
+                              <div className="text-xs text-gray-500">{article.date}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Eye className="h-4 w-4" />
+                            {article.views}
+                          </div>
                         </div>
-                        <span className="text-sm text-gray-500">{article.date}</span>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {article.tags.map((tag, idx) => (
-                          <span 
-                            key={idx}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                        
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {article.tags.map((tag, idx) => (
+                            <span 
+                              key={idx}
+                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                            >
+                              <Tag className="h-3 w-3 mr-1.5" />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                          <div className="flex items-center space-x-3">
+                            <button 
+                              onClick={() => toggleSaveArticle(article.id)}
+                              className={`p-2 rounded-lg transition-colors ${
+                                savedArticles.includes(article.id)
+                                  ? 'text-amber-500 bg-amber-50'
+                                  : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50'
+                              }`}
+                            >
+                              <Bookmark className="h-5 w-5" />
+                            </button>
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                              <Share2 className="h-5 w-5" />
+                            </button>
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-colors">
+                              <MessageCircle className="h-5 w-5" />
+                            </button>
+                          </div>
+                          <Link 
+                            to={`/news/${article.id}`}
+                            className="group flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm"
                           >
-                            <Tag className="h-3 w-3 mr-1" />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-4 border-t">
-                        <div className="flex items-center space-x-4">
-                          <button className="text-gray-400 hover:text-blue-600">
-                            <Bookmark className="h-5 w-5" />
-                          </button>
-                          <button className="text-gray-400 hover:text-green-600">
-                            <Share2 className="h-5 w-5" />
-                          </button>
-                          <button className="text-gray-400 hover:text-purple-600">
-                            <MessageCircle className="h-5 w-5" />
-                          </button>
+                            <span>Read More</span>
+                            <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
+                          </Link>
                         </div>
-                        <Link 
-                          to={`/news/${article.id}`}
-                          className="text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center text-sm"
-                        >
-                          Read More
-                          <ExternalLink className="ml-1 h-4 w-4" />
-                        </Link>
                       </div>
                     </div>
-                  </article>
+                  </motion.article>
                 ))}
               </div>
               
               {/* Load More */}
-              <div className="mt-12 text-center">
-                <button className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-lg font-semibold inline-flex items-center">
-                  Load More Articles
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </button>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-16 text-center"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg flex items-center gap-3 mx-auto"
+                >
+                  <span>Load More Articles</span>
+                  <ChevronRight className="h-5 w-5" />
+                </motion.button>
+              </motion.div>
             </div>
 
             {/* Sidebar */}
             <div className="space-y-8">
               {/* Upcoming Events */}
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-center mb-6">
-                  <Calendar className="h-6 w-6 text-blue-600 mr-3" />
-                  <h3 className="text-xl font-bold">Upcoming Events</h3>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+              >
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500">
+                    <Calendar className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {upcomingEvents.map((event, index) => (
-                    <div key={index} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-bold text-gray-900">{event.title}</h4>
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                          {event.type}
-                        </span>
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: 10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group relative"
+                    >
+                      <div className={`absolute -inset-0.5 bg-gradient-to-r ${event.gradient} rounded-xl blur opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                      <div className="relative p-5 rounded-xl border border-gray-200 hover:border-transparent transition-all duration-300">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${event.gradient} text-white`}>
+                            {event.type}
+                          </span>
+                        </div>
+                        <div className="space-y-3 text-sm text-gray-600">
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-3 text-gray-400" />
+                            <span className="font-medium">{event.date}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Globe className="h-4 w-4 mr-3 text-gray-400" />
+                            <span className="font-medium">{event.location}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <User className="h-4 w-4 mr-3 text-gray-400" />
+                            <span className="font-medium">Speaker: {event.speaker}</span>
+                          </div>
+                        </div>
+                        <button className="mt-4 group flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                          <span>Register Now</span>
+                          <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </button>
                       </div>
-                      <div className="space-y-1 text-sm text-gray-600">
-                        <div className="flex items-center">
-                          <Calendar className="h-3 w-3 mr-2" />
-                          {event.date}
-                        </div>
-                        <div className="flex items-center">
-                          <Globe className="h-3 w-3 mr-2" />
-                          {event.location}
-                        </div>
-                        <div className="flex items-center">
-                          <User className="h-3 w-3 mr-2" />
-                          Speaker: {event.speaker}
-                        </div>
-                      </div>
-                      <button className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-semibold">
-                        Register Now →
-                      </button>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Media Features */}
-              <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-xl shadow-lg p-6 text-white">
-                <div className="flex items-center mb-6">
-                  <Award className="h-6 w-6 text-blue-300 mr-3" />
-                  <h3 className="text-xl font-bold">Featured In</h3>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {mediaFeatures.map((media, index) => (
-                    <div 
-                      key={index}
-                      className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-colors"
-                    >
-                      <div className="text-2xl font-bold mb-1">{media.logo}</div>
-                      <div className="text-sm font-medium">{media.name}</div>
-                      <div className="text-xs text-gray-300 mt-1">{media.date}</div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                <div className="bg-gradient-to-br from-gray-900 to-blue-950 rounded-2xl shadow-2xl p-8 text-white">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500">
+                      <Award className="h-6 w-6 text-white" />
                     </div>
-                  ))}
+                    <h3 className="text-2xl font-bold">Featured In</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {mediaFeatures.map((media, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{ y: -3 }}
+                        className={`bg-gradient-to-br ${media.gradient} rounded-xl p-5 text-center hover:shadow-lg transition-all duration-300 cursor-pointer`}
+                      >
+                        <div className="text-2xl font-bold mb-2">{media.logo}</div>
+                        <div className="text-sm font-medium mb-1">{media.name}</div>
+                        <div className="text-xs text-gray-300">{media.date}</div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Newsletter */}
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
-                <div className="flex items-center mb-6">
-                  <TrendingUp className="h-6 w-6 text-blue-600 mr-3" />
-                  <h3 className="text-xl font-bold">Stay Updated</h3>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900">Stay Updated</h3>
+                  </div>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Get our weekly research digest and exclusive content delivered to your inbox.
+                  </p>
+                  <form className="space-y-4">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                    />
+                    <motion.button
+                      type="submit"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25"
+                    >
+                      Subscribe Now
+                    </motion.button>
+                  </form>
+                  <p className="text-xs text-gray-500 mt-4 text-center">
+                    No spam. Unsubscribe anytime.
+                  </p>
                 </div>
-                <p className="text-gray-600 mb-4">
-                  Get our weekly research digest and exclusive content delivered to your inbox.
-                </p>
-                <form className="space-y-4">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold"
-                  >
-                    Subscribe Now
-                  </button>
-                </form>
-                <p className="text-xs text-gray-500 mt-4">
-                  No spam. Unsubscribe anytime.
-                </p>
-              </div>
-
-              {/* Research Highlights */}
-              <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl shadow-lg p-6 text-white">
-                <Target className="h-8 w-8 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Latest Research Stats</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span>New Publications</span>
-                    <span className="font-bold">18</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Citations This Year</span>
-                    <span className="font-bold">240+</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Research Projects</span>
-                    <span className="font-bold">25+</span>
-                  </div>
-                </div>
-                <Link 
-                  to="/research"
-                  className="mt-6 inline-flex items-center justify-center w-full bg-white text-blue-600 hover:bg-gray-100 py-3 rounded-lg font-semibold"
-                >
-                  Explore Research
-                </Link>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Archive Section */}
-      <section className="py-16 bg-gray-50 border-t">
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">News Archive</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">News Archive</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Browse through our historical news and milestones
             </p>
-          </div>
+          </motion.div>
           
-          <div className="grid md:grid-cols-4 gap-6">
-            {['2024', '2023', '2022', '2021'].map((year) => (
-              <div key={year} className="bg-white rounded-xl shadow p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="text-4xl font-bold text-blue-600 mb-2">{year}</div>
-                <div className="text-gray-600">Archive</div>
-                <div className="mt-4 text-sm text-gray-500">
-                  {year === '2024' ? '12 articles' : 
-                   year === '2023' ? '28 articles' : 
-                   year === '2022' ? '19 articles' : '15 articles'}
+          <div className="grid md:grid-cols-4 gap-8">
+            {['2024', '2023', '2022', '2021'].map((year, index) => (
+              <motion.div
+                key={year}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -10 }}
+                className="group relative"
+              >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="relative bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
+                  <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    {year}
+                  </div>
+                  <div className="text-gray-600 font-medium mb-4">Archive</div>
+                  <div className="text-sm text-gray-500 mb-6">
+                    {year === '2024' ? '12 articles' : 
+                     year === '2023' ? '28 articles' : 
+                     year === '2022' ? '19 articles' : '15 articles'}
+                  </div>
+                  <button className="group inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+                    <span>Browse Year</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-                <button className="mt-4 text-blue-600 hover:text-blue-800 text-sm font-semibold">
-                  Browse Year →
-                </button>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

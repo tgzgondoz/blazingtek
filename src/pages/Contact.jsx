@@ -12,7 +12,9 @@ const Contact = () => {
   });
 
   const contactInfo = [
-    { icon: <Mail />, title: "Email", info: "research@blazingtek.africa", link: "mailto:research@blazingtek.africa" },
+    { icon: <Mail />, title: "General Inquiries", info: "info@blazingtek.co", link: "mailto:info@blazingtek.co" },
+    { icon: <Mail />, title: "Sales & Services", info: "sales@blazingtek.co", link: "mailto:sales@blazingtek.co" },
+    { icon: <Mail />, title: "Administration", info: "secretary@blazingtek.co", link: "mailto:secretary@blazingtek.co" },
     { icon: <Phone />, title: "Phone", info: "+233 24 123 4567", link: "tel:+233241234567" },
     { icon: <MapPin />, title: "Headquarters", info: "Accra, Ghana | Nairobi, Kenya | Lagos, Nigeria" },
     { icon: <Building />, title: "Research Labs", info: "Open for academic and industry collaborations" },
@@ -89,6 +91,9 @@ const Contact = () => {
                   <option value="partnership">Strategic Partnership</option>
                   <option value="careers">Career Opportunities</option>
                   <option value="media">Media Inquiry</option>
+                  <option value="general">General Inquiry</option>
+                  <option value="sales">Sales Inquiry</option>
+                  <option value="admin">Administrative Matter</option>
                   <option value="other">Other</option>
                 </select>
               </div>

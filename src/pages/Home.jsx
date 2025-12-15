@@ -1,4 +1,4 @@
-import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight, Sparkles, Target, Rocket, Shield, Brain } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -57,26 +57,34 @@ const Home = () => {
     { 
       title: "AI-Powered Agriculture", 
       description: "Developing autonomous drones for precision farming in Sub-Saharan Africa",
-      icon: <Cpu className="h-10 w-10" />,
-      gradient: "from-emerald-500 to-cyan-500"
+      icon: <Cpu className="h-8 w-8" />,
+      gradient: "from-emerald-500 to-cyan-500",
+      features: ["Autonomous Navigation", "Soil Analysis AI", "Yield Optimization"],
+      stats: "15+ Deployments"
     },
     { 
       title: "Solar Robotics", 
       description: "Sustainable robotic systems powered entirely by renewable energy",
-      icon: <Zap className="h-10 w-10" />,
-      gradient: "from-amber-500 to-orange-500"
+      icon: <Zap className="h-8 w-8" />,
+      gradient: "from-amber-500 to-orange-500",
+      features: ["24/7 Solar Power", "Energy Storage", "Low Maintenance"],
+      stats: "100% Renewable"
     },
     { 
       title: "Assistive Technology", 
       description: "Custom prosthetic limbs and mobility aids using 3D printing",
-      icon: <Users className="h-10 w-10" />,
-      gradient: "from-violet-500 to-purple-500"
+      icon: <Users className="h-8 w-8" />,
+      gradient: "from-violet-500 to-purple-500",
+      features: ["3D Scanning", "Custom Design", "Rapid Production"],
+      stats: "500+ Lives Impacted"
     },
     { 
       title: "Global Impact", 
       description: "Collaborating with 15+ African nations on tech solutions",
-      icon: <Globe className="h-10 w-10" />,
-      gradient: "from-blue-500 to-indigo-500"
+      icon: <Globe className="h-8 w-8" />,
+      gradient: "from-blue-500 to-indigo-500",
+      features: ["International Research", "Local Partnerships", "Scale Solutions"],
+      stats: "15+ Countries"
     },
   ];
 
@@ -441,63 +449,173 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Research Highlights */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Professional Research & Innovation Section */}
+      <section className="relative py-28 bg-white overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, #3b82f6 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full blur-3xl opacity-30"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
           <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
           >
-            <div className="inline-flex items-center gap-2 mb-4">
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
-              <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Focus Areas</span>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Research & Innovation
-              <span className="block text-3xl md:text-4xl font-normal text-gray-600 mt-2">
-                Driving Technological Advancement
+            <motion.div
+              className="inline-flex items-center gap-3 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100">
+                <Sparkles className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-semibold text-blue-700 uppercase tracking-wider">Research & Innovation</span>
+              </div>
+              <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+            </motion.div>
+            
+            <motion.h2 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+                Driving Technological
               </span>
-            </h2>
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-600 bg-clip-text text-transparent">
+                Advancement
+              </span>
+            </motion.h2>
+            
+            <motion.p 
+              className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              Pioneering cutting-edge research across multiple disciplines to solve Africa's most pressing challenges through innovative technological solutions.
+            </motion.p>
           </motion.div>
           
+          {/* Research Highlights Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {researchHighlights.map((item, index) => (
               <motion.div 
                 key={index} 
                 className="group relative"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.1 + 0.2, duration: 0.6 }}
+                whileHover={{ y: -8 }}
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl blur" 
-                  style={{ background: `linear-gradient(135deg, ${item.gradient.replace('from-', '').replace('to-', '').replace('-500', '')}500, transparent)` }}
-                />
-                <div className="relative bg-white p-8 rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100">
-                  <motion.div 
-                    className={`mb-6 p-4 rounded-xl bg-gradient-to-br ${item.gradient} w-fit`}
-                    whileHover={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="text-white">
-                      {item.icon}
+                {/* Card with Glow Effect */}
+                <div className="relative h-full">
+                  {/* Glow Effect */}
+                  <div className={`absolute -inset-0.5 bg-gradient-to-br ${item.gradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500`} />
+                  
+                  {/* Main Card */}
+                  <div className="relative h-full bg-white rounded-2xl p-8 border border-gray-100 shadow-lg shadow-gray-100/50 group-hover:shadow-2xl group-hover:shadow-blue-100/50 transition-all duration-300 group-hover:border-transparent">
+                    {/* Icon Container */}
+                    <motion.div 
+                      className={`relative mb-8 p-4 rounded-xl bg-gradient-to-br ${item.gradient} w-fit`}
+                      whileHover={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 rounded-xl blur-sm" />
+                      <div className="relative text-white">
+                        {item.icon}
+                      </div>
+                    </motion.div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors">
+                      {item.title}
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      {item.description}
+                    </p>
+                    
+                    {/* Features List */}
+                    <div className="space-y-3 mb-6">
+                      {item.features.map((feature, featureIndex) => (
+                        <motion.div 
+                          key={featureIndex}
+                          className="flex items-center gap-3 text-sm"
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: featureIndex * 0.1 + 0.3 }}
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500" />
+                          <span className="text-gray-700">{feature}</span>
+                        </motion.div>
+                      ))}
                     </div>
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  <div className="mt-6 pt-6 border-t border-gray-100">
-                    <div className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors">
-                      <span>Learn more</span>
-                      <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    
+                    {/* Stats Badge */}
+                    <div className="mt-auto pt-6 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <div className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors cursor-pointer">
+                          <span>Learn more</span>
+                          <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        
+                        <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100">
+                          <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                            {item.stats}
+                          </span>
+                        </div>
+                      </div>
                     </div>
+                    
+                    {/* Hover Effect Line */}
+                    <div className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
+                  
+                  {/* Corner Accents */}
+                  <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </motion.div>
             ))}
           </div>
+          
+          {/* Call to Action */}
+          <motion.div 
+            className="mt-20 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+          >
+            <Link
+              to="/research"
+              className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
+            >
+              <span>View All Research Projects</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-// Import the slide images
+// Import the slide images and logo
 import slide1 from '../assets/slide1.jpg';
 import slide2 from '../assets/slide2.jpg';
 import slide3 from '../assets/slide3.jpg';
 import slide4 from '../assets/slide4.jpg';
+import logo from '../assets/logo.png'; // Make sure this path is correct
 
 const Home = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -245,14 +246,36 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
+              {/* Logo Badge - Professional Design */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 backdrop-blur-sm"
+                className="flex items-center gap-3 mb-8 px-5 py-3 rounded-xl bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-lg border border-white/20 hover:border-white/30 transition-all duration-300 shadow-lg shadow-black/20 w-fit group"
               >
-                <Sparkles className="h-4 w-4 text-cyan-400" />
-                <span className="text-sm font-medium text-cyan-300">Pioneering African Innovation</span>
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative"
+                >
+                  {/* Optional: Add a subtle glow behind logo */}
+                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <img 
+                    src={logo} 
+                    alt="Research & Innovation Logo" 
+                    className="relative h-10 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity"
+                    onError={(e) => {
+                      console.error("Error loading logo");
+                      e.target.onerror = null;
+                      e.target.src = "https://via.placeholder.com/150x50/1e3a8a/ffffff?text=Research+%26+Innovation";
+                    }}
+                  />
+                </motion.div>
+                <div className="h-6 w-px bg-gradient-to-b from-transparent via-white/50 to-transparent" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-gray-300 tracking-wider uppercase">Advanced Research</span>
+                  <span className="text-xs font-medium text-cyan-300/90 tracking-wide">Cutting-Edge Innovation</span>
+                </div>
               </motion.div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
@@ -464,7 +487,7 @@ const Home = () => {
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full blur-3xl opacity-30"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
+          {/* Section Header - Professional Design */}
           <motion.div 
             className="text-center mb-20"
             initial={{ opacity: 0, y: 30 }}
@@ -472,46 +495,127 @@ const Home = () => {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
           >
+            {/* Professional Badge */}
             <motion.div
-              className="inline-flex items-center gap-3 mb-6"
+              className="inline-flex items-center justify-center mb-8 relative group"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100">
-                <Sparkles className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-semibold text-blue-700 uppercase tracking-wider">Research & Innovation</span>
+              {/* Animated Border */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity" />
+              
+              {/* Logo Badge */}
+              <div className="relative flex items-center gap-4 px-6 py-3 bg-gradient-to-b from-white to-gray-50 rounded-full border border-gray-200 shadow-lg shadow-blue-100/50 backdrop-blur-sm">
+                {/* Logo with subtle animation */}
+                <motion.div
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                  className="p-2 rounded-full bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100"
+                >
+                  <img 
+                    src={logo} 
+                    alt="Logo" 
+                    className="h-8 w-auto object-contain filter brightness-0 invert opacity-80"
+                    onError={(e) => {
+                      console.error("Error loading logo in Research section");
+                      e.target.onerror = null;
+                      e.target.src = "https://via.placeholder.com/120x40/1e3a8a/ffffff?text=Research";
+                    }}
+                  />
+                </motion.div>
+                
+                {/* Divider */}
+                <div className="h-6 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent" />
+                
+                {/* Title - Professional Typography */}
+                <div className="flex flex-col items-start">
+                  <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-gray-800 via-blue-700 to-gray-800 bg-clip-text text-transparent">
+                    RESEARCH & INNOVATION
+                  </span>
+                  <span className="text-xs font-medium text-gray-500 tracking-wide">
+                    Driving Technological Excellence
+                  </span>
+                </div>
               </div>
-              <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
             </motion.div>
             
+            {/* Main Heading */}
             <motion.h2 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-                Driving Technological
+              <span className="text-gray-900">
+                Pioneering
               </span>
+              {' '}
+              <motion.span 
+                className="bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-600 bg-clip-text text-transparent"
+                animate={{ 
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{ backgroundSize: '200% 200%' }}
+              >
+                Cutting-Edge
+              </motion.span>
               <br />
-              <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-600 bg-clip-text text-transparent">
-                Advancement
+              <span className="text-gray-900">
+                Solutions Through
+              </span>
+              {' '}
+              <span className="bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+                Advanced Research
               </span>
             </motion.h2>
             
+            {/* Subtitle */}
             <motion.p 
-              className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              Pioneering cutting-edge research across multiple disciplines to solve Africa's most pressing challenges through innovative technological solutions.
+              Our multidisciplinary research initiatives combine theoretical excellence with practical application, delivering innovative solutions to Africa's most complex challenges.
             </motion.p>
+            
+            {/* Stats Bar */}
+            <motion.div 
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              {[
+                { value: "15+", label: "Research Areas" },
+                { value: "45+", label: "Publications" },
+                { value: "12+", label: "Patents Filed" },
+                { value: "8+", label: "International Awards" }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="text-center p-4 rounded-xl bg-gradient-to-b from-blue-50 to-white border border-blue-100/50 hover:border-blue-200 transition-all duration-300 hover:shadow-lg hover:shadow-blue-100"
+                  whileHover={{ y: -4 }}
+                >
+                  <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-medium text-gray-600 mt-1">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
           
           {/* Research Highlights Grid */}

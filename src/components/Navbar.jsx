@@ -22,6 +22,11 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
+    { name: 'Services', path: '/services' },
+    { name: 'Community', path: '/community' },
+    { name: 'Partnerships', path: '/partnerships' },
+    { name: 'News', path: '/news' },
+    { name: 'Contact', path: '/contact' },
     { 
       name: 'Research & Innovation', 
       path: '/research',
@@ -32,11 +37,6 @@ const Navbar = () => {
         { name: 'Lab Projects', path: '/research/lab' }
       ]
     },
-    { name: 'Services', path: '/services' },
-    { name: 'Community', path: '/community' },
-    { name: 'Partnerships', path: '/partnerships' },
-    { name: 'News', path: '/news' },
-    { name: 'Contact', path: '/contact' },
   ];
 
   return (

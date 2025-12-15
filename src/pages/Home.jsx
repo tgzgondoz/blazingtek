@@ -3,8 +3,15 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+// Import the slide images
+import slide1 from '../assets/slide1.jpg';
+import slide2 from '../assets/slide2.jpg';
+import slide3 from '../assets/slide3.jpg';
+import slide4 from '../assets/slide4.jpg';
+
 const Home = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentBreakthrough, setCurrentBreakthrough] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -15,8 +22,36 @@ const Home = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    
+    // Auto-rotate breakthroughs
+    const interval = setInterval(() => {
+      setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length);
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(interval);
+    };
   }, []);
+
+  const breakthroughs = [
+    {
+      image: slide1,
+      alt: "AI-Assisted Irrigation Robot in Kenya"
+    },
+    {
+      image: slide2,
+      alt: "Solar-Powered Agricultural Drone"
+    },
+    {
+      image: slide3,
+      alt: "3D Printed Prosthetic Technology"
+    },
+    {
+      image: slide4,
+      alt: "Smart Water Purification System"
+    }
+  ];
 
   const researchHighlights = [
     { 
@@ -179,179 +214,6 @@ const Home = () => {
           </linearGradient>
         </defs>
       </svg>
-
-      {/* Pixel Animation Robot Images */}
-      <div className="absolute top-1/4 right-1/4 transform -translate-y-1/2">
-        <motion.div
-          className="relative"
-          animate={{
-            y: [0, -10, 0],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          {/* Pixel Robot Head */}
-          <div className="relative">
-            {/* Pixel grid background for robot */}
-            <div className="absolute -inset-8 opacity-20">
-              <div className="grid grid-cols-4 grid-rows-4 gap-1 w-16 h-16">
-                {[...Array(16)].map((_, i) => (
-                  <motion.div
-                    key={`pixel-${i}`}
-                    className="bg-cyan-500"
-                    animate={{
-                      opacity: [0.3, 0.8, 0.3],
-                      scale: [1, 1.2, 1]
-                    }}
-                    transition={{
-                      duration: 2,
-                      delay: i * 0.1,
-                      repeat: Infinity
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            {/* Robot Head - Pixel Art Style */}
-            <div className="relative">
-              {/* Main head */}
-              <div className="w-20 h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border-2 border-cyan-500/30">
-                {/* Eyes */}
-                <div className="absolute top-6 left-4 right-4 flex justify-between">
-                  <motion.div 
-                    className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-sm"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      boxShadow: ["0 0 5px rgba(6, 182, 212, 0.3)", "0 0 15px rgba(6, 182, 212, 0.6)", "0 0 5px rgba(6, 182, 212, 0.3)"]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity
-                    }}
-                  />
-                  <motion.div 
-                    className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-sm"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      boxShadow: ["0 0 5px rgba(6, 182, 212, 0.3)", "0 0 15px rgba(6, 182, 212, 0.6)", "0 0 5px rgba(6, 182, 212, 0.3)"]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: 0.5
-                    }}
-                  />
-                </div>
-                
-                {/* Mouth/Display */}
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="h-2 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full">
-                    <motion.div 
-                      className="h-full w-1/2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
-                      animate={{
-                        x: [0, "100%", 0]
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Antenna */}
-              <motion.div 
-                className="absolute -top-4 left-1/2 transform -translate-x-1/2"
-                animate={{
-                  y: [0, -2, 0],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <div className="w-1 h-4 bg-gradient-to-b from-cyan-400 to-blue-500" />
-                <div className="w-2 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mx-auto -mt-1" />
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Second Robot Pixel Animation */}
-      <div className="absolute bottom-1/4 left-1/4 transform translate-y-1/2">
-        <motion.div
-          className="relative"
-          animate={{
-            x: [0, 5, 0, -5, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          {/* Robot Arm/Drone Pixel Art */}
-          <div className="relative">
-            {/* Pixel grid background */}
-            <div className="absolute -inset-6 opacity-15">
-              <div className="grid grid-cols-3 grid-rows-3 gap-0.5 w-12 h-12">
-                {[...Array(9)].map((_, i) => (
-                  <motion.div
-                    key={`pixel-drone-${i}`}
-                    className="bg-purple-500"
-                    animate={{
-                      opacity: [0.2, 0.6, 0.2],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      delay: i * 0.15,
-                      repeat: Infinity
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            {/* Drone Body */}
-            <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 rounded rotate-45 border border-purple-500/30">
-              {/* Propellers */}
-              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                <div className="w-1 h-2 bg-gradient-to-b from-purple-400 to-purple-600" />
-              </div>
-              <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
-                <div className="w-2 h-1 bg-gradient-to-r from-purple-400 to-purple-600" />
-              </div>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                <div className="w-1 h-2 bg-gradient-to-t from-purple-400 to-purple-600" />
-              </div>
-              <div className="absolute -left-2 top-1/2 transform -translate-y-1/2">
-                <div className="w-2 h-1 bg-gradient-to-l from-purple-400 to-purple-600" />
-              </div>
-              
-              {/* Center Light */}
-              <motion.div 
-                className="absolute inset-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.7, 1, 0.7]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity
-                }}
-              />
-            </div>
-          </div>
-        </motion.div>
-      </div>
     </div>
   );
 
@@ -455,42 +317,125 @@ const Home = () => {
               </div>
             </motion.div>
             
+            {/* Animated Image Slides Carousel */}
             <motion.div 
               className="relative"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <motion.div 
-                className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl"
-                whileHover={{ y: -5 }}
-                animate={{
-                  boxShadow: [
-                    "0 20px 40px rgba(0, 0, 0, 0.3)",
-                    "0 20px 60px rgba(59, 130, 246, 0.3)",
-                    "0 20px 40px rgba(0, 0, 0, 0.3)"
-                  ]
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
+              <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl overflow-hidden">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-500 rounded-2xl opacity-20 blur" />
+                
+                {/* Carousel Container */}
                 <div className="relative">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500" />
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" />
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-red-400 to-pink-500" />
-                    <span className="ml-auto text-sm font-medium text-cyan-300">Case Study</span>
+                  {/* Carousel Controls */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <div className="flex gap-2">
+                      {breakthroughs.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentBreakthrough(index)}
+                          className="relative group"
+                        >
+                          <motion.div
+                            className={`w-2 h-2 rounded-full ${index === currentBreakthrough ? 'bg-cyan-400' : 'bg-white/50'}`}
+                            whileHover={{ scale: 1.5 }}
+                          />
+                          {index === currentBreakthrough && (
+                            <motion.div
+                              className="absolute inset-0 border border-cyan-400 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1.5 }}
+                              transition={{ duration: 0.2 }}
+                            />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">Latest Breakthrough</h3>
-                  <p className="text-gray-300 mb-6 leading-relaxed">
-                    Our team successfully deployed AI-assisted irrigation robots in Kenya, increasing crop yields by 40% while reducing water usage by 60%.
-                  </p>
-                  <Link to="/news" className="group inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium">
-                    <span>Read Case Study</span>
-                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  
+                  {/* Carousel Images */}
+                  <div className="relative h-96 rounded-xl overflow-hidden">
+                    {breakthroughs.map((breakthrough, index) => (
+                      <motion.div
+                        key={index}
+                        className="absolute inset-0"
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{
+                          opacity: currentBreakthrough === index ? 1 : 0,
+                          scale: currentBreakthrough === index ? 1 : 1.1,
+                          filter: currentBreakthrough === index ? 'brightness(1)' : 'brightness(0.7)'
+                        }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
+                        style={{ pointerEvents: currentBreakthrough === index ? 'auto' : 'none' }}
+                      >
+                        <div className="relative h-full w-full">
+                          {/* Image */}
+                          <img
+                            src={breakthrough.image}
+                            alt={breakthrough.alt}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error(`Error loading image: ${breakthrough.image}`);
+                              e.target.onerror = null;
+                              e.target.src = `https://via.placeholder.com/600x400/1e3a8a/0ea5e9?text=${encodeURIComponent(breakthrough.alt)}`;
+                            }}
+                          />
+                          
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                          
+                          {/* Image Info Overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-6">
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ 
+                                opacity: currentBreakthrough === index ? 1 : 0,
+                                y: currentBreakthrough === index ? 0 : 20
+                              }}
+                              transition={{ delay: 0.3 }}
+                              className="text-white"
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500" />
+                                <span className="text-sm font-medium text-cyan-300">Latest Breakthrough</span>
+                              </div>
+                              <h3 className="text-xl font-bold mb-2">Innovation in Action</h3>
+                              <p className="text-sm text-gray-300 mb-4">
+                                Our team successfully deployed AI-assisted irrigation robots in Kenya, increasing crop yields by 40% while reducing water usage by 60%.
+                              </p>
+                              <Link 
+                                to="/news" 
+                                className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 group"
+                              >
+                                <span>Read Case Study</span>
+                                <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                              </Link>
+                            </motion.div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  {/* Navigation Arrows */}
+                  <div className="absolute bottom-4 right-4 flex gap-2 z-20">
+                    <button
+                      onClick={() => setCurrentBreakthrough((prev) => (prev - 1 + breakthroughs.length) % breakthroughs.length)}
+                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
+                    >
+                      <ChevronRight className="h-4 w-4 rotate-180" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length)}
+                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </motion.div>

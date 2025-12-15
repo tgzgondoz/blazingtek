@@ -1,4 +1,3 @@
-// Home.jsx
 import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -180,6 +179,179 @@ const Home = () => {
           </linearGradient>
         </defs>
       </svg>
+
+      {/* Pixel Animation Robot Images */}
+      <div className="absolute top-1/4 right-1/4 transform -translate-y-1/2">
+        <motion.div
+          className="relative"
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          {/* Pixel Robot Head */}
+          <div className="relative">
+            {/* Pixel grid background for robot */}
+            <div className="absolute -inset-8 opacity-20">
+              <div className="grid grid-cols-4 grid-rows-4 gap-1 w-16 h-16">
+                {[...Array(16)].map((_, i) => (
+                  <motion.div
+                    key={`pixel-${i}`}
+                    className="bg-cyan-500"
+                    animate={{
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [1, 1.2, 1]
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: i * 0.1,
+                      repeat: Infinity
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Robot Head - Pixel Art Style */}
+            <div className="relative">
+              {/* Main head */}
+              <div className="w-20 h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border-2 border-cyan-500/30">
+                {/* Eyes */}
+                <div className="absolute top-6 left-4 right-4 flex justify-between">
+                  <motion.div 
+                    className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-sm"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      boxShadow: ["0 0 5px rgba(6, 182, 212, 0.3)", "0 0 15px rgba(6, 182, 212, 0.6)", "0 0 5px rgba(6, 182, 212, 0.3)"]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity
+                    }}
+                  />
+                  <motion.div 
+                    className="w-4 h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-sm"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      boxShadow: ["0 0 5px rgba(6, 182, 212, 0.3)", "0 0 15px rgba(6, 182, 212, 0.6)", "0 0 5px rgba(6, 182, 212, 0.3)"]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 0.5
+                    }}
+                  />
+                </div>
+                
+                {/* Mouth/Display */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="h-2 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full">
+                    <motion.div 
+                      className="h-full w-1/2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
+                      animate={{
+                        x: [0, "100%", 0]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Antenna */}
+              <motion.div 
+                className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                animate={{
+                  y: [0, -2, 0],
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <div className="w-1 h-4 bg-gradient-to-b from-cyan-400 to-blue-500" />
+                <div className="w-2 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mx-auto -mt-1" />
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Second Robot Pixel Animation */}
+      <div className="absolute bottom-1/4 left-1/4 transform translate-y-1/2">
+        <motion.div
+          className="relative"
+          animate={{
+            x: [0, 5, 0, -5, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          {/* Robot Arm/Drone Pixel Art */}
+          <div className="relative">
+            {/* Pixel grid background */}
+            <div className="absolute -inset-6 opacity-15">
+              <div className="grid grid-cols-3 grid-rows-3 gap-0.5 w-12 h-12">
+                {[...Array(9)].map((_, i) => (
+                  <motion.div
+                    key={`pixel-drone-${i}`}
+                    className="bg-purple-500"
+                    animate={{
+                      opacity: [0.2, 0.6, 0.2],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      delay: i * 0.15,
+                      repeat: Infinity
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Drone Body */}
+            <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 rounded rotate-45 border border-purple-500/30">
+              {/* Propellers */}
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                <div className="w-1 h-2 bg-gradient-to-b from-purple-400 to-purple-600" />
+              </div>
+              <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
+                <div className="w-2 h-1 bg-gradient-to-r from-purple-400 to-purple-600" />
+              </div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                <div className="w-1 h-2 bg-gradient-to-t from-purple-400 to-purple-600" />
+              </div>
+              <div className="absolute -left-2 top-1/2 transform -translate-y-1/2">
+                <div className="w-2 h-1 bg-gradient-to-l from-purple-400 to-purple-600" />
+              </div>
+              
+              {/* Center Light */}
+              <motion.div 
+                className="absolute inset-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity
+                }}
+              />
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 
@@ -376,52 +548,6 @@ const Home = () => {
                       <span>Learn more</span>
                       <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partners Section */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-3 mb-6">
-              <Sparkles className="h-5 w-5 text-cyan-400" />
-              <span className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">Trusted Partnerships</span>
-              <Sparkles className="h-5 w-5 text-cyan-400" />
-            </div>
-            <h2 className="text-4xl font-bold mb-4">
-              Global Collaborations
-            </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Working with leading organizations worldwide to drive innovation
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
-            {['UNICEF', 'African Union', 'MIT', 'UNDP', 'IBM Research', 'Google AI'].map((partner, index) => (
-              <motion.div 
-                key={partner} 
-                className="group relative"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-              >
-                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-white/10 group-hover:border-white/20 transition-all duration-300">
-                  <div className="h-12 flex items-center justify-center">
-                    <span className="text-xl font-semibold text-transparent bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text group-hover:from-white group-hover:to-cyan-200 transition-all duration-300">
-                      {partner}
-                    </span>
                   </div>
                 </div>
               </motion.div>

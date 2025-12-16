@@ -1,4 +1,4 @@
-import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight, Sparkles, Target, Rocket, Shield, Brain } from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -246,7 +246,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {/* Clean Logo Display */}
+              {/* Clean Logo Display - Blended seamlessly */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -268,16 +268,16 @@ const Home = () => {
                     }}
                   />
                   
-                  {/* Logo container */}
+                  {/* Logo container with transparent background */}
                   <motion.div
-                    className="relative p-6 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl shadow-black/30"
+                    className="relative p-6 bg-transparent backdrop-blur-xl"
                     whileHover={{ scale: 1.02, y: -2 }}
                     transition={{ duration: 0.3 }}
                   >
                     <img 
                       src={logo} 
                       alt="Research & Innovation Logo" 
-                      className="h-16 w-auto object-contain"
+                      className="h-16 w-auto object-contain drop-shadow-lg"
                       onError={(e) => {
                         console.error("Error loading logo");
                         e.target.onerror = null;
@@ -482,227 +482,169 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Professional Research & Innovation Section */}
-      <section className="relative py-28 bg-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]">
+      {/* Compact Research & Innovation Section */}
+      <section className="relative py-16 bg-white overflow-hidden">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.02]">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, #3b82f6 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
+            backgroundImage: `radial-gradient(circle at 1px 1px, #3b82f6 1px, transparent 1px)`,
+            backgroundSize: '30px 30px'
           }}></div>
         </div>
         
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full blur-3xl opacity-30"></div>
+        {/* Subtle Floating Elements */}
+        <div className="absolute top-10 left-5 w-20 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-full blur-2xl opacity-30"></div>
+        <div className="absolute bottom-10 right-5 w-24 h-24 bg-gradient-to-br from-emerald-50 to-blue-50 rounded-full blur-2xl opacity-20"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header - Minimal Logo Only */}
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Compact Section Header */}
           <motion.div 
-            className="text-center mb-20"
-            initial={{ opacity: 0, y: 30 }}
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Clean Logo Display */}
+            {/* Compact Logo */}
             <motion.div
-              className="flex flex-col items-center justify-center mb-16"
-              initial={{ opacity: 0, scale: 0.9 }}
+              className="flex flex-col items-center justify-center mb-8"
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
             >
-              {/* Animated Background Effect */}
-              <div className="relative mb-12">
+              {/* Logo with Subtle Glow */}
+              <div className="relative mb-6">
                 <motion.div
-                  className="absolute -inset-8 bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-blue-500/10 rounded-full blur-3xl"
+                  className="absolute -inset-4 bg-gradient-to-r from-blue-400/5 via-cyan-400/5 to-blue-400/5 rounded-full blur-xl"
                   animate={{
-                    rotate: [0, 360],
-                    opacity: [0.2, 0.4, 0.2]
+                    opacity: [0.1, 0.2, 0.1],
                   }}
                   transition={{
-                    rotate: {
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear"
-                    },
-                    opacity: {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
                   }}
                 />
                 
-                {/* Logo Container */}
-                <motion.div
-                  className="relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-3xl shadow-2xl shadow-blue-100/50 border border-gray-200/50"
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <img 
-                    src={logo} 
-                    alt="Research & Innovation" 
-                    className="h-24 w-auto object-contain"
-                    onError={(e) => {
-                      console.error("Error loading logo in Research section");
-                      e.target.onerror = null;
-                      e.target.src = "https://via.placeholder.com/400x120/ffffff/1e3a8a?text=Research+%26+Innovation";
-                    }}
-                  />
-                </motion.div>
+                {/* Clean Logo */}
+                <img 
+                  src={logo} 
+                  alt="Research & Innovation" 
+                  className="relative h-16 w-auto object-contain"
+                  onError={(e) => {
+                    console.error("Error loading logo in Research section");
+                    e.target.onerror = null;
+                    e.target.src = "https://via.placeholder.com/300x80/ffffff/1e3a8a?text=R+I";
+                  }}
+                />
               </div>
             </motion.div>
             
-            {/* Main Heading - Minimal */}
+            {/* Compact Heading */}
             <motion.h2 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
+              className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight text-gray-800"
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <span className="text-gray-700">Advancing </span>
+              <span className="text-blue-600">Technology</span>
+              <span className="text-gray-700"> Through </span>
+              <span className="text-gray-800 font-bold">Research Excellence</span>
+            </motion.h2>
+            
+            {/* Compact Subtitle */}
+            <motion.p 
+              className="text-sm text-gray-600 max-w-xl mx-auto leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <span className="text-gray-900">
-                Advancing
-              </span>
-              {' '}
-              <motion.span 
-                className="bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-600 bg-clip-text text-transparent"
-                animate={{ 
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                }}
-                transition={{ 
-                  duration: 3, 
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                style={{ backgroundSize: '200% 200%' }}
-              >
-                Technology
-              </motion.span>
-              <br />
-              <span className="text-gray-900">
-                Through
-              </span>
-              {' '}
-              <span className="bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
-                Research Excellence
-              </span>
-            </motion.h2>
-            
-            {/* Subtitle */}
-            <motion.p 
-              className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-            >
-              Our multidisciplinary research initiatives combine theoretical excellence with practical application, delivering innovative solutions to Africa's most complex challenges.
+              Combining theoretical excellence with practical application to deliver innovative solutions for Africa's challenges.
             </motion.p>
           </motion.div>
           
-          {/* Research Highlights Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Compact Research Highlights Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {researchHighlights.map((item, index) => (
               <motion.div 
                 key={index} 
                 className="group relative"
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: index * 0.1 + 0.2, duration: 0.6 }}
-                whileHover={{ y: -8 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                {/* Card with Glow Effect */}
-                <div className="relative h-full">
-                  {/* Glow Effect */}
-                  <div className={`absolute -inset-0.5 bg-gradient-to-br ${item.gradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500`} />
-                  
-                  {/* Main Card */}
-                  <div className="relative h-full bg-white rounded-2xl p-8 border border-gray-100 shadow-lg shadow-gray-100/50 group-hover:shadow-2xl group-hover:shadow-blue-100/50 transition-all duration-300 group-hover:border-transparent">
-                    {/* Icon Container */}
-                    <motion.div 
-                      className={`relative mb-8 p-4 rounded-xl bg-gradient-to-br ${item.gradient} w-fit`}
-                      whileHover={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <div className="absolute inset-0 bg-white/20 rounded-xl blur-sm" />
-                      <div className="relative text-white">
-                        {item.icon}
-                      </div>
-                    </motion.div>
-                    
-                    {/* Title */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors">
-                      {item.title}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      {item.description}
-                    </p>
-                    
-                    {/* Features List */}
-                    <div className="space-y-3 mb-6">
-                      {item.features.map((feature, featureIndex) => (
-                        <motion.div 
-                          key={featureIndex}
-                          className="flex items-center gap-3 text-sm"
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: featureIndex * 0.1 + 0.3 }}
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500" />
-                          <span className="text-gray-700">{feature}</span>
-                        </motion.div>
-                      ))}
+                {/* Compact Card */}
+                <div className="relative h-full bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                  {/* Compact Icon */}
+                  <div className={`mb-4 p-3 rounded-lg bg-gradient-to-br ${item.gradient} w-fit`}>
+                    <div className="text-white">
+                      {item.icon}
                     </div>
-                    
-                    {/* Stats Badge */}
-                    <div className="mt-auto pt-6 border-t border-gray-100">
-                      <div className="flex items-center justify-between">
-                        <div className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors cursor-pointer">
-                          <span>Learn more</span>
-                          <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                        
-                        <div className="px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100">
-                          <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                            {item.stats}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Hover Effect Line */}
-                    <div className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   
-                  {/* Corner Accents */}
-                  <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Compact Title */}
+                  <h3 className="text-base font-semibold text-gray-800 mb-2">
+                    {item.title}
+                  </h3>
+                  
+                  {/* Compact Description */}
+                  <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                    {item.description}
+                  </p>
+                  
+                  {/* Compact Features */}
+                  <div className="space-y-2 mb-4">
+                    {item.features.map((feature, featureIndex) => (
+                      <div 
+                        key={featureIndex}
+                        className="flex items-center gap-2 text-xs"
+                      >
+                        <div className="w-1 h-1 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Compact Stats & CTA */}
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-medium text-blue-600 cursor-pointer group-hover:text-blue-700 transition-colors">
+                        Explore →
+                      </div>
+                      <div className="px-2 py-1 rounded-lg bg-blue-50">
+                        <span className="text-xs font-semibold text-blue-600">
+                          {item.stats}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Hover Indicator */}
+                  <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </motion.div>
             ))}
           </div>
           
-          {/* Call to Action */}
+          {/* Compact Call to Action */}
           <motion.div 
-            className="mt-20 text-center"
-            initial={{ opacity: 0, y: 20 }}
+            className="mt-12 text-center"
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.4 }}
           >
             <Link
               to="/research"
-              className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 shadow-md hover:shadow-lg"
             >
-              <span>View All Research Projects</span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform" />
+              <span>View Research Portfolio</span>
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>

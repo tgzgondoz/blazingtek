@@ -531,26 +531,31 @@ const Home = () => {
             transition={{ duration: 0.6 }}
           >
             {/* Compact Logo - Larger Size */}
-            <motion.div
-              className="flex flex-col items-center justify-center mb-10"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-            >
-              {/* Clean Logo - Larger */}
-              <img
-                src={logo}
-                alt="Research & Innovation"
-                className="relative h-20 w-auto object-contain"
-                onError={(e) => {
-                  console.error("Error loading logo in Research section");
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://via.placeholder.com/400x120/ffffff/374151?text=Research+%26+Innovation";
-                }}
-              />
-            </motion.div>
+<motion.div
+  className="flex flex-col items-center justify-center mb-12"
+  initial={{ opacity: 0, scale: 0.95 }}
+  whileInView={{ opacity: 1, scale: 1 }}
+  viewport={{ once: true }}
+  transition={{ delay: 0.1, duration: 0.5 }}
+>
+  {/* Clean Logo - Larger with Black Color */}
+  <div className="relative">
+    {/* Optional shadow/glow effect for black logo */}
+    <div className="absolute inset-0 bg-black/10 blur-md rounded-full scale-110"></div>
+    
+    <img
+      src={logo}
+      alt="Research & Innovation"
+      className="relative h-28 w-auto object-contain filter brightness-0"
+      onError={(e) => {
+        console.error("Error loading logo in Research section");
+        e.target.onerror = null;
+        e.target.src =
+          "https://via.placeholder.com/400x120/000000/ffffff?text=Research+%26+Innovation";
+      }}
+    />
+  </div>
+</motion.div>
 
             {/* Compact Heading */}
             <motion.h2

@@ -60,7 +60,6 @@ const Home = () => {
       description:
         "Developing autonomous drones for precision farming in Sub-Saharan Africa",
       icon: <Cpu className="h-8 w-8" />,
-      gradient: "from-emerald-500 to-cyan-500",
       features: [
         "Autonomous Navigation",
         "Soil Analysis AI",
@@ -73,7 +72,6 @@ const Home = () => {
       description:
         "Sustainable robotic systems powered entirely by renewable energy",
       icon: <Zap className="h-8 w-8" />,
-      gradient: "from-amber-500 to-orange-500",
       features: ["24/7 Solar Power", "Energy Storage", "Low Maintenance"],
       stats: "100% Renewable",
     },
@@ -82,7 +80,6 @@ const Home = () => {
       description:
         "Custom prosthetic limbs and mobility aids using 3D printing",
       icon: <Users className="h-8 w-8" />,
-      gradient: "from-violet-500 to-purple-500",
       features: ["3D Scanning", "Custom Design", "Rapid Production"],
       stats: "500+ Lives Impacted",
     },
@@ -90,7 +87,6 @@ const Home = () => {
       title: "Global Impact",
       description: "Collaborating with 15+ African nations on tech solutions",
       icon: <Globe className="h-8 w-8" />,
-      gradient: "from-blue-500 to-indigo-500",
       features: [
         "International Research",
         "Local Partnerships",
@@ -102,7 +98,7 @@ const Home = () => {
 
   const RoboticBackground = () => (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Enhanced Circuit Board with Glow */}
+      {/* Enhanced Circuit Board */}
       <div className="absolute inset-0 opacity-[0.08]">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -115,20 +111,11 @@ const Home = () => {
               <path
                 d="M 60 0 L 0 0 0 60"
                 fill="none"
-                stroke="url(#grid-glow)"
+                stroke="#9ca3af"
                 strokeWidth="1.5"
               />
-              <circle cx="30" cy="30" r="2" fill="url(#node-glow)" />
+              <circle cx="30" cy="30" r="2" fill="#6b7280" />
             </pattern>
-            <linearGradient id="grid-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.6" />
-            </linearGradient>
-            <radialGradient id="node-glow">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#1d4ed8" />
-            </radialGradient>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
         </svg>
@@ -155,7 +142,7 @@ const Home = () => {
             ease: "easeInOut",
           }}
         >
-          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/30" />
+          <div className="w-3 h-3 rounded-full bg-gray-500 shadow-lg" />
         </motion.div>
       ))}
 
@@ -174,8 +161,8 @@ const Home = () => {
         }}
       >
         <div className="relative">
-          <div className="w-16 h-16 border-2 border-cyan-400/30 rounded-lg rotate-45" />
-          <div className="absolute inset-4 border-2 border-purple-400/30 rounded rotate-12" />
+          <div className="w-16 h-16 border-2 border-gray-400/30 rounded-lg rotate-45" />
+          <div className="absolute inset-4 border-2 border-gray-400/30 rounded rotate-12" />
         </div>
       </motion.div>
 
@@ -193,9 +180,9 @@ const Home = () => {
         }}
       >
         <div className="relative">
-          <div className="w-20 h-20 border-2 border-blue-400/20 rounded-full" />
-          <div className="absolute inset-3 border-2 border-emerald-400/20 rounded-full" />
-          <div className="absolute inset-6 border-2 border-violet-400/20 rounded-full" />
+          <div className="w-20 h-20 border-2 border-gray-400/20 rounded-full" />
+          <div className="absolute inset-3 border-2 border-gray-400/20 rounded-full" />
+          <div className="absolute inset-6 border-2 border-gray-400/20 rounded-full" />
         </div>
       </motion.div>
 
@@ -206,7 +193,7 @@ const Home = () => {
       >
         <motion.path
           d="M10,100 Q250,50 490,200"
-          stroke="url(#line-gradient)"
+          stroke="#9ca3af"
           strokeWidth="1"
           fill="none"
           strokeDasharray="5,5"
@@ -221,7 +208,7 @@ const Home = () => {
         />
         <motion.path
           d="M500,50 Q300,150 100,300"
-          stroke="url(#line-gradient-2)"
+          stroke="#6b7280"
           strokeWidth="1"
           fill="none"
           strokeDasharray="5,5"
@@ -234,24 +221,6 @@ const Home = () => {
             ease: "linear",
           }}
         />
-        <defs>
-          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#06b6d4" stopOpacity="0" />
-            <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient
-            id="line-gradient-2"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="0%"
-          >
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0" />
-            <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
-          </linearGradient>
-        </defs>
       </svg>
     </div>
   );
@@ -259,9 +228,9 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-gray-950 via-gray-900 to-blue-950 text-white overflow-hidden">
+      <section className="relative min-h-screen flex items-center bg-gray-900 text-white overflow-hidden">
         <RoboticBackground />
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-blue-900/50"></div>
+        <div className="absolute inset-0 bg-gray-900/80"></div>
 
         <motion.div
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24"
@@ -288,7 +257,7 @@ const Home = () => {
                 <div className="relative inline-block">
                   {/* Subtle glow effect */}
                   <motion.div
-                    className="absolute -inset-6 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
+                    className="absolute -inset-6 bg-gray-800 rounded-full"
                     animate={{
                       opacity: [0.3, 0.6, 0.3],
                       scale: [1, 1.05, 1],
@@ -322,26 +291,15 @@ const Home = () => {
               </motion.div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
-                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                <span className="text-white">
                   Robotics, AI &
                 </span>
                 <br />
-                <motion.span
-                  className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                  animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  style={{ backgroundSize: "200% 200%" }}
-                >
+                <span className="text-white font-bold">
                   Emerging Tech
-                </motion.span>
+                </span>
                 <br />
-                <span className="bg-gradient-to-r from-emerald-300 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <span className="text-white">
                   for Africa
                 </span>
               </h1>
@@ -367,11 +325,10 @@ const Home = () => {
                 >
                   <Link
                     to="/research"
-                    className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
+                    className="group relative inline-flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-gray-800/25 hover:shadow-xl hover:shadow-gray-800/40 border border-gray-700"
                   >
                     <span className="relative z-10">Explore Solutions</span>
                     <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300" />
                   </Link>
                 </motion.div>
 
@@ -400,8 +357,8 @@ const Home = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl overflow-hidden">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-500 rounded-2xl opacity-20 blur" />
+              <div className="relative bg-gray-800 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl overflow-hidden">
+                <div className="absolute -inset-0.5 bg-gray-700 rounded-2xl opacity-20 blur" />
 
                 {/* Carousel Container */}
                 <div className="relative">
@@ -417,14 +374,14 @@ const Home = () => {
                           <motion.div
                             className={`w-2 h-2 rounded-full ${
                               index === currentBreakthrough
-                                ? "bg-cyan-400"
+                                ? "bg-white"
                                 : "bg-white/50"
                             }`}
                             whileHover={{ scale: 1.5 }}
                           />
                           {index === currentBreakthrough && (
                             <motion.div
-                              className="absolute inset-0 border border-cyan-400 rounded-full"
+                              className="absolute inset-0 border border-white rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1.5 }}
                               transition={{ duration: 0.2 }}
@@ -467,14 +424,14 @@ const Home = () => {
                                 `Error loading image: ${breakthrough.image}`
                               );
                               e.target.onerror = null;
-                              e.target.src = `https://via.placeholder.com/600x400/1e3a8a/0ea5e9?text=${encodeURIComponent(
+                              e.target.src = `https://via.placeholder.com/600x400/374151/9ca3af?text=${encodeURIComponent(
                                 breakthrough.alt
                               )}`;
                             }}
                           />
 
-                          {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-black/50" />
 
                           {/* Image Info Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6">
@@ -488,8 +445,8 @@ const Home = () => {
                               className="text-white"
                             >
                               <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500" />
-                                <span className="text-sm font-medium text-cyan-300">
+                                <div className="w-3 h-3 rounded-full bg-green-500" />
+                                <span className="text-sm font-medium text-gray-300">
                                   Latest Breakthrough
                                 </span>
                               </div>
@@ -503,7 +460,7 @@ const Home = () => {
                               </p>
                               <Link
                                 to="/news"
-                                className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 group"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white group"
                               >
                                 <span>Read Case Study</span>
                                 <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -554,15 +511,15 @@ const Home = () => {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, #3b82f6 1px, transparent 1px)`,
+              backgroundImage: `radial-gradient(circle at 1px 1px, #6b7280 1px, transparent 1px)`,
               backgroundSize: "30px 30px",
             }}
           ></div>
         </div>
 
         {/* Subtle Floating Elements */}
-        <div className="absolute top-10 left-5 w-20 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-full blur-2xl opacity-30"></div>
-        <div className="absolute bottom-10 right-5 w-24 h-24 bg-gradient-to-br from-emerald-50 to-blue-50 rounded-full blur-2xl opacity-20"></div>
+        <div className="absolute top-10 left-5 w-20 h-20 bg-gray-100 rounded-full blur-2xl opacity-30"></div>
+        <div className="absolute bottom-10 right-5 w-24 h-24 bg-gray-100 rounded-full blur-2xl opacity-20"></div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Compact Section Header */}
@@ -581,33 +538,18 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1, duration: 0.5 }}
             >
-              {/* Logo with Subtle Glow - Larger */}
-              <div className="relative mb-8">
-                <motion.div
-                  className="absolute -inset-6 bg-gradient-to-r from-blue-400/5 via-cyan-400/5 to-blue-400/5 rounded-full blur-xl"
-                  animate={{
-                    opacity: [0.1, 0.2, 0.1],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-
-                {/* Clean Logo - Larger */}
-                <img
-                  src={logo}
-                  alt="Research & Innovation"
-                  className="relative h-20 w-auto object-contain"
-                  onError={(e) => {
-                    console.error("Error loading logo in Research section");
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://via.placeholder.com/400x120/ffffff/1e3a8a?text=Research+%26+Innovation";
-                  }}
-                />
-              </div>
+              {/* Clean Logo - Larger */}
+              <img
+                src={logo}
+                alt="Research & Innovation"
+                className="relative h-20 w-auto object-contain"
+                onError={(e) => {
+                  console.error("Error loading logo in Research section");
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/400x120/ffffff/374151?text=Research+%26+Innovation";
+                }}
+              />
             </motion.div>
 
             {/* Compact Heading */}
@@ -618,9 +560,9 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <span className="text-gray-700">Advancing </span>
-              <span className="text-blue-600">Technology</span>
-              <span className="text-gray-700"> Through </span>
+              <span className="text-gray-600">Advancing </span>
+              <span className="text-gray-700">Technology</span>
+              <span className="text-gray-600"> Through </span>
               <span className="text-gray-800 font-bold">
                 Research Excellence
               </span>
@@ -651,12 +593,10 @@ const Home = () => {
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 {/* Compact Card */}
-                <div className="relative h-full bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div className="relative h-full bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                   {/* Compact Icon */}
-                  <div
-                    className={`mb-4 p-3 rounded-lg bg-gradient-to-br ${item.gradient} w-fit`}
-                  >
-                    <div className="text-white">{item.icon}</div>
+                  <div className="mb-4 p-3 rounded-lg bg-gray-100 w-fit">
+                    <div className="text-gray-700">{item.icon}</div>
                   </div>
 
                   {/* Compact Title */}
@@ -676,20 +616,20 @@ const Home = () => {
                         key={featureIndex}
                         className="flex items-center gap-2 text-xs"
                       >
-                        <div className="w-1 h-1 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400" />
+                        <div className="w-1 h-1 rounded-full bg-gray-500" />
                         <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* Compact Stats & CTA */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex items-center justify-between">
-                      <div className="text-xs font-medium text-blue-600 cursor-pointer group-hover:text-blue-700 transition-colors">
+                      <div className="text-xs font-medium text-gray-700 cursor-pointer group-hover:text-gray-900 transition-colors">
                         Explore →
                       </div>
-                      <div className="px-2 py-1 rounded-lg bg-blue-50">
-                        <span className="text-xs font-semibold text-blue-600">
+                      <div className="px-2 py-1 rounded-lg bg-gray-100">
+                        <span className="text-xs font-semibold text-gray-700">
                           {item.stats}
                         </span>
                       </div>
@@ -697,7 +637,7 @@ const Home = () => {
                   </div>
 
                   {/* Hover Indicator */}
-                  <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </motion.div>
             ))}
@@ -713,7 +653,7 @@ const Home = () => {
           >
             <Link
               to="/research"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium text-sm transition-all duration-300 shadow-md hover:shadow-lg border border-gray-700"
             >
               <span>View Research Portfolio</span>
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />

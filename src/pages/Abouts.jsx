@@ -36,6 +36,13 @@ const Abouts = () => {
       linkedin: "#",
       email: "david@blazingtek.com"
     },
+    {
+      name: "Sarah Johnson",
+      role: "Operations Director",
+      description: "Project management and strategic planning",
+      linkedin: "#",
+      email: "sarah@blazingtek.com"
+    }
   ];
 
   return (
@@ -59,7 +66,7 @@ const Abouts = () => {
 
       {/* Leadership Team Section */}
       <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -78,7 +85,7 @@ const Abouts = () => {
             </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
             {leaders.map((leader, index) => (
               <motion.div
                 key={index}
@@ -89,38 +96,38 @@ const Abouts = () => {
                 whileHover={{ y: -5 }}
                 className="group"
               >
-                <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 text-center">
+                <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 text-center h-full">
                   {/* Circle Face/Avatar */}
                   <div className="relative mb-6">
-                    <div className={`w-32 h-32 rounded-full mx-auto ${leader.imageColor} flex items-center justify-center text-white text-4xl font-bold`}>
+                    <div className={`w-24 h-24 rounded-full mx-auto ${leader.imageColor || "bg-gray-100"} flex items-center justify-center ${leader.imageColor ? "text-white" : "text-gray-700"} text-2xl font-bold`}>
                       {leader.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     {/* Online Status Indicator */}
                     <div className="absolute bottom-4 right-1/4 transform translate-x-1/2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                     </div>
                   </div>
                   
                   {/* Leader Info */}
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">{leader.name}</h3>
-                  <p className="text-blue-600 font-medium mb-3">{leader.role}</p>
-                  <p className="text-gray-600 text-sm mb-6">{leader.description}</p>
+                  <h3 className="text-base font-bold text-gray-900 mb-1">{leader.name}</h3>
+                  <p className="text-blue-600 font-medium text-sm mb-2">{leader.role}</p>
+                  <p className="text-gray-600 text-xs mb-4">{leader.description}</p>
                   
                   {/* Social Links */}
-                  <div className="flex justify-center gap-4">
+                  <div className="flex justify-center gap-3">
                     <a 
                       href={leader.linkedin} 
-                      className="p-2 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
+                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
                       aria-label={`Connect with ${leader.name} on LinkedIn`}
                     >
-                      <Linkedin className="h-5 w-5" />
+                      <Linkedin className="h-4 w-4" />
                     </a>
                     <a 
                       href={`mailto:${leader.email}`}
-                      className="p-2 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
+                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
                       aria-label={`Email ${leader.name}`}
                     >
-                      <Mail className="h-5 w-5" />
+                      <Mail className="h-4 w-4" />
                     </a>
                   </div>
                 </div>

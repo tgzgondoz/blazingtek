@@ -1,13 +1,7 @@
 // Services.jsx
-import { 
-  Package, 
-  GraduationCap, 
-  Wrench
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
-// Import images
 import RoboticsImage from '../assets/Robotics.jpg';
 import WorkshopsImage from '../assets/Workshops.jpg';
 import SolutionsImage from '../assets/Solutions.webp';
@@ -15,103 +9,111 @@ import SolutionsImage from '../assets/Solutions.webp';
 const Services = () => {
   const services = [
     {
-      icon: <Package className="h-12 w-12" />,
       title: "Robotics Kits",
-      description: "Educational and development kits for universities and research institutions",
-      features: ["Modular design", "Open-source software", "Curriculum materials", "Cloud integration"],
-      gradient: "from-blue-500 to-cyan-500",
-      applications: ["Education", "Research", "Prototyping"],
-      delivery: "2-4 weeks",
-      image: RoboticsImage
+      description: "Educational and development kits for universities and research institutions.",
+      image: RoboticsImage,
+      link: "/services/robotics-kits"
     },
     {
-      icon: <GraduationCap className="h-12 w-12" />,
       title: "Workshops & Training",
-      description: "Custom training programs in AI, robotics, and emerging technologies",
-      features: ["Corporate training", "Academic workshops", "Hands-on labs", "Certification"],
-      gradient: "from-purple-500 to-pink-500",
-      applications: ["Skill Development", "Team Upskilling", "Technical Certification"],
-      delivery: "Flexible scheduling",
-      image: WorkshopsImage
+      description: "Custom training programs in AI, robotics, and emerging technologies.",
+      image: WorkshopsImage,
+      link: "/services/workshops"
     },
     {
-      icon: <Wrench className="h-12 w-12" />,
       title: "Custom Solutions",
-      description: "Bespoke robotic systems for industrial and research applications",
-      features: ["Requirement analysis", "Prototype development", "Deployment support", "Maintenance"],
-      gradient: "from-emerald-500 to-green-500",
-      applications: ["Industry Automation", "Research Projects", "Specialized Applications"],
-      delivery: "8-12 weeks",
-      image: SolutionsImage
+      description: "Bespoke robotic systems for industrial and research applications.",
+      image: SolutionsImage,
+      link: "/services/custom-solutions"
     }
+  ];
+
+  const otherPages = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Research", path: "/research" },
+    { name: "Careers", path: "/careers" },
+    { name: "Contact", path: "/contact" }
   ];
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gray-900 text-white py-24">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight">
-            Our Services
-          </h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-xl text-gray-300 leading-relaxed mb-10 max-w-3xl mx-auto"
-          >
-            Comprehensive robotics solutions tailored to meet your specific needs
-          </motion.p>
-        </motion.div>
+      {/* Header */}
+      <section className="bg-gray-900 text-white py-16">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h1>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+            Professional robotics solutions tailored for your needs
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            {otherPages.map((page) => (
+              <Link
+                key={page.path}
+                to={page.path}
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm"
+              >
+                {page.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Services Grid */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
             {services.map((service, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="group relative"
+                className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
               >
-                <div className={`absolute -inset-0.5 bg-gradient-to-r ${service.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
-                  {/* Image Section */}
+                <Link to={service.link} className="block">
                   <div className="h-48 overflow-hidden">
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   
-                  <div className="p-8">
-                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${service.gradient} mb-6`}>
-                      <div className="text-white">
-                        {service.icon}
-                      </div>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
                       {service.title}
                     </h3>
-                    
-                    <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                    <p className="text-gray-600 text-sm mb-4">
+                      {service.description}
+                    </p>
+                    <div className="text-blue-600 text-sm font-medium flex items-center">
+                      Learn more
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
+          </div>
+
+          {/* Quick Links */}
+          <div className="bg-gray-50 rounded-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Links</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {otherPages.map((page) => (
+                <Link
+                  key={page.path}
+                  to={page.path}
+                  className="text-center px-3 py-2 bg-white hover:bg-gray-100 rounded border border-gray-200 text-sm text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  {page.name}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -1,14 +1,14 @@
-import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // Import the slide images and logo
-import slide1 from '../assets/slide1.jpg';
-import slide2 from '../assets/slide2.jpg';
-import slide3 from '../assets/slide3.jpg';
-import slide4 from '../assets/slide4.jpg';
-import logo from '../assets/logo.png'; // Make sure this path is correct
+import slide1 from "../assets/slide1.jpg";
+import slide2 from "../assets/slide2.jpg";
+import slide3 from "../assets/slide3.jpg";
+import slide4 from "../assets/slide4.jpg";
+import logo from "../assets/logo.png"; // Make sure this path is correct
 
 const Home = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -18,19 +18,19 @@ const Home = () => {
     const handleMouseMove = (e) => {
       setMousePosition({
         x: e.clientX / window.innerWidth - 0.5,
-        y: e.clientY / window.innerHeight - 0.5
+        y: e.clientY / window.innerHeight - 0.5,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    
+    window.addEventListener("mousemove", handleMouseMove);
+
     // Auto-rotate breakthroughs
     const interval = setInterval(() => {
       setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length);
     }, 5000);
-    
+
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       clearInterval(interval);
     };
   }, []);
@@ -38,54 +38,65 @@ const Home = () => {
   const breakthroughs = [
     {
       image: slide1,
-      alt: "AI-Assisted Irrigation Robot in Kenya"
+      alt: "AI-Assisted Irrigation Robot in Kenya",
     },
     {
       image: slide2,
-      alt: "Solar-Powered Agricultural Drone"
+      alt: "Solar-Powered Agricultural Drone",
     },
     {
       image: slide3,
-      alt: "3D Printed Prosthetic Technology"
+      alt: "3D Printed Prosthetic Technology",
     },
     {
       image: slide4,
-      alt: "Smart Water Purification System"
-    }
+      alt: "Smart Water Purification System",
+    },
   ];
 
   const researchHighlights = [
-    { 
-      title: "AI-Powered Agriculture", 
-      description: "Developing autonomous drones for precision farming in Sub-Saharan Africa",
+    {
+      title: "AI-Powered Agriculture",
+      description:
+        "Developing autonomous drones for precision farming in Sub-Saharan Africa",
       icon: <Cpu className="h-8 w-8" />,
       gradient: "from-emerald-500 to-cyan-500",
-      features: ["Autonomous Navigation", "Soil Analysis AI", "Yield Optimization"],
-      stats: "15+ Deployments"
+      features: [
+        "Autonomous Navigation",
+        "Soil Analysis AI",
+        "Yield Optimization",
+      ],
+      stats: "15+ Deployments",
     },
-    { 
-      title: "Solar Robotics", 
-      description: "Sustainable robotic systems powered entirely by renewable energy",
+    {
+      title: "Solar Robotics",
+      description:
+        "Sustainable robotic systems powered entirely by renewable energy",
       icon: <Zap className="h-8 w-8" />,
       gradient: "from-amber-500 to-orange-500",
       features: ["24/7 Solar Power", "Energy Storage", "Low Maintenance"],
-      stats: "100% Renewable"
+      stats: "100% Renewable",
     },
-    { 
-      title: "Assistive Technology", 
-      description: "Custom prosthetic limbs and mobility aids using 3D printing",
+    {
+      title: "Assistive Technology",
+      description:
+        "Custom prosthetic limbs and mobility aids using 3D printing",
       icon: <Users className="h-8 w-8" />,
       gradient: "from-violet-500 to-purple-500",
       features: ["3D Scanning", "Custom Design", "Rapid Production"],
-      stats: "500+ Lives Impacted"
+      stats: "500+ Lives Impacted",
     },
-    { 
-      title: "Global Impact", 
+    {
+      title: "Global Impact",
       description: "Collaborating with 15+ African nations on tech solutions",
       icon: <Globe className="h-8 w-8" />,
       gradient: "from-blue-500 to-indigo-500",
-      features: ["International Research", "Local Partnerships", "Scale Solutions"],
-      stats: "15+ Countries"
+      features: [
+        "International Research",
+        "Local Partnerships",
+        "Scale Solutions",
+      ],
+      stats: "15+ Countries",
     },
   ];
 
@@ -95,8 +106,18 @@ const Home = () => {
       <div className="absolute inset-0 opacity-[0.08]">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="url(#grid-glow)" strokeWidth="1.5" />
+            <pattern
+              id="grid"
+              width="60"
+              height="60"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 60 0 L 0 0 0 60"
+                fill="none"
+                stroke="url(#grid-glow)"
+                strokeWidth="1.5"
+              />
               <circle cx="30" cy="30" r="2" fill="url(#node-glow)" />
             </pattern>
             <linearGradient id="grid-glow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -119,19 +140,19 @@ const Home = () => {
           key={`node-${i}`}
           className="absolute"
           style={{
-            left: `${20 + (i * 10)}%`,
-            top: `${15 + (i * 7)}%`,
+            left: `${20 + i * 10}%`,
+            top: `${15 + i * 7}%`,
           }}
           animate={{
             y: [0, -20, 0],
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.7, 0.3]
+            opacity: [0.3, 0.7, 0.3],
           }}
           transition={{
             duration: 4 + i,
             repeat: Infinity,
             delay: i * 0.5,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
         >
           <div className="w-3 h-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/30" />
@@ -144,12 +165,12 @@ const Home = () => {
         animate={{
           x: [0, 30, 0, -20, 0],
           y: [0, -30, 0, 20, 0],
-          rotate: [0, 180, 360]
+          rotate: [0, 180, 360],
         }}
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: "linear"
+          ease: "linear",
         }}
       >
         <div className="relative">
@@ -163,12 +184,12 @@ const Home = () => {
         animate={{
           x: [0, -40, 0],
           y: [0, 40, 0],
-          rotate: [0, 360]
+          rotate: [0, 360],
         }}
         transition={{
           duration: 25,
           repeat: Infinity,
-          ease: "linear"
+          ease: "linear",
         }}
       >
         <div className="relative">
@@ -179,7 +200,10 @@ const Home = () => {
       </motion.div>
 
       {/* Dynamic Connection Lines */}
-      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        className="absolute inset-0 w-full h-full"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <motion.path
           d="M10,100 Q250,50 490,200"
           stroke="url(#line-gradient)"
@@ -192,7 +216,7 @@ const Home = () => {
           transition={{
             duration: 10,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
         />
         <motion.path
@@ -207,7 +231,7 @@ const Home = () => {
           transition={{
             duration: 8,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
         />
         <defs>
@@ -216,7 +240,13 @@ const Home = () => {
             <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.5" />
             <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="line-gradient-2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient
+            id="line-gradient-2"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
             <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0" />
             <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.5" />
             <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
@@ -232,12 +262,14 @@ const Home = () => {
       <section className="relative min-h-screen flex items-center bg-gradient-to-br from-gray-950 via-gray-900 to-blue-950 text-white overflow-hidden">
         <RoboticBackground />
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-blue-900/50"></div>
-        
-        <motion.div 
+
+        <motion.div
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24"
           style={{
-            transform: `perspective(1000px) rotateY(${mousePosition.x * 2}deg) rotateX(${mousePosition.y * -2}deg)`,
-            transition: 'transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)'
+            transform: `perspective(1000px) rotateY(${
+              mousePosition.x * 2
+            }deg) rotateX(${mousePosition.y * -2}deg)`,
+            transition: "transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)",
           }}
         >
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -246,7 +278,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {/* Clean Logo Display - Blended seamlessly */}
+              {/* Clean Logo Display - Larger Size */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -256,32 +288,33 @@ const Home = () => {
                 <div className="relative inline-block">
                   {/* Subtle glow effect */}
                   <motion.div
-                    className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
+                    className="absolute -inset-6 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
                     animate={{
                       opacity: [0.3, 0.6, 0.3],
-                      scale: [1, 1.05, 1]
+                      scale: [1, 1.05, 1],
                     }}
                     transition={{
                       duration: 3,
                       repeat: Infinity,
-                      ease: "easeInOut"
+                      ease: "easeInOut",
                     }}
                   />
-                  
-                  {/* Logo container with transparent background */}
+
+                  {/* Logo container with transparent background - Larger */}
                   <motion.div
-                    className="relative p-6 bg-transparent backdrop-blur-xl"
+                    className="relative p-8 bg-transparent backdrop-blur-xl"
                     whileHover={{ scale: 1.02, y: -2 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <img 
-                      src={logo} 
-                      alt="Research & Innovation Logo" 
-                      className="h-16 w-auto object-contain drop-shadow-lg"
+                    <img
+                      src={logo}
+                      alt="Research & Innovation Logo"
+                      className="h-24 w-auto object-contain drop-shadow-2xl filter brightness-0 invert"
                       onError={(e) => {
                         console.error("Error loading logo");
                         e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/300x80/1e3a8a/ffffff?text=Research+%26+Innovation";
+                        e.target.src =
+                          "https://via.placeholder.com/400x120/1e3a8a/ffffff?text=Research+%26+Innovation";
                       }}
                     />
                   </motion.div>
@@ -293,17 +326,17 @@ const Home = () => {
                   Robotics, AI &
                 </span>
                 <br />
-                <motion.span 
+                <motion.span
                   className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                  animate={{ 
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
-                  transition={{ 
-                    duration: 5, 
+                  transition={{
+                    duration: 5,
                     repeat: Infinity,
-                    ease: "linear"
+                    ease: "linear",
                   }}
-                  style={{ backgroundSize: '200% 200%' }}
+                  style={{ backgroundSize: "200% 200%" }}
                 >
                   Emerging Tech
                 </motion.span>
@@ -312,26 +345,28 @@ const Home = () => {
                   for Africa
                 </span>
               </h1>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-xl mb-10 text-gray-300 leading-relaxed max-w-2xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
               >
-                Pioneering research-driven solutions to address Africa's most pressing challenges through cutting-edge technology and innovation.
+                Pioneering research-driven solutions to address Africa's most
+                pressing challenges through cutting-edge technology and
+                innovation.
               </motion.p>
-              
+
               <div className="flex flex-wrap gap-4">
-                <motion.div 
-                  whileHover={{ scale: 1.05, y: -2 }} 
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.8 }}
                 >
-                  <Link 
-                    to="/research" 
+                  <Link
+                    to="/research"
                     className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
                   >
                     <span className="relative z-10">Explore Solutions</span>
@@ -339,16 +374,16 @@ const Home = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300" />
                   </Link>
                 </motion.div>
-                
-                <motion.div 
-                  whileHover={{ scale: 1.05, y: -2 }} 
+
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.9 }}
                 >
-                  <Link 
-                    to="/contact" 
+                  <Link
+                    to="/contact"
                     className="group relative inline-flex items-center gap-3 bg-transparent border-2 border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm hover:bg-white/5"
                   >
                     <span>Partner With Us</span>
@@ -357,9 +392,9 @@ const Home = () => {
                 </motion.div>
               </div>
             </motion.div>
-            
+
             {/* Animated Image Slides Carousel */}
-            <motion.div 
+            <motion.div
               className="relative"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -367,7 +402,7 @@ const Home = () => {
             >
               <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl overflow-hidden">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-cyan-500 to-purple-500 rounded-2xl opacity-20 blur" />
-                
+
                 {/* Carousel Container */}
                 <div className="relative">
                   {/* Carousel Controls */}
@@ -380,7 +415,11 @@ const Home = () => {
                           className="relative group"
                         >
                           <motion.div
-                            className={`w-2 h-2 rounded-full ${index === currentBreakthrough ? 'bg-cyan-400' : 'bg-white/50'}`}
+                            className={`w-2 h-2 rounded-full ${
+                              index === currentBreakthrough
+                                ? "bg-cyan-400"
+                                : "bg-white/50"
+                            }`}
                             whileHover={{ scale: 1.5 }}
                           />
                           {index === currentBreakthrough && (
@@ -395,7 +434,7 @@ const Home = () => {
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Carousel Images */}
                   <div className="relative h-96 rounded-xl overflow-hidden">
                     {breakthroughs.map((breakthrough, index) => (
@@ -406,10 +445,16 @@ const Home = () => {
                         animate={{
                           opacity: currentBreakthrough === index ? 1 : 0,
                           scale: currentBreakthrough === index ? 1 : 1.1,
-                          filter: currentBreakthrough === index ? 'brightness(1)' : 'brightness(0.7)'
+                          filter:
+                            currentBreakthrough === index
+                              ? "brightness(1)"
+                              : "brightness(0.7)",
                         }}
                         transition={{ duration: 0.8, ease: "easeInOut" }}
-                        style={{ pointerEvents: currentBreakthrough === index ? 'auto' : 'none' }}
+                        style={{
+                          pointerEvents:
+                            currentBreakthrough === index ? "auto" : "none",
+                        }}
                       >
                         <div className="relative h-full w-full">
                           {/* Image */}
@@ -418,36 +463,46 @@ const Home = () => {
                             alt={breakthrough.alt}
                             className="absolute inset-0 w-full h-full object-cover"
                             onError={(e) => {
-                              console.error(`Error loading image: ${breakthrough.image}`);
+                              console.error(
+                                `Error loading image: ${breakthrough.image}`
+                              );
                               e.target.onerror = null;
-                              e.target.src = `https://via.placeholder.com/600x400/1e3a8a/0ea5e9?text=${encodeURIComponent(breakthrough.alt)}`;
+                              e.target.src = `https://via.placeholder.com/600x400/1e3a8a/0ea5e9?text=${encodeURIComponent(
+                                breakthrough.alt
+                              )}`;
                             }}
                           />
-                          
+
                           {/* Gradient Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                          
+
                           {/* Image Info Overlay */}
                           <div className="absolute bottom-0 left-0 right-0 p-6">
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
-                              animate={{ 
+                              animate={{
                                 opacity: currentBreakthrough === index ? 1 : 0,
-                                y: currentBreakthrough === index ? 0 : 20
+                                y: currentBreakthrough === index ? 0 : 20,
                               }}
                               transition={{ delay: 0.3 }}
                               className="text-white"
                             >
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-400 to-emerald-500" />
-                                <span className="text-sm font-medium text-cyan-300">Latest Breakthrough</span>
+                                <span className="text-sm font-medium text-cyan-300">
+                                  Latest Breakthrough
+                                </span>
                               </div>
-                              <h3 className="text-xl font-bold mb-2">Innovation in Action</h3>
+                              <h3 className="text-xl font-bold mb-2">
+                                Innovation in Action
+                              </h3>
                               <p className="text-sm text-gray-300 mb-4">
-                                Our team successfully deployed AI-assisted irrigation robots in Kenya, increasing crop yields by 40% while reducing water usage by 60%.
+                                Our team successfully deployed AI-assisted
+                                irrigation robots in Kenya, increasing crop
+                                yields by 40% while reducing water usage by 60%.
                               </p>
-                              <Link 
-                                to="/news" 
+                              <Link
+                                to="/news"
                                 className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 hover:text-cyan-300 group"
                               >
                                 <span>Read Case Study</span>
@@ -459,17 +514,27 @@ const Home = () => {
                       </motion.div>
                     ))}
                   </div>
-                  
+
                   {/* Navigation Arrows */}
                   <div className="absolute bottom-4 right-4 flex gap-2 z-20">
                     <button
-                      onClick={() => setCurrentBreakthrough((prev) => (prev - 1 + breakthroughs.length) % breakthroughs.length)}
+                      onClick={() =>
+                        setCurrentBreakthrough(
+                          (prev) =>
+                            (prev - 1 + breakthroughs.length) %
+                            breakthroughs.length
+                        )
+                      }
                       className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
                     >
                       <ChevronRight className="h-4 w-4 rotate-180" />
                     </button>
                     <button
-                      onClick={() => setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length)}
+                      onClick={() =>
+                        setCurrentBreakthrough(
+                          (prev) => (prev + 1) % breakthroughs.length
+                        )
+                      }
                       className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -486,63 +551,67 @@ const Home = () => {
       <section className="relative py-16 bg-white overflow-hidden">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #3b82f6 1px, transparent 1px)`,
-            backgroundSize: '30px 30px'
-          }}></div>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, #3b82f6 1px, transparent 1px)`,
+              backgroundSize: "30px 30px",
+            }}
+          ></div>
         </div>
-        
+
         {/* Subtle Floating Elements */}
         <div className="absolute top-10 left-5 w-20 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-full blur-2xl opacity-30"></div>
         <div className="absolute bottom-10 right-5 w-24 h-24 bg-gradient-to-br from-emerald-50 to-blue-50 rounded-full blur-2xl opacity-20"></div>
-        
+
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Compact Section Header */}
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            {/* Compact Logo */}
+            {/* Compact Logo - Larger Size */}
             <motion.div
-              className="flex flex-col items-center justify-center mb-8"
+              className="flex flex-col items-center justify-center mb-10"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1, duration: 0.5 }}
             >
-              {/* Logo with Subtle Glow */}
-              <div className="relative mb-6">
+              {/* Logo with Subtle Glow - Larger */}
+              <div className="relative mb-8">
                 <motion.div
-                  className="absolute -inset-4 bg-gradient-to-r from-blue-400/5 via-cyan-400/5 to-blue-400/5 rounded-full blur-xl"
+                  className="absolute -inset-6 bg-gradient-to-r from-blue-400/5 via-cyan-400/5 to-blue-400/5 rounded-full blur-xl"
                   animate={{
                     opacity: [0.1, 0.2, 0.1],
                   }}
                   transition={{
                     duration: 3,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
                 />
-                
-                {/* Clean Logo */}
-                <img 
-                  src={logo} 
-                  alt="Research & Innovation" 
-                  className="relative h-16 w-auto object-contain"
+
+                {/* Clean Logo - Larger */}
+                <img
+                  src={logo}
+                  alt="Research & Innovation"
+                  className="relative h-20 w-auto object-contain"
                   onError={(e) => {
                     console.error("Error loading logo in Research section");
                     e.target.onerror = null;
-                    e.target.src = "https://via.placeholder.com/300x80/ffffff/1e3a8a?text=R+I";
+                    e.target.src =
+                      "https://via.placeholder.com/400x120/ffffff/1e3a8a?text=Research+%26+Innovation";
                   }}
                 />
               </div>
             </motion.div>
-            
+
             {/* Compact Heading */}
-            <motion.h2 
+            <motion.h2
               className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight text-gray-800"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -552,26 +621,29 @@ const Home = () => {
               <span className="text-gray-700">Advancing </span>
               <span className="text-blue-600">Technology</span>
               <span className="text-gray-700"> Through </span>
-              <span className="text-gray-800 font-bold">Research Excellence</span>
+              <span className="text-gray-800 font-bold">
+                Research Excellence
+              </span>
             </motion.h2>
-            
+
             {/* Compact Subtitle */}
-            <motion.p 
+            <motion.p
               className="text-sm text-gray-600 max-w-xl mx-auto leading-relaxed"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              Combining theoretical excellence with practical application to deliver innovative solutions for Africa's challenges.
+              Combining theoretical excellence with practical application to
+              deliver innovative solutions for Africa's challenges.
             </motion.p>
           </motion.div>
-          
+
           {/* Compact Research Highlights Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {researchHighlights.map((item, index) => (
-              <motion.div 
-                key={index} 
+              <motion.div
+                key={index}
                 className="group relative"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -581,26 +653,26 @@ const Home = () => {
                 {/* Compact Card */}
                 <div className="relative h-full bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                   {/* Compact Icon */}
-                  <div className={`mb-4 p-3 rounded-lg bg-gradient-to-br ${item.gradient} w-fit`}>
-                    <div className="text-white">
-                      {item.icon}
-                    </div>
+                  <div
+                    className={`mb-4 p-3 rounded-lg bg-gradient-to-br ${item.gradient} w-fit`}
+                  >
+                    <div className="text-white">{item.icon}</div>
                   </div>
-                  
+
                   {/* Compact Title */}
                   <h3 className="text-base font-semibold text-gray-800 mb-2">
                     {item.title}
                   </h3>
-                  
+
                   {/* Compact Description */}
                   <p className="text-xs text-gray-600 mb-4 leading-relaxed">
                     {item.description}
                   </p>
-                  
+
                   {/* Compact Features */}
                   <div className="space-y-2 mb-4">
                     {item.features.map((feature, featureIndex) => (
-                      <div 
+                      <div
                         key={featureIndex}
                         className="flex items-center gap-2 text-xs"
                       >
@@ -609,7 +681,7 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* Compact Stats & CTA */}
                   <div className="mt-4 pt-4 border-t border-gray-100">
                     <div className="flex items-center justify-between">
@@ -623,16 +695,16 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Hover Indicator */}
                   <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </motion.div>
             ))}
           </div>
-          
+
           {/* Compact Call to Action */}
-          <motion.div 
+          <motion.div
             className="mt-12 text-center"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

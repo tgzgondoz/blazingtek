@@ -255,23 +255,9 @@ const Home = () => {
                 className="mb-12"
               >
                 <div className="relative inline-block">
-                  {/* Subtle glow effect */}
-                  <motion.div
-                    className="absolute -inset-6 bg-gray-800 rounded-full"
-                    animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                      scale: [1, 1.05, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-
                   {/* Logo container with transparent background - Larger */}
                   <motion.div
-                    className="relative p-8 bg-transparent backdrop-blur-xl"
+                    className="relative p-8 bg-transparent"
                     whileHover={{ scale: 1.02, y: -2 }}
                     transition={{ duration: 0.3 }}
                   >
@@ -291,17 +277,11 @@ const Home = () => {
               </motion.div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
-                <span className="text-white">
-                  Robotics, AI &
-                </span>
+                <span className="text-white">Robotics, AI &</span>
                 <br />
-                <span className="text-white font-bold">
-                  Emerging Tech
-                </span>
+                <span className="text-white font-bold">Emerging Tech</span>
                 <br />
-                <span className="text-white">
-                  for Africa
-                </span>
+                <span className="text-white">for Africa</span>
               </h1>
 
               <motion.p
@@ -531,31 +511,31 @@ const Home = () => {
             transition={{ duration: 0.6 }}
           >
             {/* Compact Logo - Larger Size */}
-<motion.div
-  className="flex flex-col items-center justify-center mb-12"
-  initial={{ opacity: 0, scale: 0.95 }}
-  whileInView={{ opacity: 1, scale: 1 }}
-  viewport={{ once: true }}
-  transition={{ delay: 0.1, duration: 0.5 }}
->
-  {/* Clean Logo - Larger with Black Color */}
-  <div className="relative">
-    {/* Optional shadow/glow effect for black logo */}
-    <div className="absolute inset-0 bg-black/10 blur-md rounded-full scale-110"></div>
-    
-    <img
-      src={logo}
-      alt="Research & Innovation"
-      className="relative h-28 w-auto object-contain filter brightness-0"
-      onError={(e) => {
-        console.error("Error loading logo in Research section");
-        e.target.onerror = null;
-        e.target.src =
-          "https://via.placeholder.com/400x120/000000/ffffff?text=Research+%26+Innovation";
-      }}
-    />
-  </div>
-</motion.div>
+            <motion.div
+              className="flex flex-col items-center justify-center mb-12"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+            >
+              {/* Clean Logo - Larger with Black Color */}
+              <div className="relative">
+                {/* Optional shadow/glow effect for black logo */}
+                <div className="absolute inset-0 bg-black/10 blur-md rounded-full scale-110"></div>
+
+                <img
+                  src={logo}
+                  alt="Research & Innovation"
+                  className="relative h-28 w-auto object-contain filter brightness-0"
+                  onError={(e) => {
+                    console.error("Error loading logo in Research section");
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/400x120/000000/ffffff?text=Research+%26+Innovation";
+                  }}
+                />
+              </div>
+            </motion.div>
 
             {/* Compact Heading */}
             <motion.h2

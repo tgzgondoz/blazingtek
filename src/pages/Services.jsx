@@ -2,16 +2,15 @@
 import { 
   Package, 
   GraduationCap, 
-  Wrench, 
-  Cpu, 
-  Cloud, 
-  Shield,
-  CheckCircle,
-  Clock,
-  ArrowRight
+  Wrench
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
+// Import images
+import RoboticsImage from '../assets/Robotics.jpg';
+import WorkshopsImage from '../assets/Workshops.jpg';
+import SolutionsImage from '../assets/Solutions.webp';
 
 const Services = () => {
   const services = [
@@ -22,7 +21,8 @@ const Services = () => {
       features: ["Modular design", "Open-source software", "Curriculum materials", "Cloud integration"],
       gradient: "from-blue-500 to-cyan-500",
       applications: ["Education", "Research", "Prototyping"],
-      delivery: "2-4 weeks"
+      delivery: "2-4 weeks",
+      image: RoboticsImage
     },
     {
       icon: <GraduationCap className="h-12 w-12" />,
@@ -31,7 +31,8 @@ const Services = () => {
       features: ["Corporate training", "Academic workshops", "Hands-on labs", "Certification"],
       gradient: "from-purple-500 to-pink-500",
       applications: ["Skill Development", "Team Upskilling", "Technical Certification"],
-      delivery: "Flexible scheduling"
+      delivery: "Flexible scheduling",
+      image: WorkshopsImage
     },
     {
       icon: <Wrench className="h-12 w-12" />,
@@ -40,34 +41,8 @@ const Services = () => {
       features: ["Requirement analysis", "Prototype development", "Deployment support", "Maintenance"],
       gradient: "from-emerald-500 to-green-500",
       applications: ["Industry Automation", "Research Projects", "Specialized Applications"],
-      delivery: "8-12 weeks"
-    },
-    {
-      icon: <Cpu className="h-12 w-12" />,
-      title: "Robot Rentals",
-      description: "Short-term access to advanced robotic platforms for research",
-      features: ["Flexible terms", "Technical support", "Maintenance included", "Training"],
-      gradient: "from-amber-500 to-orange-500",
-      applications: ["Research Trials", "Event Demos", "Testing & Validation"],
-      delivery: "Immediate availability"
-    },
-    {
-      icon: <Cloud className="h-12 w-12" />,
-      title: "Software Platform",
-      description: "Cloud-based robotics simulation and development environment",
-      features: ["Real-time simulation", "Collaboration tools", "API access", "Analytics"],
-      gradient: "from-indigo-500 to-blue-500",
-      applications: ["Virtual Testing", "Team Collaboration", "Data Analysis"],
-      delivery: "Instant access"
-    },
-    {
-      icon: <Shield className="h-12 w-12" />,
-      title: "Maintenance & Support",
-      description: "Comprehensive support packages for deployed systems",
-      features: ["24/7 monitoring", "Preventive maintenance", "Remote diagnostics", "Updates"],
-      gradient: "from-rose-500 to-red-500",
-      applications: ["System Reliability", "Performance Optimization", "Risk Management"],
-      delivery: "Ongoing"
+      delivery: "8-12 weeks",
+      image: SolutionsImage
     }
   ];
 
@@ -93,36 +68,13 @@ const Services = () => {
           >
             Comprehensive robotics solutions tailored to meet your specific needs
           </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-wrap justify-center gap-4"
-          >
-            
-          </motion.div>
         </motion.div>
       </section>
 
       {/* Services Grid */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Our Service Offerings
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              End-to-end solutions for education, research, and industry
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <motion.div
                 key={index}
@@ -135,6 +87,15 @@ const Services = () => {
               >
                 <div className={`absolute -inset-0.5 bg-gradient-to-r ${service.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
                 <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                  {/* Image Section */}
+                  <div className="h-48 overflow-hidden">
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  
                   <div className="p-8">
                     <div className={`inline-flex p-4 rounded-xl bg-gradient-to-r ${service.gradient} mb-6`}>
                       <div className="text-white">
@@ -146,45 +107,7 @@ const Services = () => {
                       {service.title}
                     </h3>
                     
-                    <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
-                    
-                    <div className="mb-6">
-                      <div className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        Key Features
-                      </div>
-                      <ul className="space-y-2">
-                        {service.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-center text-sm text-gray-600">
-                            <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 mr-3"></div>
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">Applications</div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {service.applications.join(", ")}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">Delivery</div>
-                        <div className="text-sm font-medium text-gray-900 flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {service.delivery}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
-                    <button className="group w-full flex items-center justify-between text-blue-600 hover:text-blue-700 font-semibold">
-                      <span>Request Service Details</span>
-                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    <p className="text-gray-600 leading-relaxed">{service.description}</p>
                   </div>
                 </div>
               </motion.div>

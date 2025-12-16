@@ -22,13 +22,10 @@ const Abouts = () => {
           transition={{ duration: 0.6 }}
           className="relative max-w-6xl mx-auto px-4 text-center"
         >
-          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm">
-            <Building className="h-4 w-4 text-blue-300" />
-            <span className="text-xs font-medium text-blue-200">ABOUT US</span>
-          </div>
+        
           
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
-            BlazingTek
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+            About BlazingTek
           </h1>
           
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">

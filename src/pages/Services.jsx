@@ -45,17 +45,6 @@ const Services = () => {
           <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
             Professional robotics solutions tailored for your needs
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            {otherPages.map((page) => (
-              <Link
-                key={page.path}
-                to={page.path}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm"
-              >
-                {page.name}
-              </Link>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -1,133 +1,99 @@
-// About.jsx
 import { motion } from 'framer-motion';
-import { Users, Linkedin, Mail } from 'lucide-react';
+import { Users, Linkedin, Mail, Building } from 'lucide-react';
 
 const Abouts = () => {
   const leaders = [
-    {
-      name: "Dr. Amina Diallo",
-      role: "AI Research Lead",
-      description: "Expert in machine learning and computer vision",
-      imageColor: "bg-gradient-to-br from-blue-500 to-cyan-500",
-      linkedin: "#",
-      email: "amina@blazingtek.com"
-    },
-    {
-      name: "Kwame Osei",
-      role: "Robotics Director",
-      description: "Specialized in autonomous systems and IoT",
-      imageColor: "bg-gradient-to-br from-purple-500 to-pink-500",
-      linkedin: "#",
-      email: "kwame@blazingtek.com"
-    },
-    {
-      name: "Fatima Bello",
-      role: "Sustainability Lead",
-      description: "Focused on renewable energy and green tech",
-      imageColor: "bg-gradient-to-br from-emerald-500 to-green-500",
-      linkedin: "#",
-      email: "fatima@blazingtek.com"
-    },
-    {
-      name: "David Chen",
-      role: "Hardware Specialist",
-      description: "Expert in embedded systems and 3D printing",
-      imageColor: "bg-gradient-to-br from-amber-500 to-orange-500",
-      linkedin: "#",
-      email: "david@blazingtek.com"
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Operations Director",
-      description: "Project management and strategic planning",
-      linkedin: "#",
-      email: "sarah@blazingtek.com"
-    }
+    { name: "Andrew Chigona", role: "CEO", email: "andrew@blazingtek.com" },
+    { name: "Garry Payera", role: "Brand Ambassador", email: "garry@blazingtek.com" },
+    { name: "Frank Farakezi", role: "Events Coordinator", email: "frank@blazingtek.com" },
+    { name: "Takudzwa Masomera", role: "Project Lead", email: "takudzwa@blazingtek.com" },
+    { name: "Claudius Saranavo", role: "Creative Director", email: "claudius@blazingtek.com" },
+    { name: "Tatenda Gondo", role: "IT Specialist", email: "tatenda@blazingtek.com" }
   ];
 
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white py-16 md:py-20">
+      <section className="relative bg-gray-900 text-white py-16 md:py-20">
+        <div className="absolute inset-0 bg-black/20"></div>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          className="relative max-w-6xl mx-auto px-4 text-center"
         >
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-snug">
-            About BlazingTek
+          <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm">
+            <Building className="h-4 w-4 text-blue-300" />
+            <span className="text-xs font-medium text-blue-200">ABOUT US</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+            BlazingTek
           </h1>
-          <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            Pioneering African innovation through research and development.
+          
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            We're pioneering African innovation through cutting-edge technology research 
+            and development that matters to real people.
           </p>
         </motion.div>
       </section>
 
-      {/* Leadership Team Section */}
-      <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 mb-4">
-              <Users className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Leadership Team</span>
+      {/* Team Section */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gray-50 border border-gray-200">
+              <Users className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-semibold text-blue-600">Meet Our Leadership</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Meet Our Leaders
-            </h2>
-            <p className="text-gray-600 max-w-xl mx-auto">
-              The brilliant minds driving innovation across Africa
+            <p className="text-gray-600 max-w-xl mx-auto mb-8">
+              The dedicated team driving innovation and making technology accessible across Africa
             </p>
-          </motion.div>
+          </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {leaders.map((leader, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 text-center h-full">
-                  {/* Circle Face/Avatar */}
-                  <div className="relative mb-6">
-                    <div className={`w-24 h-24 rounded-full mx-auto ${leader.imageColor || "bg-gray-100"} flex items-center justify-center ${leader.imageColor ? "text-white" : "text-gray-700"} text-2xl font-bold`}>
+                <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center">
+                  {/* Avatar */}
+                  <div className="relative mb-4">
+                    <div className="w-16 h-16 rounded-full mx-auto bg-gray-100 flex items-center justify-center text-gray-700 text-lg font-bold group-hover:bg-gray-200 transition-all">
                       {leader.name.split(' ').map(n => n[0]).join('')}
                     </div>
-                    {/* Online Status Indicator */}
-                    <div className="absolute bottom-4 right-1/4 transform translate-x-1/2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
                   </div>
                   
-                  {/* Leader Info */}
-                  <h3 className="text-base font-bold text-gray-900 mb-1">{leader.name}</h3>
-                  <p className="text-blue-600 font-medium text-sm mb-2">{leader.role}</p>
-                  <p className="text-gray-600 text-xs mb-4">{leader.description}</p>
+                  {/* Info */}
+                  <h3 className="text-sm font-bold text-gray-900 mb-1 truncate group-hover:text-blue-600 transition-colors">
+                    {leader.name}
+                  </h3>
+                  <p className="text-gray-700 font-medium text-xs mb-3 px-2 py-1 bg-gray-50 rounded-full inline-block">
+                    {leader.role}
+                  </p>
                   
-                  {/* Social Links */}
+                  {/* Contact Links */}
                   <div className="flex justify-center gap-3">
                     <a 
-                      href={leader.linkedin} 
-                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
-                      aria-label={`Connect with ${leader.name} on LinkedIn`}
+                      href="#"
+                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-600 text-gray-600 hover:text-white transition-all duration-300"
+                      aria-label={`Connect with ${leader.name}`}
                     >
-                      <Linkedin className="h-4 w-4" />
+                      <Linkedin className="h-3.5 w-3.5" />
                     </a>
                     <a 
                       href={`mailto:${leader.email}`}
-                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors"
+                      className="p-1.5 rounded-full bg-gray-100 hover:bg-blue-600 text-gray-600 hover:text-white transition-all duration-300"
                       aria-label={`Email ${leader.name}`}
                     >
-                      <Mail className="h-4 w-4" />
+                      <Mail className="h-3.5 w-3.5" />
                     </a>
                   </div>
                 </div>

@@ -168,33 +168,94 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {/* Enhanced Logo */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="mb-8"
-              >
-                <div className="relative inline-block">
-                  <motion.div
-                    className="relative p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 shadow-2xl"
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <img
-                      src={logo}
-                      alt="Research & Innovation Logo"
-                      className="h-20 w-auto object-contain"
-                      onError={(e) => {
-                        console.error("Error loading logo");
-                        e.target.onerror = null;
-                        e.target.src =
-                          "https://via.placeholder.com/400x120/1e3a8a/ffffff?text=Research+%26+Innovation";
-                      }}
-                    />
-                  </motion.div>
-                </div>
-              </motion.div>
+   {/* Enhanced Logo - Pro Design */}
+<motion.div
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+  className="mb-10"
+>
+  <div className="relative inline-block">
+    <motion.div
+      className="relative p-3 bg-gradient-to-br from-gray-900/90 to-gray-900/70 backdrop-blur-xl shadow-2xl"
+      whileHover={{ 
+        scale: 1.03, 
+        y: -2,
+        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)"
+      }}
+      transition={{ 
+        duration: 0.3,
+        ease: "easeInOut"
+      }}
+      style={{
+        borderRadius: '12px',
+        boxShadow: `
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 1px 0 rgba(255, 255, 255, 0.05) inset,
+          0 -1px 0 rgba(0, 0, 0, 0.2) inset
+        `
+      }}
+    >
+      {/* Inner glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none rounded-lg" />
+      
+      {/* Logo container */}
+      <div className="relative p-4">
+        <img
+          src={logo}
+          alt="Research & Innovation Logo"
+          className="h-16 w-auto object-contain filter drop-shadow-lg"
+          onError={(e) => {
+            console.error("Error loading logo");
+            e.target.onerror = null;
+            e.target.src =
+              "https://via.placeholder.com/400x120/1e3a8a/ffffff?text=Research+%26+Innovation";
+          }}
+        />
+        
+        {/* Subtle bottom accent */}
+        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+      </div>
+      
+      {/* Floating particles effect on hover */}
+      <motion.div
+        className="absolute inset-0 overflow-hidden pointer-events-none rounded-lg"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
+            initial={{
+              x: Math.random() * 100 - 50 + "%",
+              y: Math.random() * 100 - 50 + "%",
+            }}
+            animate={{
+              x: [null, Math.random() * 100 - 50 + "%"],
+              y: [null, Math.random() * 100 - 50 + "%"],
+              opacity: [0, 0.8, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              delay: i * 0.3,
+            }}
+          />
+        ))}
+      </motion.div>
+    </motion.div>
+    
+    {/* Outer glow effect */}
+    <motion.div
+      className="absolute -inset-4 bg-gradient-to-r from-blue-600/10 to-emerald-600/10 blur-xl -z-10"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 0.6, duration: 0.8 }}
+    />
+  </div>
+</motion.div>
 
               {/* Enhanced Main Heading */}
               <motion.div

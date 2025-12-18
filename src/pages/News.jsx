@@ -20,16 +20,54 @@ import {
   Clock,
   ArrowRight,
   Eye,
-  Heart
+  Heart,
+  ChevronLeft,
+  ChevronRight as ChevronRightIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Import images from src/assets/
+import s1 from '../assets/s1.jpg';
+import s from '../assets/s.jpg';
+import slide1 from '../assets/slide1.jpg';
+import slide2 from '../assets/slide2.jpg';
+import slide3 from '../assets/slide3.jpg';
+import slide4 from '../assets/slide4.jpg';
 
 const News = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [savedArticles, setSavedArticles] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
   
+  // Slideshow images array using imported images
+  const slideshowImages = [
+    s1,
+    s,
+    slide1,
+    slide2,
+    slide3,
+    slide4
+  ];
+  
+  // Auto-rotate slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [slideshowImages.length]);
+  
+  // Navigation functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
+  };
+  
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
+  };
+
   const newsCategories = [
     { id: 'all', name: 'All News', count: 28, color: 'from-gray-500 to-gray-700' },
     { id: 'research', name: 'Research Breakthroughs', count: 12, color: 'from-blue-500 to-cyan-500' },
@@ -193,11 +231,66 @@ const News = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section */}
+      {/* Hero Section with Slideshow */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-24">
-        <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full blur-3xl"></div>
+        {/* Slideshow Background with reduced opacity */}
+        <div className="absolute inset-0 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 0.35, scale: 1 }} 
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${slideshowImages[currentSlide]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            />
+          </AnimatePresence>
+          {/* Lighter overlay for better readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/60 via-blue-900/50 to-purple-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          
+          {/* Subtle pattern overlay for texture */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)',
+            backgroundSize: '30px 30px'
+          }}></div>
+        </div>
+        
+        {/* Slideshow Navigation */}
+        <div className="absolute inset-0 flex items-center justify-between px-4">
+          <button
+            onClick={prevSlide}
+            className="z-10 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/25 hover:bg-white/25 transition-all duration-300 group shadow-lg"
+          >
+            <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="z-10 p-3 rounded-full bg-white/15 backdrop-blur-md border border-white/25 hover:bg-white/25 transition-all duration-300 group shadow-lg"
+          >
+            <ChevronRightIcon className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+          </button>
+        </div>
+        
+        {/* Slide Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex gap-2">
+          {slideshowImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentSlide === index 
+                  ? 'w-8 bg-gradient-to-r from-cyan-400 to-blue-500 shadow-lg' 
+                  : 'w-2 bg-white/60 hover:bg-white/80 shadow'
+              }`}
+            />
+          ))}
         </div>
         
         <motion.div 
@@ -208,37 +301,62 @@ const News = () => {
         >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/20 backdrop-blur-sm">
-                <Newspaper className="h-4 w-4 text-cyan-400" />
-                <span className="text-sm font-medium text-cyan-300">Latest Updates</span>
-              </div>
-              
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                  News &
-                </span>
-                <br />
-                <motion.span 
-                  className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  style={{ backgroundSize: '200% 200%' }}
+              {/* Latest Updates with enhanced animation */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/25 to-purple-500/25 border border-white/30 backdrop-blur-md shadow-lg"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
-                  Insights
-                </motion.span>
-              </h1>
+                  <Newspaper className="h-4 w-4 text-cyan-300" />
+                </motion.div>
+                <span className="text-sm font-medium text-cyan-200">Latest Updates</span>
+                <motion.div 
+                  className="w-2 h-2 bg-cyan-300 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                  animate={{ scale: [1, 1.5, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              </motion.div>
+              
+              {/* News & Insights with enhanced animation */}
+              <div className="mb-8">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                  <motion.span 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent block drop-shadow-lg"
+                  >
+                    News &
+                  </motion.span>
+                  <motion.span 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="relative"
+                  >
+                    <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 bg-clip-text text-transparent block drop-shadow-lg">
+                      Insights
+                    </span>
+                    <motion.div 
+                      className="absolute -bottom-2 left-0 h-1.5 bg-gradient-to-r from-cyan-300 to-purple-400 rounded-full shadow-lg"
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ delay: 0.8, duration: 1 }}
+                    />
+                  </motion.span>
+                </h1>
+              </div>
               
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl"
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="text-xl text-gray-200 leading-relaxed mb-10 max-w-2xl drop-shadow-md"
               >
                 Stay updated with our latest research breakthroughs, events, 
                 and thought leadership in emerging technologies.
@@ -246,20 +364,31 @@ const News = () => {
               
               <div className="flex flex-wrap gap-4">
                 <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <button className="group bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 flex items-center gap-3">
+                  <button className="group bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40 flex items-center gap-3 backdrop-blur-sm">
                     <span>Subscribe to Newsletter</span>
-                    <Send className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <motion.div
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Send className="h-5 w-5" />
+                    </motion.div>
                   </button>
                 </motion.div>
                 
                 <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 }}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <button className="group bg-transparent border-2 border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm hover:bg-white/5 flex items-center gap-3">
+                  <button className="group bg-transparent border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 backdrop-blur-md hover:bg-white/10 flex items-center gap-3 shadow-lg">
                     <Podcast className="h-5 w-5" />
                     <span>Listen to Podcast</span>
                   </button>
@@ -267,20 +396,21 @@ const News = () => {
               </div>
             </div>
             
+            {/* Featured Article Card with enhanced clarity */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
               className="relative"
             >
-              <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-white/10 shadow-2xl overflow-hidden">
-                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
+              <div className="relative bg-gradient-to-br from-gray-900/80 to-gray-900/40 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl overflow-hidden">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-gray-900 px-4 py-2 rounded-full font-bold text-sm shadow-lg">
                   Featured Story
                 </div>
                 
-                <div className={`h-48 bg-gradient-to-r ${featuredArticle.gradient} rounded-xl mb-6 relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                <div className={`h-48 bg-gradient-to-r ${featuredArticle.gradient} rounded-xl mb-6 relative overflow-hidden shadow-lg`}>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                  <div className="absolute top-4 left-4 bg-white/25 backdrop-blur-sm px-3 py-1 rounded-full shadow">
                     <span className="text-white text-sm font-medium">{featuredArticle.category}</span>
                   </div>
                 </div>
@@ -288,40 +418,40 @@ const News = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Clock className="h-4 w-4 text-gray-300" />
-                      <span className="text-sm text-gray-300">{featuredArticle.readTime}</span>
+                      <Clock className="h-4 w-4 text-gray-200" />
+                      <span className="text-sm text-gray-200">{featuredArticle.readTime}</span>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1">
-                        <Eye className="h-4 w-4 text-gray-300" />
-                        <span className="text-sm text-gray-300">{featuredArticle.views}</span>
+                        <Eye className="h-4 w-4 text-gray-200" />
+                        <span className="text-sm text-gray-200">{featuredArticle.views}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Heart className="h-4 w-4 text-rose-400" />
-                        <span className="text-sm text-gray-300">{featuredArticle.likes}</span>
+                        <Heart className="h-4 w-4 text-rose-300" />
+                        <span className="text-sm text-gray-200">{featuredArticle.likes}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-white line-clamp-2">
+                  <h3 className="text-2xl font-bold text-white line-clamp-2 drop-shadow">
                     {featuredArticle.title}
                   </h3>
                   
-                  <p className="text-gray-300 leading-relaxed line-clamp-2">
+                  <p className="text-gray-200 leading-relaxed line-clamp-2 drop-shadow-sm">
                     {featuredArticle.excerpt}
                   </p>
                   
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center justify-between pt-4 border-t border-white/20">
                     <div className="flex items-center">
-                      <User className="h-5 w-5 text-gray-300 mr-2" />
+                      <User className="h-5 w-5 text-gray-200 mr-2" />
                       <div>
-                        <div className="text-sm text-white">{featuredArticle.author}</div>
-                        <div className="text-xs text-gray-400">{featuredArticle.authorRole}</div>
+                        <div className="text-sm text-white font-medium">{featuredArticle.author}</div>
+                        <div className="text-xs text-gray-300">{featuredArticle.authorRole}</div>
                       </div>
                     </div>
                     <Link 
                       to="/news/featured" 
-                      className="group text-cyan-400 hover:text-cyan-300 font-semibold inline-flex items-center"
+                      className="group text-cyan-300 hover:text-cyan-200 font-semibold inline-flex items-center"
                     >
                       <span>Read Full Story</span>
                       <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -346,20 +476,20 @@ const News = () => {
             {newsCategories.map((category) => (
               <motion.button
                 key={category.id}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveCategory(category.id)}
-                className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+                className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 shadow-lg ${
                   activeCategory === category.id
-                    ? `bg-gradient-to-r ${category.color} text-white shadow-lg`
+                    ? `bg-gradient-to-r ${category.color} text-white shadow-xl`
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
                 }`}
               >
                 {category.name}
                 <span className={`px-2 py-0.5 rounded-full text-sm ${
                   activeCategory === category.id 
-                    ? 'bg-white/20' 
-                    : 'bg-white/80'
+                    ? 'bg-white/25' 
+                    : 'bg-white/90'
                 }`}>
                   {category.count}
                 </span>
@@ -386,13 +516,13 @@ const News = () => {
                     whileHover={{ y: -10 }}
                     className="group relative"
                   >
-                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${article.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                    <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${article.gradient} rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300`} />
+                    <div className="relative bg-white rounded-2xl shadow-xl group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
                       <div className="p-8">
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-2">
                             {getTypeIcon(article.type)}
-                            <span className="text-sm text-gray-500 font-medium">{article.type}</span>
+                            <span className="text-sm text-gray-600 font-medium">{article.type}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500">
                             <Clock className="h-4 w-4" />
@@ -400,7 +530,7 @@ const News = () => {
                           </div>
                         </div>
                         
-                        <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r ${article.gradient} text-white mb-4`}>
+                        <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r ${article.gradient} text-white mb-4 shadow`}>
                           {article.category}
                         </span>
                         
@@ -414,7 +544,7 @@ const News = () => {
                         
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"></div>
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-300 to-gray-400 shadow"></div>
                             <div>
                               <div className="text-sm font-medium text-gray-900">{article.author}</div>
                               <div className="text-xs text-gray-500">{article.date}</div>
@@ -430,7 +560,7 @@ const News = () => {
                           {article.tags.map((tag, idx) => (
                             <span 
                               key={idx}
-                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 shadow-sm hover:shadow transition-all"
                             >
                               <Tag className="h-3 w-3 mr-1.5" />
                               {tag}
@@ -442,18 +572,18 @@ const News = () => {
                           <div className="flex items-center space-x-3">
                             <button 
                               onClick={() => toggleSaveArticle(article.id)}
-                              className={`p-2 rounded-lg transition-colors ${
+                              className={`p-2 rounded-lg transition-all duration-300 ${
                                 savedArticles.includes(article.id)
-                                  ? 'text-amber-500 bg-amber-50'
-                                  : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50'
+                                  ? 'text-amber-500 bg-amber-50 shadow-inner'
+                                  : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50 shadow-sm'
                               }`}
                             >
                               <Bookmark className="h-5 w-5" />
                             </button>
-                            <button className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 shadow-sm">
                               <Share2 className="h-5 w-5" />
                             </button>
-                            <button className="p-2 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-colors">
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-300 shadow-sm">
                               <MessageCircle className="h-5 w-5" />
                             </button>
                           </div>
@@ -479,9 +609,9 @@ const News = () => {
                 className="mt-16 text-center"
               >
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg flex items-center gap-3 mx-auto"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center gap-3 mx-auto"
                 >
                   <span>Load More Articles</span>
                   <ChevronRight className="h-5 w-5" />
@@ -499,7 +629,7 @@ const News = () => {
                 className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
               >
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500">
+                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 shadow">
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
@@ -514,11 +644,11 @@ const News = () => {
                       transition={{ delay: index * 0.1 }}
                       className="group relative"
                     >
-                      <div className={`absolute -inset-0.5 bg-gradient-to-r ${event.gradient} rounded-xl blur opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                      <div className="relative p-5 rounded-xl border border-gray-200 hover:border-transparent transition-all duration-300">
+                      <div className={`absolute -inset-0.5 bg-gradient-to-r ${event.gradient} rounded-xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
+                      <div className="relative p-5 rounded-xl border border-gray-200 hover:border-transparent transition-all duration-300 bg-white shadow-sm hover:shadow-lg">
                         <div className="flex justify-between items-start mb-3">
                           <h4 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${event.gradient} text-white`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${event.gradient} text-white shadow`}>
                             {event.type}
                           </span>
                         </div>
@@ -555,7 +685,7 @@ const News = () => {
               >
                 <div className="bg-gradient-to-br from-gray-900 to-blue-950 rounded-2xl shadow-2xl p-8 text-white">
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 shadow">
                       <Award className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold">Featured In</h3>
@@ -568,10 +698,10 @@ const News = () => {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.05 }}
-                        whileHover={{ y: -3 }}
-                        className={`bg-gradient-to-br ${media.gradient} rounded-xl p-5 text-center hover:shadow-lg transition-all duration-300 cursor-pointer`}
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        className={`bg-gradient-to-br ${media.gradient} rounded-xl p-5 text-center hover:shadow-xl transition-all duration-300 cursor-pointer shadow-lg`}
                       >
-                        <div className="text-2xl font-bold mb-2">{media.logo}</div>
+                        <div className="text-2xl font-bold mb-2 drop-shadow">{media.logo}</div>
                         <div className="text-sm font-medium mb-1">{media.name}</div>
                         <div className="text-xs text-gray-300">{media.date}</div>
                       </motion.div>
@@ -589,7 +719,7 @@ const News = () => {
               >
                 <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 shadow">
                       <TrendingUp className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900">Stay Updated</h3>
@@ -601,13 +731,13 @@ const News = () => {
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                      className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-sm focus:shadow-md"
                     />
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.02, y: -1 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25"
+                      className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl shadow-blue-500/25"
                     >
                       Subscribe Now
                     </motion.button>
@@ -645,10 +775,10 @@ const News = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -10, scale: 1.02 }}
                 className="group relative"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
                 <div className="relative bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
                   <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                     {year}

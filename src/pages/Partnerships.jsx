@@ -17,135 +17,55 @@ import {
   MessageCircle,
   MapPin,
   CheckCircle,
-  Star
+  Star,
+  Mail,
+  Phone,
+  User,
+  Briefcase,
+  MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 const Partnerships = () => {
-  const partnerCategories = [
-    {
-      title: "Academic Institutions",
-      icon: <Building className="h-8 w-8" />,
-      description: "Universities and research centers collaborating on cutting-edge projects",
-      partners: [
-        { name: "University of Ghana", focus: "AI Research Lab", since: 2019, gradient: "from-blue-500 to-cyan-500" },
-        { name: "Makerere University", focus: "Robotics Engineering", since: 2020, gradient: "from-purple-500 to-pink-500" },
-        { name: "University of Nairobi", focus: "Sustainable Tech", since: 2021, gradient: "from-emerald-500 to-green-500" },
-        { name: "MIT Open Learning", focus: "Curriculum Development", since: 2018, gradient: "from-amber-500 to-orange-500" },
-      ],
-      gradient: "from-blue-500 to-cyan-500"
-    },
-    {
-      title: "Government & NGOs",
-      icon: <Shield className="h-8 w-8" />,
-      description: "Public sector partnerships for national development projects",
-      partners: [
-        { name: "UNICEF Innovation", focus: "Education Technology", since: 2020, gradient: "from-blue-500 to-indigo-500" },
-        { name: "African Union Commission", focus: "Pan-African Initiatives", since: 2019, gradient: "from-green-500 to-emerald-500" },
-        { name: "UNDP Africa", focus: "Sustainable Development", since: 2021, gradient: "from-purple-500 to-violet-500" },
-        { name: "Ghana Ministry of Education", focus: "STEM Programs", since: 2018, gradient: "from-amber-500 to-yellow-500" },
-      ],
-      gradient: "from-purple-500 to-pink-500"
-    },
-    {
-      title: "Corporate Collaborations",
-      icon: <TrendingUp className="h-8 w-8" />,
-      description: "Industry partnerships driving commercial innovation",
-      partners: [
-        { name: "IBM Research Africa", focus: "AI & Cloud Computing", since: 2020, gradient: "from-blue-500 to-indigo-500" },
-        { name: "Google AI Research", focus: "Machine Learning", since: 2019, gradient: "from-green-500 to-teal-500" },
-        { name: "Siemens Healthineers", focus: "Medical Robotics", since: 2021, gradient: "from-purple-500 to-rose-500" },
-        { name: "Nvidia AI Tech Center", focus: "GPU Computing", since: 2022, gradient: "from-gray-500 to-gray-700" },
-      ],
-      gradient: "from-emerald-500 to-green-500"
-    },
-    {
-      title: "International Organizations",
-      icon: <Globe className="h-8 w-8" />,
-      description: "Global partnerships for technology transfer and capacity building",
-      partners: [
-        { name: "World Bank Group", focus: "Digital Transformation", since: 2019, gradient: "from-blue-500 to-cyan-500" },
-        { name: "African Development Bank", focus: "Infrastructure Tech", since: 2020, gradient: "from-green-500 to-emerald-500" },
-        { name: "UNESCO", focus: "Digital Literacy", since: 2021, gradient: "from-purple-500 to-violet-500" },
-        { name: "World Economic Forum", focus: "4IR in Africa", since: 2022, gradient: "from-amber-500 to-orange-500" },
-      ],
-      gradient: "from-amber-500 to-orange-500"
-    }
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    organization: '',
+    position: '',
+    partnershipType: '',
+    message: '',
+    agreement: false
+  });
+
+  const partnershipTypes = [
+    'Academic Institution',
+    'Government Agency',
+    'NGO/Non-Profit',
+    'Corporate Partner',
+    'Research Collaboration',
+    'Technology Transfer',
+    'Funding/Sponsorship',
+    'Student Exchange'
   ];
 
-  const partnershipBenefits = [
-    {
-      title: "Research Collaboration",
-      description: "Access to cutting-edge research and development resources",
-      stats: "25+ Joint Research Papers",
-      icon: <FileText className="h-6 w-6" />,
-      gradient: "from-blue-500 to-cyan-500"
-    },
-    {
-      title: "Funding Opportunities",
-      description: "Grant proposals and joint funding applications",
-      stats: "$5M+ in Collaborative Grants",
-      icon: <TrendingUp className="h-6 w-6" />,
-      gradient: "from-purple-500 to-pink-500"
-    },
-    {
-      title: "Talent Development",
-      description: "Student exchanges, internships, and training programs",
-      stats: "150+ Students Trained",
-      icon: <Users className="h-6 w-6" />,
-      gradient: "from-emerald-500 to-green-500"
-    },
-    {
-      title: "Technology Transfer",
-      description: "Shared IP and technology commercialization support",
-      stats: "8 Patent Filings",
-      icon: <Zap className="h-6 w-6" />,
-      gradient: "from-amber-500 to-orange-500"
-    }
-  ];
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
-  const successStories = [
-    {
-      title: "AI for Agriculture Initiative",
-      partner: "UNICEF & University of Ghana",
-      outcome: "Deployed smart irrigation systems across 50 farms",
-      impact: "40% increase in crop yield",
-      duration: "18 months",
-      gradient: "from-green-500 to-emerald-500"
-    },
-    {
-      title: "Robotics Education Program",
-      partner: "Ministry of Education & Google",
-      outcome: "Trained 500+ teachers in robotics curriculum",
-      impact: "200 schools equipped with robotics kits",
-      duration: "24 months",
-      gradient: "from-blue-500 to-cyan-500"
-    },
-    {
-      title: "Medical Robotics Research",
-      partner: "Siemens Healthineers & KNUST",
-      outcome: "Developed low-cost surgical assistance robots",
-      impact: "Reduced procedure costs by 60%",
-      duration: "36 months",
-      gradient: "from-purple-500 to-pink-500"
-    }
-  ];
-
-  const partnershipProcess = [
-    { step: 1, title: "Initial Consultation", description: "Understand mutual goals and objectives", icon: <MessageCircle className="h-5 w-5" /> },
-    { step: 2, title: "Proposal Development", description: "Create detailed project framework", icon: <FileText className="h-5 w-5" /> },
-    { step: 3, title: "Agreement Finalization", description: "Legal and operational documentation", icon: <CheckCircle className="h-5 w-5" /> },
-    { step: 4, title: "Project Implementation", description: "Joint execution with regular reviews", icon: <Target className="h-5 w-5" /> },
-    { step: 5, title: "Impact Assessment", description: "Measure outcomes and plan scaling", icon: <TrendingUp className="h-5 w-5" /> },
-  ];
-
-  const partnershipStats = [
-    { value: "40+", label: "Active Partners", icon: <Users className="h-6 w-6" />, gradient: "from-blue-500 to-cyan-500" },
-    { value: "15", label: "Countries", icon: <Globe className="h-6 w-6" />, gradient: "from-purple-500 to-pink-500" },
-    { value: "$10M+", label: "Joint Funding", icon: <TrendingUp className="h-6 w-6" />, gradient: "from-emerald-500 to-green-500" },
-    { value: "50+", label: "Projects", icon: <Target className="h-6 w-6" />, gradient: "from-amber-500 to-orange-500" },
-  ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    console.log('Form submitted:', formData);
+    // Reset form or show success message
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -203,354 +123,334 @@ const Partnerships = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Link 
-              to="/contact" 
+            <a 
+              href="#partnership-form"
               className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
             >
-              <span>Partner With Us</span>
+              <span>Become a Partner</span>
               <ExternalLink className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Partnership Stats */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {partnershipStats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="group relative"
-              >
-                <div className={`absolute -inset-0.5 bg-gradient-to-r ${stat.gradient} rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300`} />
-                <div className="relative bg-white p-8 rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 text-center">
-                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-r ${stat.gradient} mb-4 shadow-lg`}>
-                    <div className="text-white">
-                      {stat.icon}
-                    </div>
-                  </div>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                  <div className="text-gray-600 font-medium">{stat.label}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partner Categories */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Partnership Registration Form */}
+      <section id="partnership-form" className="py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 mb-4">
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
-              <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Our Network</span>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200">
+              <Handshake className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-600 uppercase tracking-wider">Join Our Network</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Partnership Network
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Collaborating across sectors to maximize impact and drive innovation
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {partnerCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="group relative"
-              >
-                <div className={`absolute -inset-0.5 bg-gradient-to-r ${category.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
-                  <div className="p-8">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className={`p-3 rounded-xl bg-gradient-to-r ${category.gradient} shadow-lg`}>
-                        <div className="text-white">
-                          {category.icon}
-                        </div>
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">{category.title}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-8 leading-relaxed">{category.description}</p>
-                    
-                    <div className="space-y-4">
-                      {category.partners.map((partner, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: idx * 0.05 }}
-                          whileHover={{ x: 5 }}
-                          className="flex justify-between items-center p-4 bg-gray-50 rounded-xl group/item transition-all duration-300"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${partner.gradient} opacity-0 group-hover/item:opacity-100 transition-opacity duration-300`} />
-                            <div>
-                              <div className="font-semibold text-gray-900 group-hover/item:text-blue-600 transition-colors">
-                                {partner.name}
-                              </div>
-                              <div className="text-sm text-gray-500">{partner.focus}</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="h-4 w-4 mr-1.5" />
-                            Since {partner.since}
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partnership Benefits */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 via-blue-950 to-purple-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-3 mb-6">
-              <Sparkles className="h-6 w-6 text-cyan-400" />
-              <span className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">Why Partner With Us</span>
-              <Sparkles className="h-6 w-6 text-cyan-400" />
-            </div>
-            <h2 className="text-4xl font-bold mb-4">Partnership Benefits</h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Mutual benefits that drive sustainable impact and innovation
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {partnershipBenefits.map((benefit, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="group relative"
-              >
-                <div className={`absolute -inset-0.5 bg-gradient-to-r ${benefit.gradient} rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300`} />
-                <div className="relative bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10">
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${benefit.gradient} mb-6`}>
-                    <div className="text-white">
-                      {benefit.icon}
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold mb-4">{benefit.stats}</div>
-                  <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{benefit.description}</p>
-                  <div className="mt-6 pt-6 border-t border-white/10">
-                    <button className="text-sm font-medium text-gray-400 hover:text-cyan-300 transition-colors flex items-center group">
-                      <span>Learn more</span>
-                      <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Success Stories */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Award className="h-12 w-12 mx-auto text-emerald-600 mb-4" />
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real impact through strategic collaborations
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {successStories.map((story, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="group relative"
-              >
-                <div className={`absolute -inset-0.5 bg-gradient-to-r ${story.gradient} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                <div className="relative bg-white rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
-                  <div className={`h-3 bg-gradient-to-r ${story.gradient}`}></div>
-                  <div className="p-8">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Star className="h-4 w-4 text-amber-500" />
-                      <span className="text-sm font-semibold text-emerald-600">Case Study</span>
-                    </div>
-                    
-                    <div className="text-blue-600 font-semibold mb-2 flex items-center gap-2">
-                      <Handshake className="h-4 w-4" />
-                      {story.partner}
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">{story.title}</h3>
-                    
-                    <p className="text-gray-600 mb-6 leading-relaxed">{story.outcome}</p>
-                    
-                    <div className="mb-6">
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                        <span>Duration</span>
-                        <span className="font-medium">{story.duration}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-900">Impact</span>
-                        <div className="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg font-semibold">
-                          {story.impact}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <button className="group w-full flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 font-semibold border border-blue-200 hover:border-blue-300 rounded-xl py-3 transition-all duration-300">
-                      <span>Read Full Case Study</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partnership Process */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Target className="h-12 w-12 mx-auto text-blue-600 mb-4" />
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Partnership Process</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our structured approach to building successful collaborations
-            </p>
-          </motion.div>
-
-          <div className="relative">
-            <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-emerald-200"></div>
             
-            <div className="space-y-12">
-              {partnershipProcess.map((step, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`flex flex-col lg:flex-row items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
-                >
-                  <div className="relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-20"></div>
-                    <div className="relative w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-lg">
-                      {step.step}
-                    </div>
-                    <div className="absolute -right-3 lg:right-auto lg:top-1/2 lg:transform lg:-translate-y-1/2 w-6 h-6 bg-white border-4 border-blue-100 rounded-full"></div>
-                  </div>
-                  
-                  <div className={`flex-1 ${index % 2 === 0 ? 'lg:pl-12' : 'lg:pr-12'} mt-8 lg:mt-0`}>
-                    <motion.div
-                      whileHover={{ y: -5 }}
-                      className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100"
-                    >
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500">
-                          <div className="text-white">
-                            {step.icon}
-                          </div>
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900">{step.title}</h3>
-                      </div>
-                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
-                      <div className="mt-6 pt-6 border-t border-gray-100">
-                        <div className="text-sm text-gray-500">Timeline: 2-4 weeks</div>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Partner <span className="text-blue-600">With Us</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Fill out the form below to start your partnership journey with us. Our team will contact you within 48 hours.
+            </p>
+          </motion.div>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100"
           >
-            <h2 className="text-4xl font-bold mb-6">Ready to Collaborate?</h2>
-            <p className="text-xl mb-10 max-w-2xl mx-auto text-white/90">
-              Join our network of partners driving technological innovation across Africa. 
-              Let's create impact together.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link 
-                  to="/contact" 
-                  className="group bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg flex items-center justify-center gap-3"
-                >
-                  <span>Start Partnership Discussion</span>
-                  <ExternalLink className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+            <div className="grid md:grid-cols-3">
+              {/* Form Sidebar */}
+              <div className="md:col-span-1 bg-gradient-to-b from-blue-600 to-purple-600 text-white p-8 md:p-12">
+                <div className="mb-8">
+                  <Award className="h-10 w-10 mb-4 text-blue-200" />
+                  <h3 className="text-xl font-bold mb-3">Why Partner With Us?</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-emerald-300 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-blue-100">Access to cutting-edge research</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-emerald-300 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-blue-100">Joint funding opportunities</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-emerald-300 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-blue-100">Talent development programs</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-emerald-300 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-blue-100">Technology transfer support</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pt-8 border-t border-blue-500/30">
+                  <h4 className="text-lg font-semibold mb-4">Contact Information</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-blue-200" />
+                      <span className="text-sm text-blue-100">partnerships@innovation.org</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-4 w-4 text-blue-200" />
+                      <span className="text-sm text-blue-100">+233 24 123 4567</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-4 w-4 text-blue-200" />
+                      <span className="text-sm text-blue-100">Accra, Ghana</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-4 bg-blue-500/20 rounded-xl">
+                  <p className="text-sm text-blue-100">
+                    <span className="font-semibold">Average response time:</span> 24-48 hours
+                  </p>
+                </div>
+              </div>
+
+              {/* Main Form */}
+              <div className="md:col-span-2 p-8 md:p-12">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-gray-400" />
+                          First Name *
+                        </div>
+                      </label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="Enter your first name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Last Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="Enter your last name"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-gray-400" />
+                          Email Address *
+                        </div>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="your.email@organization.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-gray-400" />
+                          Phone Number
+                        </div>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="+233 24 123 4567"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <Briefcase className="h-4 w-4 text-gray-400" />
+                          Organization *
+                        </div>
+                      </label>
+                      <input
+                        type="text"
+                        name="organization"
+                        value={formData.organization}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="Your organization name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Position/Title *
+                      </label>
+                      <input
+                        type="text"
+                        name="position"
+                        value={formData.position}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+                        placeholder="e.g., Director of Research"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Handshake className="h-4 w-4 text-gray-400" />
+                        Type of Partnership Interest *
+                      </div>
+                    </label>
+                    <select
+                      name="partnershipType"
+                      value={formData.partnershipType}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors appearance-none"
+                    >
+                      <option value="">Select partnership type</option>
+                      {partnershipTypes.map((type, index) => (
+                        <option key={index} value={type}>{type}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="h-4 w-4 text-gray-400" />
+                        Partnership Proposal/Message *
+                      </div>
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={5}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors resize-none"
+                      placeholder="Tell us about your partnership interests, goals, and how we can collaborate..."
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        id="agreement"
+                        name="agreement"
+                        checked={formData.agreement}
+                        onChange={handleInputChange}
+                        required
+                        className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500 mt-0.5"
+                      />
+                      <label htmlFor="agreement" className="text-sm text-gray-700">
+                        I agree to receive communications regarding this partnership inquiry and confirm that I have the authority to represent my organization in partnership discussions. I understand that my information will be processed in accordance with your privacy policy.
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="pt-6">
+                    <motion.button
+                      type="submit"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group"
+                    >
+                      <span>Submit Partnership Application</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </motion.button>
+                    
+                    <p className="text-center text-sm text-gray-500 mt-4">
+                      By submitting this form, you agree to our{' '}
+                      <Link to="/privacy" className="text-blue-600 hover:text-blue-700 font-medium">
+                        Privacy Policy
+                      </Link>{' '}
+                      and{' '}
+                      <Link to="/terms" className="text-blue-600 hover:text-blue-700 font-medium">
+                        Terms of Service
+                      </Link>
+                    </p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Additional Information */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-16 text-center"
+          >
+            <div className="inline-flex items-center gap-4 mb-6">
+              <div className="w-12 h-px bg-gradient-to-r from-blue-500 to-transparent"></div>
+              <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Next Steps</span>
+              <div className="w-12 h-px bg-gradient-to-r from-transparent to-purple-500"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="text-blue-600 mb-3">
+                  <MessageCircle className="h-8 w-8 mx-auto" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Initial Consultation</h4>
+                <p className="text-sm text-gray-600">
+                  Our partnership team will schedule a call to understand your objectives
+                </p>
+              </div>
               
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link 
-                  to="/research" 
-                  className="group bg-transparent border-2 border-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3"
-                >
-                  <span>Explore Research Areas</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="text-purple-600 mb-3">
+                  <FileText className="h-8 w-8 mx-auto" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Proposal Review</h4>
+                <p className="text-sm text-gray-600">
+                  We'll evaluate alignment and create a customized partnership framework
+                </p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="text-emerald-600 mb-3">
+                  <CheckCircle className="h-8 w-8 mx-auto" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Agreement & Kickoff</h4>
+                <p className="text-sm text-gray-600">
+                  Formalize partnership and begin collaborative project implementation
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>

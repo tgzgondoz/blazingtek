@@ -115,33 +115,6 @@ const Community = () => {
     }
   ];
 
-  const successStories = [
-    {
-      name: "Aisha Mohammed",
-      role: "Software Engineer at Google",
-      story: "Former STEM camp participant now working on AI research",
-      quote: "BlazingTek showed me that technology could change Africa.",
-      imageColor: "from-pink-500 via-rose-500 to-red-500",
-      delay: 0.1
-    },
-    {
-      name: "David Osei",
-      role: "Founder of AgriTech Startup",
-      story: "Hackathon winner now running successful agriculture tech company",
-      quote: "The community support helped turn my idea into reality.",
-      imageColor: "from-emerald-500 via-green-500 to-teal-500",
-      delay: 0.2
-    },
-    {
-      name: "Grace Chen",
-      role: "PhD Candidate at MIT",
-      story: "Women in Tech scholar pursuing robotics research",
-      quote: "They believed in me when no one else did.",
-      imageColor: "from-blue-500 via-cyan-500 to-sky-500",
-      delay: 0.3
-    }
-  ];
-
   const upcomingEvents = [
     {
       title: "National Robotics Competition",
@@ -401,65 +374,6 @@ const Community = () => {
                         <Share2 className="h-5 w-5" />
                       </button>
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Success Stories */}
-      <section className="py-24 bg-gradient-to-br from-emerald-50 via-blue-50 to-cyan-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Trophy className="h-12 w-12 mx-auto text-emerald-600 mb-4" />
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Meet the innovators whose journeys started with our community programs
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {successStories.map((story, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: story.delay }}
-                whileHover={{ y: -10 }}
-                className="group relative"
-              >
-                <div className={`absolute -inset-0.5 bg-gradient-to-br ${story.imageColor} rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                  <div className={`h-48 bg-gradient-to-r ${story.imageColor} relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                  </div>
-                  <div className="p-8">
-                    <div className="flex items-center mb-6">
-                      <div className="w-12 h-12 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full"></div>
-                      <div className="ml-4">
-                        <h3 className="font-bold text-xl text-gray-900">{story.name}</h3>
-                        <p className="text-emerald-600 font-semibold">{story.role}</p>
-                      </div>
-                    </div>
-                    
-                    <p className="text-gray-700 mb-6 leading-relaxed">{story.story}</p>
-                    
-                    <div className="border-l-4 border-emerald-500 pl-4 mb-6">
-                      <p className="italic text-gray-600 leading-relaxed">"{story.quote}"</p>
-                    </div>
-                    
-                    <button className="group flex items-center text-emerald-600 hover:text-emerald-700 font-semibold">
-                      <span>Read Full Interview</span>
-                      <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
                   </div>
                 </div>
               </motion.div>

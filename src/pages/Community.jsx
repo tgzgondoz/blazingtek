@@ -40,15 +40,6 @@ const Community = () => {
     { id: 'alumni', name: 'Alumni Network', icon: <Sparkles className="h-5 w-5" /> },
   ];
 
-  const impactStats = [
-    { icon: <Users className="h-8 w-8" />, value: "5000+", label: "Students Reached", color: "from-blue-500 to-cyan-500" },
-    { icon: <GraduationCap className="h-8 w-8" />, value: "120", label: "Schools Partnered", color: "from-purple-500 to-pink-500" },
-    { icon: <Award className="h-8 w-8" />, value: "25", label: "National Awards", color: "from-emerald-500 to-green-500" },
-    { icon: <Globe className="h-8 w-8" />, value: "8", label: "African Countries", color: "from-amber-500 to-orange-500" },
-    { icon: <Target className="h-8 w-8" />, value: "150+", label: "Community Projects", color: "from-cyan-500 to-blue-500" },
-    { icon: <TrendingUp className="h-8 w-8" />, value: "40%", label: "Female Participation", color: "from-rose-500 to-purple-500" },
-  ];
-
   const communityPrograms = [
     {
       id: 1,
@@ -294,33 +285,6 @@ const Community = () => {
             </motion.div>
           </div>
         </motion.div>
-      </section>
-
-      {/* Impact Stats */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {impactStats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="text-center group"
-              >
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br ${stat.color} mb-4 shadow-lg`}>
-                  <div className="text-white">
-                    {stat.icon}
-                  </div>
-                </div>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* Community Programs */}

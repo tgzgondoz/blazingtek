@@ -38,7 +38,7 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header with bg.jpg */}
+      {/* Header with bg.jpg - UPDATED VERSION */}
       <section className="relative text-white py-16 md:py-20 overflow-hidden">
         {/* Background with bg.jpg */}
         <div className="absolute inset-0">
@@ -52,10 +52,10 @@ const Services = () => {
               e.target.style.display = 'none';
             }}
           />
-          {/* Gradient overlays for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/85 to-gray-900/95"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-transparent to-emerald-900/30"></div>
+          {/* Reduced opacity gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/70 via-gray-900/50 to-gray-900/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-gray-900/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
           
           {/* Animated particles */}
           <div className="absolute inset-0">
@@ -96,17 +96,14 @@ const Services = () => {
           transition={{ duration: 0.6 }}
           className="relative max-w-6xl mx-auto px-4 text-center"
         >
-          {/* Decorative icon */}
-         
-          
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
           >
-            <span className="text-white">Our </span>
-            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent font-extrabold">
+            <span className="text-white drop-shadow-lg">Our </span>
+            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent font-extrabold drop-shadow-lg">
               Services
             </span>
           </motion.h1>
@@ -115,7 +112,7 @@ const Services = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-lg md:text-xl text-gray-100 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
           >
             Professional robotics solutions tailored for your needs
           </motion.p>
@@ -125,7 +122,7 @@ const Services = () => {
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-full"
+            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-full drop-shadow-lg"
           />
         </motion.div>
       </section>

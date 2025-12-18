@@ -32,7 +32,7 @@ const Contact = () => {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src={bgImage} // Change this to bg4.jpg if you have it
+            src={bgImage}
             alt="Contact Background"
             className="absolute inset-0 w-full h-full object-cover"
             onError={(e) => {
@@ -41,10 +41,10 @@ const Contact = () => {
               e.target.style.display = 'none';
             }}
           />
-          {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/80 to-cyan-900/90"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-700/30 via-transparent to-cyan-700/30"></div>
+          {/* Reduced opacity gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-900/50 to-cyan-900/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-gray-900/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-700/20 via-transparent to-cyan-700/20"></div>
           
           {/* Animated particles */}
           <div className="absolute inset-0">
@@ -92,10 +92,10 @@ const Contact = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
+            className="text-4xl md:text-5xl font-bold mb-4 leading-tight drop-shadow-lg"
           >
             <span className="text-white">Get in </span>
-            <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-extrabold">
+            <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-extrabold drop-shadow-lg">
               Touch
             </span>
           </motion.h1>
@@ -104,7 +104,7 @@ const Contact = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-lg md:text-xl text-gray-100 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
           >
             Contact our team. We're here to help you with innovative solutions.
           </motion.p>
@@ -114,7 +114,7 @@ const Contact = () => {
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 rounded-full"
+            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 rounded-full drop-shadow-lg"
           />
         </motion.div>
       </div>

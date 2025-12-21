@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 import RoboticsImage from '../assets/Robotics.jpg';
 import WorkshopsImage from '../assets/Workshops.jpg';
@@ -38,7 +39,7 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header with bg.jpg - UPDATED VERSION */}
+      {/* Header with bg.jpg - MATCHING HOME PAGE STYLE */}
       <section className="relative text-white py-16 md:py-20 overflow-hidden">
         {/* Background with bg.jpg */}
         <div className="absolute inset-0">
@@ -52,9 +53,9 @@ const Services = () => {
               e.target.style.display = 'none';
             }}
           />
-          {/* Reduced opacity gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/70 via-gray-900/50 to-gray-900/70"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-gray-900/20 to-transparent"></div>
+          {/* Updated to match home page gradients */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
           
           {/* Animated particles */}
@@ -103,7 +104,7 @@ const Services = () => {
             className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
           >
             <span className="text-white drop-shadow-lg">Our </span>
-            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent font-extrabold drop-shadow-lg">
+            <span className="bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent font-extrabold drop-shadow-lg">
               Services
             </span>
           </motion.h1>
@@ -112,17 +113,17 @@ const Services = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-gray-100 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
+            className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
           >
             Professional robotics solutions tailored for your needs
           </motion.p>
 
-          {/* Decorative line */}
+          {/* Decorative line - Matching home page */}
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-blue-500 rounded-full drop-shadow-lg"
+            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full drop-shadow-lg"
           />
         </motion.div>
       </section>
@@ -137,8 +138,12 @@ const Services = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              What We Offer
+            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-100">
+              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+              <span className="text-sm font-semibold text-blue-600">What We Offer</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Professional Robotics Solutions
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Comprehensive robotics solutions for education, industry, and research
@@ -156,7 +161,7 @@ const Services = () => {
                 whileHover={{ y: -5 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-100">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-200">
                   <Link to={service.link} className="block">
                     <div className="h-56 overflow-hidden relative">
                       <img 
@@ -164,12 +169,14 @@ const Services = () => {
                         alt={service.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                      {/* Gradient overlay at bottom */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/10 via-transparent to-transparent"></div>
                     </div>
                     
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500"></div>
                         <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
                           Service
                         </span>
@@ -182,13 +189,11 @@ const Services = () => {
                         {service.description}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-blue-600 font-medium text-sm flex items-center group-hover:translate-x-1 transition-transform">
+                        <span className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text font-medium text-sm flex items-center group-hover:translate-x-1 transition-transform">
                           Learn more
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
+                          <ArrowRight className="w-4 h-4 ml-2" />
                         </span>
-                        <div className="text-xs font-medium text-gray-500">
+                        <div className="text-xs font-medium text-gray-500 group-hover:text-blue-500 transition-colors">
                           Click to explore →
                         </div>
                       </div>
@@ -204,11 +209,14 @@ const Services = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-8 border border-gray-200"
+            className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-xl p-8 border border-blue-100"
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Explore More</h3>
+                <div className="inline-flex items-center gap-2 mb-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                  <h3 className="text-lg font-bold text-gray-900">Explore More</h3>
+                </div>
                 <p className="text-gray-600 text-sm">
                   Discover other areas of our work and expertise
                 </p>
@@ -225,7 +233,7 @@ const Services = () => {
                   >
                     <Link
                       to={page.path}
-                      className="block text-center px-4 py-3 bg-white hover:bg-gray-50 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:text-blue-600 transition-all duration-300 hover:border-blue-200 hover:shadow-sm"
+                      className="block text-center px-4 py-3 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-emerald-50 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:text-blue-600 transition-all duration-300 hover:border-blue-300 hover:shadow-sm"
                     >
                       {page.name}
                     </Link>

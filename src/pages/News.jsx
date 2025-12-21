@@ -69,12 +69,12 @@ const News = () => {
   };
 
   const newsCategories = [
-    { id: 'all', name: 'All News', count: 28, color: 'from-gray-500 to-gray-700' },
-    { id: 'research', name: 'Research Breakthroughs', count: 12, color: 'from-blue-500 to-cyan-500' },
-    { id: 'events', name: 'Events & Conferences', count: 8, color: 'from-purple-500 to-pink-500' },
-    { id: 'partnerships', name: 'Partnerships', count: 5, color: 'from-emerald-500 to-green-500' },
-    { id: 'awards', name: 'Awards & Recognition', count: 3, color: 'from-amber-500 to-orange-500' },
-    { id: 'thought', name: 'Thought Leadership', count: 7, color: 'from-indigo-500 to-blue-500' },
+    { id: 'all', name: 'All News', count: 28, gradient: 'from-blue-600 to-emerald-600' },
+    { id: 'research', name: 'Research Breakthroughs', count: 12, gradient: 'from-blue-500 to-emerald-500' },
+    { id: 'events', name: 'Events & Conferences', count: 8, gradient: 'from-blue-600 to-emerald-600' },
+    { id: 'partnerships', name: 'Partnerships', count: 5, gradient: 'from-blue-500 to-emerald-500' },
+    { id: 'awards', name: 'Awards & Recognition', count: 3, gradient: 'from-blue-600 to-emerald-600' },
+    { id: 'thought', name: 'Thought Leadership', count: 7, gradient: 'from-blue-500 to-emerald-500' },
   ];
 
   const featuredArticle = {
@@ -89,7 +89,7 @@ const News = () => {
     likes: 156,
     image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800",
     tags: ["AI", "Agriculture", "Robotics", "Sustainability"],
-    gradient: "from-blue-500 via-cyan-500 to-emerald-500"
+    gradient: "from-blue-600 to-emerald-600"
   };
 
   const newsArticles = [
@@ -104,7 +104,7 @@ const News = () => {
       author: "Fatima Bello",
       tags: ["Award", "AI", "Assistive Tech"],
       views: "1.8K",
-      gradient: "from-amber-500 to-orange-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       id: 2,
@@ -117,7 +117,7 @@ const News = () => {
       author: "Kwame Osei",
       tags: ["Partnership", "Research", "Sustainability"],
       views: "3.2K",
-      gradient: "from-emerald-500 to-green-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       id: 3,
@@ -130,7 +130,7 @@ const News = () => {
       author: "David Chen",
       tags: ["Innovation", "Future Tech", "Africa"],
       views: "5.1K",
-      gradient: "from-indigo-500 to-purple-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       id: 4,
@@ -143,7 +143,7 @@ const News = () => {
       author: "Maria Rodriguez",
       tags: ["Education", "STEM", "Workshop"],
       views: "1.2K",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       id: 5,
@@ -156,7 +156,7 @@ const News = () => {
       author: "Dr. Samuel Adeyemi",
       tags: ["Patent", "Solar", "Navigation"],
       views: "2.9K",
-      gradient: "from-cyan-500 to-teal-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       id: 6,
@@ -169,7 +169,7 @@ const News = () => {
       author: "Dr. Amina Diallo",
       tags: ["UN", "Innovation", "Social Good"],
       views: "4.3K",
-      gradient: "from-purple-500 to-pink-500"
+      gradient: "from-blue-500 to-emerald-500"
     }
   ];
 
@@ -180,7 +180,7 @@ const News = () => {
       location: "Kigali, Rwanda",
       type: "Conference",
       speaker: "Kwame Osei",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       title: "Women in AI Africa Conference",
@@ -188,7 +188,7 @@ const News = () => {
       location: "Virtual",
       type: "Webinar",
       speaker: "Dr. Amina Diallo",
-      gradient: "from-purple-500 to-pink-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       title: "IEEE Robotics Symposium",
@@ -196,7 +196,7 @@ const News = () => {
       location: "Cape Town, South Africa",
       type: "Symposium",
       speaker: "Dr. Samuel Adeyemi",
-      gradient: "from-emerald-500 to-green-500"
+      gradient: "from-blue-600 to-emerald-600"
     }
   ];
 
@@ -204,7 +204,7 @@ const News = () => {
     { name: "TechCrunch", logo: "TC", date: "Feb 2024", gradient: "from-gray-800 to-gray-900" },
     { name: "BBC Future", logo: "BBC", date: "Jan 2024", gradient: "from-red-600 to-red-800" },
     { name: "Nature", logo: "N", date: "Dec 2023", gradient: "from-blue-600 to-blue-800" },
-    { name: "Forbes Africa", logo: "FA", date: "Nov 2023", gradient: "from-green-600 to-emerald-800" },
+    { name: "Forbes Africa", logo: "FA", date: "Nov 2023", gradient: "from-emerald-600 to-emerald-800" },
     { name: "MIT Technology Review", logo: "MIT", date: "Oct 2023", gradient: "from-red-500 to-red-700" },
     { name: "African Business", logo: "AB", date: "Sep 2023", gradient: "from-amber-600 to-orange-700" },
   ];
@@ -230,36 +230,72 @@ const News = () => {
     : newsArticles.filter(article => article.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section with Slideshow */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-24">
-        {/* Slideshow Background with reduced opacity */}
-        <div className="absolute inset-0 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentSlide}
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 0.35, scale: 1 }} 
-              exit={{ opacity: 0, scale: 1.1 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url(${slideshowImages[currentSlide]})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-              }}
-            />
-          </AnimatePresence>
-          {/* Lighter overlay for better readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/60 via-blue-900/50 to-purple-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-          
-          {/* Subtle pattern overlay for texture */}
-          <div className="absolute inset-0 opacity-5" style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)',
-            backgroundSize: '30px 30px'
-          }}></div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section with Slideshow - Updated to match home page */}
+      <section className="relative overflow-hidden text-white py-16 md:py-20">
+        {/* Background with bg.jpg and gradient overlay */}
+        <div className="absolute inset-0">
+          {/* Slideshow Background */}
+          <div className="absolute inset-0 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `url(${slideshowImages[currentSlide]})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
+                onError={(e) => {
+                  console.error("Error loading slideshow image");
+                  e.target.onerror = null;
+                  e.target.style.display = 'none';
+                }}
+              />
+            </AnimatePresence>
+            
+            {/* Updated to match home page gradients */}
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
+            
+            {/* Animated particles overlay */}
+            <div className="absolute inset-0">
+              {[...Array(15)].map((_, i) => (
+                <motion.div
+                  key={`particle-${i}`}
+                  className="absolute w-1 h-1 bg-white/20 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, -30, 0],
+                    opacity: [0.2, 0.8, 0.2],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: Math.random() * 2,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Subtle grid overlay */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '50px 50px',
+            }}></div>
+          </div>
         </div>
         
         {/* Slideshow Navigation */}
@@ -286,7 +322,7 @@ const News = () => {
               onClick={() => setCurrentSlide(index)}
               className={`h-2 rounded-full transition-all duration-300 ${
                 currentSlide === index 
-                  ? 'w-8 bg-gradient-to-r from-cyan-400 to-blue-500 shadow-lg' 
+                  ? 'w-8 bg-gradient-to-r from-blue-500 to-emerald-500 shadow-lg' 
                   : 'w-2 bg-white/60 hover:bg-white/80 shadow'
               }`}
             />
@@ -306,17 +342,17 @@ const News = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/25 to-purple-500/25 border border-white/30 backdrop-blur-md shadow-lg"
+                className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/25 to-emerald-500/25 border border-white/30 backdrop-blur-md shadow-lg"
               >
                 <motion.div
                   animate={{ rotate: [0, 360] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
-                  <Newspaper className="h-4 w-4 text-cyan-300" />
+                  <Newspaper className="h-4 w-4 text-blue-300" />
                 </motion.div>
-                <span className="text-sm font-medium text-cyan-200">Latest Updates</span>
+                <span className="text-sm font-medium text-blue-200">Latest Updates</span>
                 <motion.div 
-                  className="w-2 h-2 bg-cyan-300 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                  className="w-2 h-2 bg-blue-300 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
@@ -329,7 +365,7 @@ const News = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent block drop-shadow-lg"
+                    className="text-white block drop-shadow-lg"
                   >
                     News &
                   </motion.span>
@@ -339,11 +375,11 @@ const News = () => {
                     transition={{ delay: 0.4 }}
                     className="relative"
                   >
-                    <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 bg-clip-text text-transparent block drop-shadow-lg">
+                    <span className="bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent block drop-shadow-lg">
                       Insights
                     </span>
                     <motion.div 
-                      className="absolute -bottom-2 left-0 h-1.5 bg-gradient-to-r from-cyan-300 to-purple-400 rounded-full shadow-lg"
+                      className="absolute -bottom-2 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full shadow-lg"
                       initial={{ width: 0 }}
                       animate={{ width: "100%" }}
                       transition={{ delay: 0.8, duration: 1 }}
@@ -370,7 +406,7 @@ const News = () => {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <button className="group bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40 flex items-center gap-3 backdrop-blur-sm">
+                  <button className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-900/25 hover:shadow-xl hover:shadow-blue-900/40">
                     <span>Subscribe to Newsletter</span>
                     <motion.div
                       animate={{ x: [0, 5, 0] }}
@@ -378,6 +414,8 @@ const News = () => {
                     >
                       <Send className="h-5 w-5" />
                     </motion.div>
+                    {/* Button glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                   </button>
                 </motion.div>
                 
@@ -388,7 +426,7 @@ const News = () => {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <button className="group bg-transparent border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 backdrop-blur-md hover:bg-white/10 flex items-center gap-3 shadow-lg">
+                  <button className="group relative inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/20 hover:border-white/40 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300">
                     <Podcast className="h-5 w-5" />
                     <span>Listen to Podcast</span>
                   </button>
@@ -404,7 +442,7 @@ const News = () => {
               className="relative"
             >
               <div className="relative bg-gradient-to-br from-gray-900/80 to-gray-900/40 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl overflow-hidden">
-                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-gray-900 px-4 py-2 rounded-full font-bold text-sm shadow-lg">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-blue-600 to-emerald-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
                   Featured Story
                 </div>
                 
@@ -451,7 +489,7 @@ const News = () => {
                     </div>
                     <Link 
                       to="/news/featured" 
-                      className="group text-cyan-300 hover:text-cyan-200 font-semibold inline-flex items-center"
+                      className="group text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text hover:from-blue-500 hover:to-emerald-500 font-semibold inline-flex items-center"
                     >
                       <span>Read Full Story</span>
                       <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -481,8 +519,8 @@ const News = () => {
                 onClick={() => setActiveCategory(category.id)}
                 className={`px-5 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 shadow-lg ${
                   activeCategory === category.id
-                    ? `bg-gradient-to-r ${category.color} text-white shadow-xl`
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                    ? `bg-gradient-to-r ${category.gradient} text-white shadow-xl`
+                    : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 hover:from-blue-50 hover:to-emerald-50 hover:text-blue-600 border border-gray-200'
                 }`}
               >
                 {category.name}
@@ -517,7 +555,7 @@ const News = () => {
                     className="group relative"
                   >
                     <div className={`absolute -inset-0.5 bg-gradient-to-r ${article.gradient} rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300`} />
-                    <div className="relative bg-white rounded-2xl shadow-xl group-hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+                    <div className="relative bg-white rounded-2xl shadow-sm group-hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
                       <div className="p-8">
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-2">
@@ -560,7 +598,7 @@ const News = () => {
                           {article.tags.map((tag, idx) => (
                             <span 
                               key={idx}
-                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 shadow-sm hover:shadow transition-all"
+                              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 border border-gray-200 shadow-sm hover:shadow transition-all"
                             >
                               <Tag className="h-3 w-3 mr-1.5" />
                               {tag}
@@ -574,22 +612,22 @@ const News = () => {
                               onClick={() => toggleSaveArticle(article.id)}
                               className={`p-2 rounded-lg transition-all duration-300 ${
                                 savedArticles.includes(article.id)
-                                  ? 'text-amber-500 bg-amber-50 shadow-inner'
-                                  : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50 shadow-sm'
+                                  ? 'text-amber-500 bg-gradient-to-r from-amber-50 to-amber-100 shadow-inner'
+                                  : 'text-gray-400 hover:text-amber-500 hover:bg-gradient-to-r hover:from-amber-50 hover:to-amber-100 shadow-sm'
                               }`}
                             >
                               <Bookmark className="h-5 w-5" />
                             </button>
-                            <button className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 shadow-sm">
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 shadow-sm">
                               <Share2 className="h-5 w-5" />
                             </button>
-                            <button className="p-2 rounded-lg text-gray-400 hover:text-purple-600 hover:bg-purple-50 transition-all duration-300 shadow-sm">
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 transition-all duration-300 shadow-sm">
                               <MessageCircle className="h-5 w-5" />
                             </button>
                           </div>
                           <Link 
                             to={`/news/${article.id}`}
-                            className="group flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm"
+                            className="group text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text hover:from-blue-600 hover:to-emerald-600 font-semibold text-sm flex items-center"
                           >
                             <span>Read More</span>
                             <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
@@ -611,10 +649,12 @@ const News = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center gap-3 mx-auto"
+                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white px-10 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-900/25 hover:shadow-xl hover:shadow-blue-900/40"
                 >
                   <span>Load More Articles</span>
                   <ChevronRight className="h-5 w-5" />
+                  {/* Button glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                 </motion.button>
               </motion.div>
             </div>
@@ -626,13 +666,16 @@ const News = () => {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+                className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100"
               >
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 shadow">
+                  <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-500 shadow">
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
+                    <p className="text-gray-600 text-sm">Join our next gatherings</p>
+                  </div>
                 </div>
                 <div className="space-y-6">
                   {upcomingEvents.map((event, index) => (
@@ -645,7 +688,7 @@ const News = () => {
                       className="group relative"
                     >
                       <div className={`absolute -inset-0.5 bg-gradient-to-r ${event.gradient} rounded-xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                      <div className="relative p-5 rounded-xl border border-gray-200 hover:border-transparent transition-all duration-300 bg-white shadow-sm hover:shadow-lg">
+                      <div className="relative p-5 rounded-xl border border-gray-200 hover:border-blue-200 transition-all duration-300 bg-white shadow-sm hover:shadow-lg">
                         <div className="flex justify-between items-start mb-3">
                           <h4 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${event.gradient} text-white shadow`}>
@@ -666,7 +709,7 @@ const News = () => {
                             <span className="font-medium">Speaker: {event.speaker}</span>
                           </div>
                         </div>
-                        <button className="mt-4 group flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                        <button className="mt-4 group flex items-center text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text hover:from-blue-600 hover:to-emerald-600 font-semibold text-sm">
                           <span>Register Now</span>
                           <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                         </button>
@@ -683,12 +726,15 @@ const News = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="bg-gradient-to-br from-gray-900 to-blue-950 rounded-2xl shadow-2xl p-8 text-white">
+                <div className="bg-gradient-to-br from-gray-900 to-blue-900 rounded-2xl shadow-2xl p-8 text-white">
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 shadow">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-500 shadow">
                       <Award className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold">Featured In</h3>
+                    <div>
+                      <h3 className="text-2xl font-bold">Featured In</h3>
+                      <p className="text-gray-300 text-sm">Global media coverage</p>
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {mediaFeatures.map((media, index) => (
@@ -717,12 +763,15 @@ const News = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 shadow">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-500 shadow">
                       <TrendingUp className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">Stay Updated</h3>
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900">Stay Updated</h3>
+                      <p className="text-gray-600 text-sm">Get our weekly digest</p>
+                    </div>
                   </div>
                   <p className="text-gray-600 mb-6 leading-relaxed">
                     Get our weekly research digest and exclusive content delivered to your inbox.
@@ -735,11 +784,14 @@ const News = () => {
                     />
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl shadow-blue-500/25"
+                      className="group relative w-full inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-900/25 hover:shadow-xl hover:shadow-blue-900/40"
                     >
-                      Subscribe Now
+                      <span>Subscribe Now</span>
+                      <Send className="h-5 w-5" />
+                      {/* Button glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                     </motion.button>
                   </form>
                   <p className="text-xs text-gray-500 mt-4 text-center">
@@ -761,8 +813,12 @@ const News = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">News Archive</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-100">
+              <Newspaper className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-semibold text-blue-600">News Archive</span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse Historical News</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
               Browse through our historical news and milestones
             </p>
           </motion.div>
@@ -778,9 +834,9 @@ const News = () => {
                 whileHover={{ y: -10, scale: 1.02 }}
                 className="group relative"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
-                <div className="relative bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
-                  <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+                <div className="relative bg-white rounded-2xl shadow-sm p-8 text-center border border-gray-100 hover:border-blue-200 transition-all duration-300">
+                  <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent mb-2">
                     {year}
                   </div>
                   <div className="text-gray-600 font-medium mb-4">Archive</div>
@@ -789,7 +845,7 @@ const News = () => {
                      year === '2023' ? '28 articles' : 
                      year === '2022' ? '19 articles' : '15 articles'}
                   </div>
-                  <button className="group inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+                  <button className="group inline-flex items-center text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text hover:from-blue-600 hover:to-emerald-600 font-semibold">
                     <span>Browse Year</span>
                     <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </button>

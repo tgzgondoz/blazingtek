@@ -18,7 +18,8 @@ import {
   Star,
   ArrowRight,
   ExternalLink,
-  Send
+  Send,
+  MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -47,7 +48,7 @@ const Community = () => {
       location: "Multiple",
       impact: "85% pursue STEM",
       icon: <GraduationCap className="h-6 w-6" />,
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       id: 2,
@@ -59,7 +60,7 @@ const Community = () => {
       location: "Remote",
       impact: "30 tech hubs",
       icon: <Heart className="h-6 w-6" />,
-      gradient: "from-emerald-500 to-green-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       id: 3,
@@ -71,7 +72,7 @@ const Community = () => {
       location: "Pan-Africa",
       impact: "50+ solutions",
       icon: <Zap className="h-6 w-6" />,
-      gradient: "from-amber-500 to-orange-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       id: 4,
@@ -83,7 +84,7 @@ const Community = () => {
       location: "Hybrid",
       impact: "300+ careers",
       icon: <Sparkles className="h-6 w-6" />,
-      gradient: "from-purple-500 to-pink-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       id: 5,
@@ -95,7 +96,7 @@ const Community = () => {
       location: "Global",
       impact: "15 projects",
       icon: <Brain className="h-6 w-6" />,
-      gradient: "from-indigo-500 to-blue-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       id: 6,
@@ -107,7 +108,7 @@ const Community = () => {
       location: "Cities",
       impact: "$2M+ raised",
       icon: <TrendingUp className="h-6 w-6" />,
-      gradient: "from-rose-500 to-red-500"
+      gradient: "from-blue-600 to-emerald-600"
     }
   ];
 
@@ -119,7 +120,7 @@ const Community = () => {
       type: "Competition",
       participants: "200",
       registration: "Open",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-blue-500 to-emerald-500"
     },
     {
       title: "Women in AI Summit",
@@ -128,7 +129,7 @@ const Community = () => {
       type: "Conference",
       participants: "500+",
       registration: "Open",
-      gradient: "from-purple-500 to-pink-500"
+      gradient: "from-blue-600 to-emerald-600"
     },
     {
       title: "Tech Caravan",
@@ -137,7 +138,7 @@ const Community = () => {
       type: "Outreach",
       participants: "Volunteers",
       registration: "Open",
-      gradient: "from-emerald-500 to-green-500"
+      gradient: "from-blue-500 to-emerald-500"
     }
   ];
 
@@ -146,28 +147,58 @@ const Community = () => {
     : communityPrograms.filter(program => program.category.toLowerCase().includes(activeTab));
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-emerald-900 text-white py-16">
-        {/* Animated background */}
-        <motion.div 
-          className="absolute inset-0 opacity-20"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-emerald-500 rounded-full blur-3xl"></div>
-        </motion.div>
+    <div className="min-h-screen bg-white">
+      {/* Hero - Updated to match home page */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-emerald-900 text-white py-16 md:py-20">
+        {/* Background overlay matching home page */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
+          
+          {/* Animated background */}
+          <motion.div 
+            className="absolute inset-0 opacity-20"
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 90, 0],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-emerald-500 rounded-full blur-3xl"></div>
+          </motion.div>
+
+          {/* Animated particles */}
+          <div className="absolute inset-0">
+            {[...Array(15)].map((_, i) => (
+              <motion.div
+                key={`particle-${i}`}
+                className="absolute w-1 h-1 bg-white/20 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  opacity: [0.2, 0.8, 0.2],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              />
+            ))}
+          </div>
+        </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -190,7 +221,7 @@ const Community = () => {
                 Building Africa's
                 <br />
                 <motion.span 
-                  className="text-cyan-400"
+                  className="bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent"
                   animate={{
                     textShadow: [
                       "0 0 20px rgba(34, 211, 238, 0.5)",
@@ -208,7 +239,7 @@ const Community = () => {
               </motion.h1>
               
               <motion.p 
-                className="text-gray-300 mb-8 max-w-xl"
+                className="text-gray-200 mb-8 max-w-xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
@@ -216,14 +247,14 @@ const Community = () => {
                 Empowering Africa's next generation through education and innovation.
               </motion.p>
               
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Link 
                     to="/contact"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-900/25 hover:shadow-xl hover:shadow-blue-900/40"
                   >
                     <span>Join Community</span>
                     <motion.div
@@ -232,14 +263,16 @@ const Community = () => {
                     >
                       <ArrowRight className="h-4 w-4" />
                     </motion.div>
+                    {/* Button glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                   </Link>
                 </motion.div>
                 
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <button className="border border-white/30 hover:border-white/50 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
+                  <button className="group relative inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/20 hover:border-white/40 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
                     <Video className="h-4 w-4" />
                     <span>Watch Story</span>
                   </button>
@@ -267,7 +300,7 @@ const Community = () => {
               <p className="text-gray-300 text-sm mb-4">
                 Meet Aisha, who went from our STEM camp to working at Google AI.
               </p>
-              <button className="text-emerald-400 hover:text-emerald-300 text-sm font-medium flex items-center">
+              <button className="text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text hover:from-blue-500 hover:to-emerald-500 text-sm font-medium flex items-center">
                 <span>Read Story</span>
                 <motion.div
                   whileHover={{ x: 5 }}
@@ -290,16 +323,11 @@ const Community = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <motion.div
-              className="inline-block mb-4"
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <div className="w-16 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent mx-auto"></div>
-            </motion.div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Community Programs</h2>
+            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-100">
+              <Users className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-semibold text-blue-600">Community Programs</span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Initiatives Nurturing Talent</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Initiatives nurturing talent across Africa
             </p>
@@ -318,8 +346,8 @@ const Community = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-4 py-2 rounded-lg font-medium text-sm inline-flex items-center gap-2 transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/25'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-600 to-emerald-600 text-white shadow-lg shadow-blue-500/25'
+                    : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 hover:from-blue-50 hover:to-emerald-50 hover:text-blue-600 border border-gray-200'
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -394,7 +422,7 @@ const Community = () => {
                       </div>
                       
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <button className="text-emerald-600 hover:text-emerald-700 text-sm font-medium flex items-center">
+                        <button className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text hover:from-blue-600 hover:to-emerald-600 text-sm font-medium flex items-center">
                           <span>Learn More</span>
                           <motion.div
                             whileHover={{ x: 5 }}
@@ -422,7 +450,7 @@ const Community = () => {
       </section>
 
       {/* Events & Sidebar */}
-      <section className="py-16">
+      <section className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Events */}
@@ -434,7 +462,7 @@ const Community = () => {
                 viewport={{ once: true }}
               >
                 <motion.div 
-                  className="p-2 rounded-lg bg-emerald-500"
+                  className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-500"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <Calendar className="h-5 w-5 text-white" />
@@ -455,7 +483,7 @@ const Community = () => {
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ x: 5 }}
                   >
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:border-blue-200 transition-all duration-300">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-3">
@@ -482,9 +510,9 @@ const Community = () => {
                           </div>
                         </div>
                         <motion.button
-                          className={`bg-gradient-to-r ${event.gradient} text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 whitespace-nowrap`}
-                          whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-                          whileTap={{ scale: 0.95 }}
+                          className={`bg-gradient-to-r ${event.gradient} text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 whitespace-nowrap hover:shadow-lg hover:shadow-blue-500/25`}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           <motion.div
                             animate={{ y: [0, -2, 0] }}
@@ -510,7 +538,7 @@ const Community = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="relative overflow-hidden bg-gradient-to-br from-emerald-600 to-cyan-600 rounded-xl p-6 text-white">
+                <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-emerald-600 rounded-xl p-6 text-white">
                   <motion.div 
                     className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -518,12 +546,12 @@ const Community = () => {
                   />
                   <Heart className="h-6 w-6 mb-4 relative z-10" />
                   <h3 className="font-bold text-xl mb-3 relative z-10">Become a Volunteer</h3>
-                  <p className="text-emerald-100 text-sm mb-6 relative z-10">
+                  <p className="text-blue-100 text-sm mb-6 relative z-10">
                     Join volunteers making a difference across Africa.
                   </p>
                   <motion.button
-                    className="w-full bg-white text-emerald-600 hover:bg-gray-100 py-3 rounded-lg font-medium transition-colors shadow relative z-10"
-                    whileHover={{ scale: 1.02 }}
+                    className="w-full bg-white text-blue-600 hover:bg-gray-100 py-3 rounded-lg font-medium transition-colors shadow relative z-10 hover:shadow-lg"
+                    whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     Apply Now
@@ -538,22 +566,26 @@ const Community = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                  <BookOpen className="h-6 w-6 text-emerald-600 mb-4" />
-                  <h3 className="font-bold text-gray-900 mb-4">Resources</h3>
+                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:border-blue-200 transition-all duration-300">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-emerald-50">
+                      <BookOpen className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-900">Resources</h3>
+                  </div>
                   <div className="space-y-3">
                     {['Open Source', 'Learning', 'Mentorship', 'Scholarships'].map((item, idx) => (
                       <motion.a 
                         key={idx}
                         href="#" 
-                        className="flex items-center justify-between text-gray-700 hover:text-emerald-600 p-2 rounded hover:bg-emerald-50 transition-colors"
+                        className="flex items-center justify-between text-gray-700 hover:text-blue-600 p-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-emerald-50 transition-all duration-300"
                         whileHover={{ x: 5 }}
                       >
                         <div className="flex items-center">
-                          <ChevronRight className="h-3 w-3 mr-2 text-gray-400" />
+                          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 mr-3"></div>
                           <span className="text-sm">{item}</span>
                         </div>
-                        <ArrowRight className="h-3 w-3" />
+                        <ArrowRight className="h-3 w-3 text-gray-400" />
                       </motion.a>
                     ))}
                   </div>
@@ -567,30 +599,34 @@ const Community = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                <div className="bg-gray-900 rounded-xl p-6 text-white relative overflow-hidden">
+                <div className="bg-gradient-to-br from-gray-900 to-blue-900 rounded-xl p-6 text-white relative overflow-hidden">
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-emerald-500/10"
                     animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
                     transition={{ duration: 5, repeat: Infinity }}
                     style={{ backgroundSize: '200% 200%' }}
                   />
-                  <Coffee className="h-6 w-6 mb-4 relative z-10" />
-                  <h3 className="font-bold text-xl mb-3 relative z-10">Connect</h3>
+                  <div className="flex items-center gap-2 mb-4 relative z-10">
+                    <div className="p-2 rounded-lg bg-gradient-to-r from-blue-500/20 to-emerald-500/20">
+                      <MessageSquare className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="font-bold text-xl">Connect</h3>
+                  </div>
                   <p className="text-gray-300 text-sm mb-6 relative z-10">
                     Join our community forums and Discord.
                   </p>
                   <div className="space-y-3 relative z-10">
                     <motion.button
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                      whileHover={{ scale: 1.02 }}
+                      className="w-full bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-blue-500/25"
+                      whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <MessageCircle className="h-4 w-4" />
                       Discord
                     </motion.button>
                     <motion.button
-                      className="w-full bg-white/10 hover:bg-white/20 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                      whileHover={{ scale: 1.02 }}
+                      className="w-full bg-white/10 hover:bg-white/20 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-white/10"
+                      whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Users className="h-4 w-4" />

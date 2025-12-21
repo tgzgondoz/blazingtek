@@ -3,6 +3,9 @@ import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Import the logo
+import logo from '../assets/logo.png';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
@@ -56,7 +59,17 @@ const Navbar = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400 }}
           >
-            <Link to="/" className="flex items-center gap-2 group">
+            <Link to="/" className="flex items-center gap-3 group">
+              {/* Logo Image */}
+              <div className="flex-shrink-0">
+                <img 
+                  src={logo} 
+                  alt="BlazingTek Logo" 
+                  className="h-8 w-auto object-contain filter brightness-0 invert"
+                />
+              </div>
+              
+              {/* Text Container */}
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   <span className="text-xl font-bold text-white tracking-tight">BLAZINGTEK</span>

@@ -60,19 +60,33 @@ const Navbar = () => {
             transition={{ type: "spring", stiffness: 400 }}
           >
             <Link to="/" className="flex items-center gap-3 group">
-              {/* Logo Image - CHANGED: Removed filter to match footer */}
+              {/* Logo Image */}
               <div className="flex-shrink-0">
                 <img 
                   src={logo} 
                   alt="BlazingTek Logo" 
-                  className="h-8 w-8 object-contain"  // Changed from w-auto to w-8
+                  className="h-8 w-8 object-contain"
                 />
               </div>
               
-              {/* Text Container */}
+              {/* Text Container - CHANGED: Added space and gradient to TEK */}
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
-                  <span className="text-xl font-bold text-white tracking-tight">BLAZINGTEK</span>
+                  <span className="text-xl font-bold text-white tracking-tight">BLAZING</span>
+                  <motion.span 
+                    className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{ backgroundSize: '200% 200%' }}
+                  >
+                    TEK
+                  </motion.span>
                 </div>
                 <span className="text-xs text-gray-400">Research Labs</span>
               </div>

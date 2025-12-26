@@ -2,19 +2,58 @@ import { motion } from 'framer-motion';
 import { Users, Linkedin, Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import bg2 from '../assets/bg2.jpg';
 
+
+// Import profile pictures - CORRECTED
+import AndrewChigona from '../assets/leaders/Andrew_Chigona.png'; // .png not .jpg
+import GarryPayera from '../assets/leaders/Garry_Payera.png';     // .png not .jpg
+import FrankFarakezi from '../assets/leaders/Frank_Farakezi.png'; // .png not .jpg
+import TakudzwaMasomera from '../assets/leaders/Takudzwa_Masomera.png'; // .png not .jpg
+import ClaudiusSaranavo from '../assets/leaders/Claudius_Saranavo.png'; // .png not .jpg
+import TatendaGondo from '../assets/leaders/Tatenda_Gondo.jpg'; // This one is .jpg (note the filename ends with 'j' not 'o')
+
 const Abouts = () => {
   const leaders = [
-    { name: "Andrew Chigona", role: "CEO", email: "andrew@blazingtek.com" },
-    { name: "Garry Payera", role: "Brand Ambassador", email: "garry@blazingtek.com" },
-    { name: "Frank Farakezi", role: "Events Coordinator", email: "frank@blazingtek.com" },
-    { name: "Takudzwa Masomera", role: "Project Lead", email: "takudzwa@blazingtek.com" },
-    { name: "Claudius Saranavo", role: "Creative Director", email: "claudius@blazingtek.com" },
-    { name: "Tatenda Gondo", role: "IT Specialist", email: "tatenda@blazingtek.com" }
+    { 
+      name: "Andrew Chigona", 
+      role: "CEO", 
+      email: "andrew@blazingtek.com",
+      image: AndrewChigona
+    },
+    { 
+      name: "Garry Payera", 
+      role: "Brand Ambassador", 
+      email: "garry@blazingtek.com",
+      image: GarryPayera
+    },
+    { 
+      name: "Frank Farakezi", 
+      role: "Events Coordinator", 
+      email: "frank@blazingtek.com",
+      image: FrankFarakezi
+    },
+    { 
+      name: "Takudzwa Masomera", 
+      role: "Project Lead", 
+      email: "takudzwa@blazingtek.com",
+      image: TakudzwaMasomera
+    },
+    { 
+      name: "Claudius Saranavo", 
+      role: "Creative Director", 
+      email: "claudius@blazingtek.com",
+      image: ClaudiusSaranavo
+    },
+    { 
+      name: "Tatenda Gondo", 
+      role: "IT Specialist", 
+      email: "tatenda@blazingtek.com",
+      image: TatendaGondo
+    }
   ];
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Updated gradient colors */}
+      {/* Hero Section */}
       <section className="relative text-white py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -22,7 +61,6 @@ const Abouts = () => {
             alt="About Background"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          {/* Updated to match home page gradients */}
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
@@ -64,7 +102,7 @@ const Abouts = () => {
         </motion.div>
       </section>
 
-      {/* Team Section - Updated color scheme */}
+      {/* Team Section */}
       <section className="py-12 md:py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <motion.div
@@ -85,7 +123,7 @@ const Abouts = () => {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             {leaders.map((leader, index) => (
               <motion.div
                 key={index}
@@ -96,32 +134,38 @@ const Abouts = () => {
                 whileHover={{ y: -4 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center">
+                <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center h-full">
                   <div className="relative mb-4">
-                    <div className="w-12 h-12 rounded-full mx-auto bg-gradient-to-br from-blue-50 to-emerald-50 flex items-center justify-center text-gray-700 text-sm font-bold group-hover:from-blue-100 group-hover:to-emerald-100 transition-all">
-                      {leader.name.split(' ').map(n => n[0]).join('')}
+                    {/* Profile Image */}
+                    <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-white shadow-md mb-3 group-hover:border-blue-200 transition-all duration-300">
+                      <img 
+                        src={leader.image} 
+                        alt={leader.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
                   </div>
                   
-                  <h3 className="text-sm font-bold text-gray-900 mb-1 truncate group-hover:text-blue-600 transition-colors">
+                  {/* Name with hover effect */}
+                  <h3 className="text-base font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
                     {leader.name}
                   </h3>
                   <p className="text-gray-600 text-xs mb-3 px-2 py-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full font-medium">
                     {leader.role}
                   </p>
                   
-                  <div className="flex justify-center gap-3">
+                  <div className="flex justify-center gap-3 mt-4">
                     <a 
                       href="#"
-                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm"
+                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
                       aria-label={`Connect with ${leader.name} on LinkedIn`}
                     >
                       <Linkedin className="h-3.5 w-3.5" />
                     </a>
                     <a 
                       href={`mailto:${leader.email}`}
-                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm"
+                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
                       aria-label={`Email ${leader.name}`}
                     >
                       <Mail className="h-3.5 w-3.5" />
@@ -134,7 +178,7 @@ const Abouts = () => {
         </div>
       </section>
 
-      {/* Compact Contact Section - Updated colors */}
+      {/* Compact Contact Section */}
       <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-4">
           <motion.div 

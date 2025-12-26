@@ -41,7 +41,7 @@ const Abouts = () => {
       name: "Claudius Saranavo", 
       role: "Creative Director", 
       email: "claudius@blazingtek.com",
-      image: ClaudiusSaranavo
+      image: GarryPayera // SWAPPED: Changed from ClaudiusSaranavo to GarryPayera
     },
     { 
       name: "Tatenda Gondo", 

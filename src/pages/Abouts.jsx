@@ -123,7 +123,8 @@ const Abouts = () => {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+          {/* Changed grid-cols-6 to grid-cols-3 for 3 per row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {leaders.map((leader, index) => (
               <motion.div
                 key={index}
@@ -134,41 +135,41 @@ const Abouts = () => {
                 whileHover={{ y: -4 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center h-full">
-                  <div className="relative mb-4">
-                    {/* Profile Image */}
-                    <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-white shadow-md mb-3 group-hover:border-blue-200 transition-all duration-300">
+                <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center h-full">
+                  <div className="relative mb-6">
+                    {/* Profile Image - Increased from w-20 h-20 to w-32 h-32 */}
+                    <div className="w-32 h-32 rounded-full mx-auto overflow-hidden border-4 border-white shadow-lg mb-4 group-hover:border-blue-200 transition-all duration-300">
                       <img 
                         src={leader.image} 
                         alt={leader.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md"></div>
                   </div>
                   
                   {/* Name with hover effect */}
-                  <h3 className="text-base font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                     {leader.name}
                   </h3>
-                  <p className="text-gray-600 text-xs mb-3 px-2 py-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full font-medium">
+                  <p className="text-gray-600 text-sm mb-4 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full font-medium inline-block">
                     {leader.role}
                   </p>
                   
-                  <div className="flex justify-center gap-3 mt-4">
+                  <div className="flex justify-center gap-4 mt-6">
                     <a 
                       href="#"
-                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+                      className="p-2 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
                       aria-label={`Connect with ${leader.name} on LinkedIn`}
                     >
-                      <Linkedin className="h-3.5 w-3.5" />
+                      <Linkedin className="h-4 w-4" />
                     </a>
                     <a 
                       href={`mailto:${leader.email}`}
-                      className="p-1.5 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+                      className="p-2 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
                       aria-label={`Email ${leader.name}`}
                     >
-                      <Mail className="h-3.5 w-3.5" />
+                      <Mail className="h-4 w-4" />
                     </a>
                   </div>
                 </div>

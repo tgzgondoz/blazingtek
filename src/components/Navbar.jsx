@@ -60,12 +60,12 @@ const Navbar = () => {
             transition={{ type: "spring", stiffness: 400 }}
           >
             <Link to="/" className="flex items-center gap-3 group">
-              {/* Logo Image */}
+              {/* Logo Image - CHANGED: Removed filter to match footer */}
               <div className="flex-shrink-0">
                 <img 
                   src={logo} 
                   alt="BlazingTek Logo" 
-                  className="h-8 w-auto object-contain filter brightness-0 invert"
+                  className="h-8 w-8 object-contain"  // Changed from w-auto to w-8
                 />
               </div>
               

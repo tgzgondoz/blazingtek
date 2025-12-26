@@ -235,27 +235,6 @@ const Home = () => {
                   </Link>
                 </motion.div>
               </div>
-
-              {/* Stats Bar */}
-              <motion.div
-                className="mt-12 pt-8 border-t border-white/10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-              >
-                <div className="grid grid-cols-3 gap-6">
-                  {[
-                    { number: "50+", label: "Projects" },
-                    { number: "15+", label: "Countries" },
-                    { number: "100%", label: "Impact" },
-                  ].map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-2xl font-bold text-white mb-1">{stat.number}</div>
-                      <div className="text-sm text-gray-300">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
             </motion.div>
 
             {/* Right Column - Image Carousel */}
@@ -338,41 +317,6 @@ const Home = () => {
 
                           {/* Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
-
-                          {/* Image Info Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-6">
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{
-                                opacity: currentBreakthrough === index ? 1 : 0,
-                                y: currentBreakthrough === index ? 0 : 20,
-                              }}
-                              transition={{ delay: 0.3 }}
-                              className="text-white"
-                            >
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                                <span className="text-sm font-medium text-gray-300">
-                                  Latest Breakthrough
-                                </span>
-                              </div>
-                              <h3 className="text-xl font-bold mb-2">
-                                Innovation in Action
-                              </h3>
-                              <p className="text-sm text-gray-300 mb-4">
-                                Our team successfully deployed AI-assisted
-                                irrigation robots in Kenya, increasing crop
-                                yields by 40% while reducing water usage by 60%.
-                              </p>
-                              <Link
-                                to="/news"
-                                className="inline-flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white group"
-                              >
-                                <span>Read Case Study</span>
-                                <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                              </Link>
-                            </motion.div>
-                          </div>
                         </div>
                       </motion.div>
                     ))}

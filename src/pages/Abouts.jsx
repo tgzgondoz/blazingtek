@@ -23,7 +23,7 @@ const Abouts = () => {
       name: "Garry Payera", 
       role: "Brand Ambassador", 
       email: "garry@blazingtek.com",
-      image: GarryPayera
+      image: ClaudiusSaranavo // SWAPPED: Garry Payera now shows Claudius's image
     },
     { 
       name: "Frank Farakezi", 
@@ -41,7 +41,7 @@ const Abouts = () => {
       name: "Claudius Saranavo", 
       role: "Creative Director", 
       email: "claudius@blazingtek.com",
-      image: GarryPayera // SWAPPED: Changed from ClaudiusSaranavo to GarryPayera
+      image: GarryPayera // SWAPPED: Claudius Saranavo now shows Garry's image
     },
     { 
       name: "Tatenda Gondo", 
@@ -50,7 +50,6 @@ const Abouts = () => {
       image: TatendaGondo
     }
   ];
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}

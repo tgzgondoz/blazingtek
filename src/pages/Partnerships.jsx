@@ -247,7 +247,7 @@ const Partnerships = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-colors"
-                      placeholder="+233 24 123 4567"
+                      placeholder="+263 788 605 607"
                     />
                   </div>
                 </div>
@@ -407,13 +407,13 @@ const Partnerships = () => {
                       <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-emerald-50">
                         <Mail className="h-3 w-3 text-gray-600" />
                       </div>
-                      <span className="text-sm text-gray-600">partnerships@blazingtek.com</span>
+                      <span className="text-sm text-gray-600">info@blazingtek.com</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-emerald-50">
                         <Phone className="h-3 w-3 text-gray-600" />
                       </div>
-                      <span className="text-sm text-gray-600">+1 (555) 123-4567</span>
+                      <span className="text-sm text-gray-600">+263 788 605 607</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-emerald-50">

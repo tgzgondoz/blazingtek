@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { Users, Linkedin, Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import bg2 from '../assets/bg2.jpg';
 
-
 // Import profile pictures - CORRECTED
 import AndrewChigona from '../assets/leaders/Andrew_Chigona.png'; // .png not .jpg
 import GarryPayera from '../assets/leaders/Garry_Payera.png';     // .png not .jpg
@@ -50,6 +49,7 @@ const Abouts = () => {
       image: TatendaGondo
     }
   ];
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -178,8 +178,8 @@ const Abouts = () => {
         </div>
       </section>
 
-      {/* Compact Contact Section */}
-      <section className="py-12 md:py-16 bg-gradient-to-br from-gray-50 to-white">
+      {/* Compact Contact Section - UPDATED */}
+      <section className="py-12 md:py-16 bg-gradient-to-br from-gray-100 to-gray-200">
         <div className="max-w-4xl mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -194,26 +194,26 @@ const Abouts = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
               Contact Our Team
             </h2>
-            <p className="text-gray-600 max-w-md mx-auto text-sm md:text-base">
+            <p className="text-gray-700 max-w-md mx-auto text-sm md:text-base">
               We're here to help you with innovative solutions
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <motion.a
-              href="tel:+15551234567"
+              href="tel:+263788605607"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group text-center"
+              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-50 to-emerald-50 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-100 group-hover:to-emerald-100 transition-colors">
-                <Phone className="h-6 w-6 text-blue-500" />
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
+                <Phone className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Call Us</h3>
-              <p className="text-gray-600 text-sm">+1 (555) 123-4567</p>
+              <p className="text-gray-700 text-sm font-medium">+263 788 605 607</p>
               <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 Click to call →
               </div>
@@ -226,13 +226,13 @@ const Abouts = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 group text-center"
+              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-50 to-emerald-50 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-100 group-hover:to-emerald-100 transition-colors">
-                <Mail className="h-6 w-6 text-emerald-500" />
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
+                <Mail className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-gray-600 text-sm">info@blazingtek.com</p>
+              <p className="text-gray-700 text-sm font-medium">info@blazingtek.com</p>
               <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 Click to email →
               </div>
@@ -245,18 +245,31 @@ const Abouts = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group text-center"
+              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-50 to-emerald-50 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-100 group-hover:to-emerald-100 transition-colors">
-                <MapPin className="h-6 w-6 text-blue-500" />
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
+                <MapPin className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Visit Us</h3>
-              <p className="text-gray-600 text-sm">Harare, Zimbabwe</p>
+              <p className="text-gray-700 text-sm font-medium">Harare, Zimbabwe</p>
               <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 View location →
               </div>
             </motion.a>
           </div>
+
+          {/* Additional enhancement - Brief contact info */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="mt-8 text-center"
+          >
+            <p className="text-gray-600 text-sm">
+              Available Monday - Friday, 8:00 AM - 5:00 PM CAT
+            </p>
+          </motion.div>
         </div>
       </section>
     </div>

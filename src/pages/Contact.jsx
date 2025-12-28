@@ -11,9 +11,9 @@ const Contact = () => {
   });
 
   const contactInfo = [
-    { icon: <Mail className="h-4 w-4" />, title: "General Inquiries", info: "info@blazingtek.co", link: "mailto:info@blazingtek.co" },
-    { icon: <Mail className="h-4 w-4" />, title: "Sales", info: "sales@blazingtek.co", link: "mailto:sales@blazingtek.co" },
-    { icon: <Phone className="h-4 w-4" />, title: "Phone", info: "+1 (555) 123-4567", link: "tel:+15551234567" },
+    { icon: <Mail className="h-4 w-4" />, title: "General Inquiries", info: "info@blazingtek.com", link: "mailto:info@blazingtek.com" },
+    { icon: <Mail className="h-4 w-4" />, title: "Sales", info: "sales@blazingtek.com", link: "mailto:sales@blazingtek.com" },
+    { icon: <Phone className="h-4 w-4" />, title: "Phone", info: "+263 788 605 607", link: "tel:+263788605607" },
     { icon: <MapPin className="h-4 w-4" />, title: "Location", info: "Harare, Zimbabwe", link: "#" },
   ];
 
@@ -273,18 +273,14 @@ const Contact = () => {
                 <h5 className="font-semibold text-gray-900">Our Presence</h5>
               </div>
               <div className="flex flex-wrap gap-3">
-                {['Harare, Zimbabwe', 'Nairobi, Kenya', 'Accra, Ghana', 'Cape Town, South Africa'].map((city, idx) => (
-                  <motion.span 
-                    key={idx} 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-emerald-50 hover:border-blue-200 hover:text-blue-700 transition-all cursor-pointer"
-                  >
-                    {city}
-                  </motion.span>
-                ))}
+                <motion.span 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  className="px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-emerald-50 hover:border-blue-200 hover:text-blue-700 transition-all cursor-pointer"
+                >
+                  Harare, Zimbabwe
+                </motion.span>
               </div>
             </div>
             

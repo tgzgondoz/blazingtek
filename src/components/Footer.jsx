@@ -2,11 +2,7 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  Twitter, 
-  Linkedin, 
-  Github, 
-  Instagram, 
-  Globe,
+  Linkedin,
   Heart
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -15,15 +11,11 @@ import logo from '../assets/logo.png';
 
 const Footer = () => {
   const socialLinks = [
-    { icon: <Twitter size={16} />, name: 'Twitter', url: 'https://twitter.com/blazingtek', color: 'hover:bg-blue-500' },
-    { icon: <Linkedin size={16} />, name: 'LinkedIn', url: 'https://linkedin.com/company/blazingtek', color: 'hover:bg-blue-700' },
-    { icon: <Github size={16} />, name: 'GitHub', url: 'https://github.com/blazingtek', color: 'hover:bg-gray-800' },
-    { icon: <Instagram size={16} />, name: 'Instagram', url: 'https://instagram.com/blazingtek', color: 'hover:bg-pink-600' },
-    { icon: <Globe size={16} />, name: 'Research Portal', url: 'https://research.blazingtek.co', color: 'hover:bg-cyan-500' },
+    { icon: <Linkedin size={16} />, name: 'LinkedIn', url: 'https://linkedin.com/company/blazingtek' },
   ];
 
   return (
-    <footer className="bg-gray-900 text-white border-t border-white/10">
+    <footer className="bg-[#0A0F14] text-white border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand */}
@@ -38,20 +30,9 @@ const Footer = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
                 <span className="text-lg font-bold text-white">BLAZING</span>
-                <motion.span 
-                  className="text-lg font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-                  animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  style={{ backgroundSize: '200% 200%' }}
-                >
+                <span className="text-lg font-bold text-[#00D4AA]">
                   TEK
-                </motion.span>
+                </span>
               </div>
               <span className="text-xs text-gray-400">Research Labs</span>
             </div>
@@ -67,7 +48,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className={`p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 border border-white/5 ${social.color}`}
+                className="p-2 rounded-lg bg-[#1A232E] hover:bg-[#0066CC] transition-all duration-300 border border-white/5"
                 aria-label={social.name}
               >
                 {social.icon}
@@ -84,7 +65,7 @@ const Footer = () => {
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
-                  <Heart size={14} className="mx-1 text-red-500" />
+                  <Heart size={14} className="mx-1 text-[#00D4AA]" />
                 </motion.span>
                 in Africa
               </span>
@@ -102,7 +83,7 @@ const Footer = () => {
                 >
                   <Link 
                     to={`/${item.toLowerCase()}`} 
-                    className="hover:text-gray-300 transition-colors"
+                    className="hover:text-[#00D4AA] transition-colors"
                   >
                     {item}
                   </Link>
@@ -112,22 +93,22 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Location */}
+        {/* Contact Info */}
         <div className="mt-6 pt-6 border-t border-white/10">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Mail size={12} />
-              <a href="mailto:info@blazingtek.co" className="hover:text-blue-400 transition-colors">info@blazingtek.co</a>
+              <a href="mailto:info@blazingtek.co" className="hover:text-[#00D4AA] transition-colors">info@blazingtek.co</a>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center gap-1">
               <Phone size={12} />
-              <a href="tel:+263788605607" className="hover:text-blue-400 transition-colors">+263 788 605 607</a>
+              <a href="tel:+263788605607" className="hover:text-[#00D4AA] transition-colors">+263 788 605 607</a>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center gap-1">
               <MapPin size={12} />
-              <span>Zimbabwe</span>
+              <span>Harare, Zimbabwe</span>
             </div>
           </div>
         </div>

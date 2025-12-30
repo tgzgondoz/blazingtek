@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
-import { Users, Linkedin, Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
+import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import bg2 from '../assets/bg2.jpg';
 
-// Import profile pictures - CORRECTED
-import AndrewChigona from '../assets/leaders/Andrew_Chigona.png'; // .png not .jpg
-import GarryPayera from '../assets/leaders/Garry_Payera.png';     // .png not .jpg
-import FrankFarakezi from '../assets/leaders/Frank_Farakezi.png'; // .png not .jpg
-import TakudzwaMasomera from '../assets/leaders/Takudzwa_Masomera.png'; // .png not .jpg
-import ClaudiusSaranavo from '../assets/leaders/Claudius_Saranavo.png'; // .png not .jpg
-import TatendaGondo from '../assets/leaders/Tatenda_Gondo.jpg'; // This one is .jpg (note the filename ends with 'j' not 'o')
+// Import profile pictures
+import AndrewChigona from '../assets/leaders/Andrew_Chigona.png';
+import GarryPayera from '../assets/leaders/Garry_Payera.png';
+import FrankFarakezi from '../assets/leaders/Frank_Farakezi.png';
+import TakudzwaMasomera from '../assets/leaders/Takudzwa_Masomera.png';
+import ClaudiusSaranavo from '../assets/leaders/Claudius_Saranavo.png';
+import TatendaGondo from '../assets/leaders/Tatenda_Gondo.jpg';
 
 const Abouts = () => {
   const leaders = [
@@ -22,7 +22,7 @@ const Abouts = () => {
       name: "Garry Payera", 
       role: "Brand Ambassador", 
       email: "garry@blazingtek.com",
-      image: ClaudiusSaranavo // SWAPPED: Garry Payera now shows Claudius's image
+      image: GarryPayera // FIXED: Correct image for Garry
     },
     { 
       name: "Frank Farakezi", 
@@ -40,7 +40,7 @@ const Abouts = () => {
       name: "Claudius Saranavo", 
       role: "Creative Director", 
       email: "claudius@blazingtek.com",
-      image: GarryPayera // SWAPPED: Claudius Saranavo now shows Garry's image
+      image: ClaudiusSaranavo // FIXED: Correct image for Claudius
     },
     { 
       name: "Tatenda Gondo", 
@@ -51,7 +51,7 @@ const Abouts = () => {
   ];
   
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0A0F14]">
       {/* Hero Section */}
       <section className="relative text-white py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0">
@@ -60,9 +60,7 @@ const Abouts = () => {
             alt="About Background"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
+          <div className="absolute inset-0 bg-[#0A0F14] opacity-90"></div>
         </div>
 
         <motion.div 
@@ -75,19 +73,17 @@ const Abouts = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold mb-4 leading-tight drop-shadow-lg"
+            className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
           >
             <span className="text-white">About </span>
-            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent font-extrabold drop-shadow-lg">
-              BlazingTek
-            </span>
+            <span className="text-[#00D4AA] font-bold">BlazingTek</span>
           </motion.h1>
           
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
+            className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
           >
             Pioneering African innovation through cutting-edge technology
           </motion.p>
@@ -96,13 +92,13 @@ const Abouts = () => {
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full drop-shadow-lg"
+            className="mx-auto mt-8 h-1 bg-[#00D4AA] rounded-full"
           />
         </motion.div>
       </section>
 
       {/* Team Section */}
-      <section className="py-12 md:py-16 bg-white">
+      <section className="py-12 md:py-16 bg-[#0A0F14]">
         <div className="max-w-6xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -110,19 +106,15 @@ const Abouts = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-100">
-              <Users className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-semibold text-blue-600">Our Leadership Team</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Meet the Visionaries
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Meet Our Team
             </h2>
-            <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
+            <div className="w-16 h-1 bg-[#00D4AA] mx-auto mb-4"></div>
+            <p className="text-gray-400 max-w-xl mx-auto">
               The team driving innovation and technology solutions across Africa
             </p>
           </motion.div>
           
-          {/* Changed grid-cols-6 to grid-cols-3 for 3 per row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {leaders.map((leader, index) => (
               <motion.div
@@ -134,43 +126,33 @@ const Abouts = () => {
                 whileHover={{ y: -4 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-100 text-center h-full">
+                <div className="bg-[#1A232E] rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/5 hover:border-[#00D4AA]/30 text-center h-full">
                   <div className="relative mb-6">
-                    {/* Profile Image - Increased from w-20 h-20 to w-32 h-32 */}
-                    <div className="w-32 h-32 rounded-full mx-auto overflow-hidden border-4 border-white shadow-lg mb-4 group-hover:border-blue-200 transition-all duration-300">
+                    {/* Profile Image */}
+                    <div className="w-32 h-32 rounded-full mx-auto overflow-hidden border-4 border-[#0A0F14] shadow-lg mb-4 group-hover:border-[#00D4AA]/50 transition-all duration-300">
                       <img 
                         src={leader.image} 
                         alt={leader.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md"></div>
                   </div>
                   
-                  {/* Name with hover effect */}
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  {/* Name and Role */}
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00D4AA] transition-colors">
                     {leader.name}
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full font-medium inline-block">
+                  <p className="text-[#00D4AA] text-sm mb-4 px-3 py-1.5 bg-[#0A0F14] rounded-full font-medium inline-block">
                     {leader.role}
                   </p>
                   
-                  <div className="flex justify-center gap-4 mt-6">
-                    <a 
-                      href="#"
-                      className="p-2 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
-                      aria-label={`Connect with ${leader.name} on LinkedIn`}
-                    >
-                      <Linkedin className="h-4 w-4" />
-                    </a>
-                    <a 
-                      href={`mailto:${leader.email}`}
-                      className="p-2 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 hover:from-blue-500 hover:to-emerald-500 text-gray-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
-                      aria-label={`Email ${leader.name}`}
-                    >
-                      <Mail className="h-4 w-4" />
-                    </a>
-                  </div>
+                  {/* Email */}
+                  <a 
+                    href={`mailto:${leader.email}`}
+                    className="inline-block text-gray-400 hover:text-[#00D4AA] transition-colors text-sm mt-2"
+                  >
+                    {leader.email}
+                  </a>
                 </div>
               </motion.div>
             ))}
@@ -178,8 +160,8 @@ const Abouts = () => {
         </div>
       </section>
 
-      {/* Compact Contact Section - UPDATED */}
-      <section className="py-12 md:py-16 bg-gradient-to-br from-gray-100 to-gray-200">
+      {/* Contact Section */}
+      <section className="py-12 md:py-16 bg-[#1A232E]">
         <div className="max-w-4xl mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -187,19 +169,17 @@ const Abouts = () => {
             viewport={{ once: true }}
             className="text-center mb-8"
           >
-            <div className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-100">
-              <MessageSquare className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-semibold text-blue-600">Get in Touch</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
               Contact Our Team
             </h2>
-            <p className="text-gray-700 max-w-md mx-auto text-sm md:text-base">
+            <div className="w-12 h-1 bg-[#00D4AA] mx-auto mb-4"></div>
+            <p className="text-gray-400 max-w-md mx-auto">
               We're here to help you with innovative solutions
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            {/* Phone */}
             <motion.a
               href="tel:+263788605607"
               initial={{ opacity: 0, y: 10 }}
@@ -207,18 +187,19 @@ const Abouts = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group text-center"
+              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#0066CC] hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
-                <Phone className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#0066CC]/20 transition-colors">
+                <Phone className="h-6 w-6 text-[#0066CC]" />
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Call Us</h3>
-              <p className="text-gray-700 text-sm font-medium">+263 788 605 607</p>
-              <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <h3 className="text-base font-semibold text-white mb-2">Call Us</h3>
+              <p className="text-gray-300 text-sm font-medium">+263 788 605 607</p>
+              <div className="text-[#0066CC] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 Click to call →
               </div>
             </motion.a>
 
+            {/* Email */}
             <motion.a
               href="mailto:info@blazingtek.com"
               initial={{ opacity: 0, y: 10 }}
@@ -226,18 +207,19 @@ const Abouts = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 group text-center"
+              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#00D4AA] hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
-                <Mail className="h-6 w-6 text-emerald-600" />
+              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#00D4AA]/20 transition-colors">
+                <Mail className="h-6 w-6 text-[#00D4AA]" />
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-gray-700 text-sm font-medium">info@blazingtek.com</p>
-              <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <h3 className="text-base font-semibold text-white mb-2">Email Us</h3>
+              <p className="text-gray-300 text-sm font-medium">info@blazingtek.com</p>
+              <div className="text-[#00D4AA] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 Click to email →
               </div>
             </motion.a>
 
+            {/* Location */}
             <motion.a
               href="#"
               initial={{ opacity: 0, y: 10 }}
@@ -245,20 +227,20 @@ const Abouts = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-xl border border-gray-300 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group text-center"
+              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#0066CC] hover:shadow-xl transition-all duration-300 group text-center"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 mx-auto mb-4 flex items-center justify-center group-hover:from-blue-200 group-hover:to-emerald-200 transition-colors shadow-sm">
-                <MapPin className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#0066CC]/20 transition-colors">
+                <MapPin className="h-6 w-6 text-[#0066CC]" />
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Visit Us</h3>
-              <p className="text-gray-700 text-sm font-medium">Harare, Zimbabwe</p>
-              <div className="text-transparent bg-gradient-to-r from-blue-500 to-emerald-500 bg-clip-text text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <h3 className="text-base font-semibold text-white mb-2">Visit Us</h3>
+              <p className="text-gray-300 text-sm font-medium">Harare, Zimbabwe</p>
+              <div className="text-[#0066CC] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 View location →
               </div>
             </motion.a>
           </div>
 
-          {/* Additional enhancement - Brief contact info */}
+          {/* Contact Hours */}
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -266,7 +248,7 @@ const Abouts = () => {
             transition={{ delay: 0.4 }}
             className="mt-8 text-center"
           >
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-500 text-sm">
               Available Monday - Friday, 8:00 AM - 5:00 PM CAT
             </p>
           </motion.div>

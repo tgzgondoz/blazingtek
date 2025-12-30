@@ -1,4 +1,4 @@
-import { ArrowRight, Cpu, Zap, Users, Globe, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -8,8 +8,7 @@ import slide1 from "../assets/slide1.jpg";
 import slide2 from "../assets/slide2.jpg";
 import slide3 from "../assets/slide3.jpg";
 import slide4 from "../assets/slide4.jpg";
-import logo from "../assets/logo.png";
-import bgImage from "../assets/bg.jpg"; // Import the background image
+import bgImage from "../assets/bg.jpg";
 
 const Home = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -25,7 +24,6 @@ const Home = () => {
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Auto-rotate breakthroughs
     const interval = setInterval(() => {
       setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length);
     }, 5000);
@@ -55,53 +53,11 @@ const Home = () => {
     },
   ];
 
-  const researchHighlights = [
-    {
-      title: "AI-Powered Agriculture",
-      description:
-        "Developing autonomous drones for precision farming in Sub-Saharan Africa",
-      icon: <Cpu className="h-8 w-8" />,
-      features: [
-        "Autonomous Navigation",
-        "Soil Analysis AI",
-        "Yield Optimization",
-      ],
-      stats: "15+ Deployments",
-    },
-    {
-      title: "Solar Robotics",
-      description:
-        "Sustainable robotic systems powered entirely by renewable energy",
-      icon: <Zap className="h-8 w-8" />,
-      features: ["24/7 Solar Power", "Energy Storage", "Low Maintenance"],
-      stats: "100% Renewable",
-    },
-    {
-      title: "Assistive Technology",
-      description:
-        "Custom prosthetic limbs and mobility aids using 3D printing",
-      icon: <Users className="h-8 w-8" />,
-      features: ["3D Scanning", "Custom Design", "Rapid Production"],
-      stats: "500+ Lives Impacted",
-    },
-    {
-      title: "Global Impact",
-      description: "Collaborating with 15+ African nations on tech solutions",
-      icon: <Globe className="h-8 w-8" />,
-      features: [
-        "International Research",
-        "Local Partnerships",
-        "Scale Solutions",
-      ],
-      stats: "15+ Countries",
-    },
-  ];
-
   return (
-    <div>
-      {/* Enhanced Hero Section with bg.jpg */}
+    <div className="bg-[#0A0F14]">
+      {/* Enhanced Hero Section with Professional Robotics Color Scheme */}
       <section className="relative min-h-screen flex items-center text-white overflow-hidden">
-        {/* Background with bg.jpg and gradient overlay */}
+        {/* Background with more visible bg.jpg */}
         <div className="absolute inset-0">
           <img
             src={bgImage}
@@ -113,42 +69,47 @@ const Home = () => {
               e.target.style.display = 'none';
             }}
           />
-          {/* Gradient overlays for better text readability - Brightness increased slightly */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/70 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/15 via-transparent to-emerald-900/15"></div>
           
-          {/* Animated particles overlay */}
+          {/* Reduced dark overlay to make bg.jpg more visible */}
+          <div className="absolute inset-0 bg-[#0A0F14]" style={{ opacity: 0.85 }}></div>
+          
+          {/* Subtle circuit board pattern - reduced opacity */}
+          <div className="absolute inset-0 opacity-5">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="circuit" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M20,0 L20,40 M0,20 L40,20 M5,5 L35,35 M35,5 L5,35" 
+                        stroke="#00D4AA" 
+                        strokeWidth="0.5" 
+                        fill="none"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#circuit)" />
+            </svg>
+          </div>
+
+          {/* Animated data points */}
           <div className="absolute inset-0">
-            {[...Array(15)].map((_, i) => (
+            {[...Array(20)].map((_, i) => (
               <motion.div
-                key={`particle-${i}`}
-                className="absolute w-1 h-1 bg-white/25 rounded-full"
+                key={`data-${i}`}
+                className="absolute w-0.5 h-0.5 bg-[#00D4AA] rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                 }}
                 animate={{
-                  y: [0, -30, 0],
-                  opacity: [0.25, 0.8, 0.25],
+                  y: [0, -20, 0],
+                  opacity: [0.3, 0.8, 0.3],
                 }}
                 transition={{
-                  duration: 3 + Math.random() * 2,
+                  duration: 2 + Math.random() * 3,
                   repeat: Infinity,
                   delay: Math.random() * 2,
                 }}
               />
             ))}
           </div>
-        </div>
-
-        {/* Subtle grid overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-          }}></div>
         </div>
 
         <motion.div
@@ -175,31 +136,36 @@ const Home = () => {
                 transition={{ delay: 0.6, duration: 0.8 }}
               >
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                  <span className="block text-white/90">Robotics, AI &</span>
-                  <span className="block bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent font-extrabold">
-                    Emerging Tech
+                  <span className="block text-white">Engineering</span>
+                  <span className="block text-[#00D4AA] font-bold mt-2">
+                    Intelligent Systems
                   </span>
-                  <span className="block text-white mt-2">
-                    for <span className="text-emerald-300 font-bold">Africa</span>
+                  <span className="block text-white mt-4">
+                    for <span className="text-[#0066CC]">Africa's Future</span>
                   </span>
                 </h1>
 
-                {/* Subtle decorative line */}
-                <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full mb-8"></div>
+                {/* Tech-inspired accent line */}
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-24 h-1 bg-[#00D4AA] rounded-full"></div>
+                  <div className="text-sm text-white/50 font-mono tracking-wider">
+                    INNOVATION • IMPACT • INTEGRITY
+                  </div>
+                </div>
 
                 <motion.p
-                  className="text-xl mb-10 text-gray-200 leading-relaxed max-w-2xl"
+                  className="text-xl mb-10 text-white/80 leading-relaxed max-w-2xl font-light"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.8 }}
                 >
                   Pioneering research-driven solutions to address Africa's most
-                  pressing challenges through cutting-edge technology and
-                  innovation.
+                  pressing challenges through cutting-edge robotics, AI, and
+                  emerging technologies.
                 </motion.p>
               </motion.div>
 
-              {/* Enhanced CTA Buttons */}
+              {/* Enhanced CTA Buttons with tech feel */}
               <div className="flex flex-wrap gap-4">
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -210,12 +176,14 @@ const Home = () => {
                 >
                   <Link
                     to="/research"
-                    className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-blue-900/25 hover:shadow-xl hover:shadow-blue-900/40"
+                    className="group relative inline-flex items-center gap-3 bg-[#0066CC] hover:bg-[#0052A3] text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-[#0066CC]/20 overflow-hidden"
                   >
-                    <span className="relative z-10">Explore Solutions</span>
+                    <span className="relative z-10">
+                      Explore Research
+                    </span>
                     <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    {/* Button glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                    {/* Hover effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   </Link>
                 </motion.div>
 
@@ -228,9 +196,9 @@ const Home = () => {
                 >
                   <Link
                     to="/contact"
-                    className="group relative inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/20 hover:border-white/40 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300"
+                    className="group relative inline-flex items-center gap-3 bg-transparent hover:bg-white/5 border border-[#00D4AA]/50 hover:border-[#00D4AA] text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300"
                   >
-                    <span>Partner With Us</span>
+                    <span>Collaborate</span>
                     <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
@@ -244,108 +212,120 @@ const Home = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <div className="relative bg-gray-900/40 backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl overflow-hidden">
-                {/* Carousel Container */}
+              {/* Clean carousel box without gradient top border */}
+              <div className="relative bg-[#0A0F14]/70 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl overflow-hidden">
+                
                 <div className="relative">
-                  {/* Carousel Controls */}
+                  {/* Carousel indicator */}
                   <div className="absolute top-4 right-4 z-20">
-                    <div className="flex gap-2">
-                      {breakthroughs.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentBreakthrough(index)}
-                          className="relative group"
-                        >
-                          <motion.div
-                            className={`w-2 h-2 rounded-full ${
-                              index === currentBreakthrough
-                                ? "bg-white"
-                                : "bg-white/50"
-                            }`}
-                            whileHover={{ scale: 1.5 }}
-                          />
-                          {index === currentBreakthrough && (
-                            <motion.div
-                              className="absolute inset-0 border border-white rounded-full"
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1.5 }}
-                              transition={{ duration: 0.2 }}
-                            />
-                          )}
-                        </button>
-                      ))}
+                    <div className="text-xs text-white/40 font-mono">
+                      0{currentBreakthrough + 1}/0{breakthroughs.length}
                     </div>
                   </div>
 
-                  {/* Carousel Images */}
-                  <div className="relative h-96 rounded-xl overflow-hidden">
-                    {breakthroughs.map((breakthrough, index) => (
-                      <motion.div
-                        key={index}
-                        className="absolute inset-0"
-                        initial={{ opacity: 0, scale: 1.1 }}
-                        animate={{
-                          opacity: currentBreakthrough === index ? 1 : 0,
-                          scale: currentBreakthrough === index ? 1 : 1.1,
-                          filter:
-                            currentBreakthrough === index
-                              ? "brightness(1)"
-                              : "brightness(0.7)",
-                        }}
-                        transition={{ duration: 0.8, ease: "easeInOut" }}
-                        style={{
-                          pointerEvents:
-                            currentBreakthrough === index ? "auto" : "none",
-                        }}
+                  {/* Carousel Container */}
+                  <div className="relative">
+                    {/* Carousel Controls */}
+                    <div className="absolute top-16 right-4 z-20">
+                      <div className="flex gap-2">
+                        {breakthroughs.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentBreakthrough(index)}
+                            className="relative group"
+                          >
+                            <motion.div
+                              className={`w-2 h-2 rounded-full ${
+                                index === currentBreakthrough
+                                  ? "bg-[#00D4AA]"
+                                  : "bg-white/30"
+                              }`}
+                              whileHover={{ scale: 1.5 }}
+                            />
+                            {index === currentBreakthrough && (
+                              <motion.div
+                                className="absolute inset-0 border border-[#00D4AA] rounded-full"
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1.5 }}
+                                transition={{ duration: 0.2 }}
+                              />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Carousel Images with Professional Blending Overlay */}
+                    <div className="relative h-96 rounded-xl overflow-hidden">
+                      {breakthroughs.map((breakthrough, index) => (
+                        <motion.div
+                          key={index}
+                          className="absolute inset-0"
+                          initial={{ opacity: 0, scale: 1.1 }}
+                          animate={{
+                            opacity: currentBreakthrough === index ? 1 : 0,
+                            scale: currentBreakthrough === index ? 1 : 1.1,
+                          }}
+                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                          style={{
+                            pointerEvents:
+                              currentBreakthrough === index ? "auto" : "none",
+                          }}
+                        >
+                          <div className="relative h-full w-full">
+                            {/* Image */}
+                            <img
+                              src={breakthrough.image}
+                              alt={breakthrough.alt}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              onError={(e) => {
+                                console.error(
+                                  `Error loading image: ${breakthrough.image}`
+                                );
+                                e.target.onerror = null;
+                                e.target.src = `https://via.placeholder.com/600x400/0A0F14/00D4AA?text=${encodeURIComponent(
+                                  breakthrough.alt
+                                )}`;
+                              }}
+                            />
+
+                            {/* Professional Color Blending Overlay */}
+                            <div className="absolute inset-0 bg-[#0A0F14] mix-blend-multiply opacity-40"></div>
+                            <div className="absolute inset-0 bg-[#0066CC] mix-blend-overlay opacity-20"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F14] via-transparent to-transparent mix-blend-normal opacity-30"></div>
+                            
+                            {/* Subtle edge vignette */}
+                            <div className="absolute inset-0 ring-1 ring-inset ring-white/10"></div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Navigation Arrows */}
+                    <div className="absolute bottom-6 right-6 flex gap-2 z-20">
+                      <button
+                        onClick={() =>
+                          setCurrentBreakthrough(
+                            (prev) =>
+                              (prev - 1 + breakthroughs.length) %
+                              breakthroughs.length
+                          )
+                        }
+                        className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm transition-all hover:scale-110"
                       >
-                        <div className="relative h-full w-full">
-                          {/* Image */}
-                          <img
-                            src={breakthrough.image}
-                            alt={breakthrough.alt}
-                            className="absolute inset-0 w-full h-full object-cover"
-                            onError={(e) => {
-                              console.error(
-                                `Error loading image: ${breakthrough.image}`
-                              );
-                              e.target.onerror = null;
-                              e.target.src = `https://via.placeholder.com/600x400/374151/9ca3af?text=${encodeURIComponent(
-                                breakthrough.alt
-                              )}`;
-                            }}
-                          />
-
-                          {/* Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Navigation Arrows */}
-                  <div className="absolute bottom-4 right-4 flex gap-2 z-20">
-                    <button
-                      onClick={() =>
-                        setCurrentBreakthrough(
-                          (prev) =>
-                            (prev - 1 + breakthroughs.length) %
-                            breakthroughs.length
-                        )
-                      }
-                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
-                    >
-                      <ChevronRight className="h-4 w-4 rotate-180" />
-                    </button>
-                    <button
-                      onClick={() =>
-                        setCurrentBreakthrough(
-                          (prev) => (prev + 1) % breakthroughs.length
-                        )
-                      }
-                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-sm transition-all hover:scale-110"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
+                        <ChevronRight className="h-5 w-5 rotate-180 text-[#00D4AA]" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          setCurrentBreakthrough(
+                            (prev) => (prev + 1) % breakthroughs.length
+                          )
+                        }
+                        className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm transition-all hover:scale-110"
+                      >
+                        <ChevronRight className="h-5 w-5 text-[#00D4AA]" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -353,9 +333,6 @@ const Home = () => {
           </div>
         </motion.div>
       </section>
-
-      {/* Keep the existing Research & Innovation section below */}
-      {/* ... rest of the existing code remains the same ... */}
     </div>
   );
 };

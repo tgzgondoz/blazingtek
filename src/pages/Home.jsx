@@ -113,24 +113,24 @@ const Home = () => {
               e.target.style.display = 'none';
             }}
           />
-          {/* Gradient overlays for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/80 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-emerald-900/20"></div>
+          {/* Gradient overlays for better text readability - Brightness increased slightly */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/15 via-transparent to-emerald-900/15"></div>
           
           {/* Animated particles overlay */}
           <div className="absolute inset-0">
             {[...Array(15)].map((_, i) => (
               <motion.div
                 key={`particle-${i}`}
-                className="absolute w-1 h-1 bg-white/20 rounded-full"
+                className="absolute w-1 h-1 bg-white/25 rounded-full"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                 }}
                 animate={{
                   y: [0, -30, 0],
-                  opacity: [0.2, 0.8, 0.2],
+                  opacity: [0.25, 0.8, 0.25],
                 }}
                 transition={{
                   duration: 3 + Math.random() * 2,

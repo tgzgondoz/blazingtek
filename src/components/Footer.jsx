@@ -3,7 +3,11 @@ import {
   Phone, 
   MapPin, 
   Linkedin,
-  Heart
+  Heart,
+  MessageCircle, // WhatsApp
+  Instagram,
+  Facebook,
+  Music // TikTok (Music icon is commonly used for TikTok)
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -11,7 +15,31 @@ import logo from '../assets/logo.png';
 
 const Footer = () => {
   const socialLinks = [
-    { icon: <Linkedin size={16} />, name: 'LinkedIn', url: 'https://linkedin.com/company/blazingtek' },
+    { 
+      icon: <Linkedin size={16} />, 
+      name: 'LinkedIn', 
+      url: 'https://linkedin.com/company/blazingtek' 
+    },
+    { 
+      icon: <MessageCircle size={16} />, 
+      name: 'WhatsApp', 
+      url: 'https://wa.me/263788605607' 
+    },
+    { 
+      icon: <Instagram size={16} />, 
+      name: 'Instagram', 
+      url: 'https://instagram.com/blazingtek' 
+    },
+    { 
+      icon: <Facebook size={16} />, 
+      name: 'Facebook', 
+      url: 'https://facebook.com/blazingtek' 
+    },
+    { 
+      icon: <Music size={16} />, 
+      name: 'TikTok', 
+      url: 'https://tiktok.com/@blazingtek' 
+    },
   ];
 
   return (
@@ -39,7 +67,7 @@ const Footer = () => {
           </div>
 
           {/* Social Links */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {socialLinks.map((social, index) => (
               <motion.a
                 key={index}
@@ -50,6 +78,7 @@ const Footer = () => {
                 whileTap={{ scale: 0.95 }}
                 className="p-2 rounded-lg bg-[#1A232E] hover:bg-[#0066CC] transition-all duration-300 border border-white/5"
                 aria-label={social.name}
+                title={social.name}
               >
                 {social.icon}
               </motion.a>

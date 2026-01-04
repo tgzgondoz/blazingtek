@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import bg2 from '../assets/bg2.jpg';
 
 // Import profile pictures - Swapped the images
@@ -52,7 +52,7 @@ const Abouts = () => {
   
   return (
     <div className="min-h-screen bg-[#0A0F14]">
-      {/* Hero Section - Updated for better image visibility */}
+      {/* Hero Section - Visible Background */}
       <section className="relative text-white py-20 md:py-24 overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -60,13 +60,11 @@ const Abouts = () => {
             alt="About Background"
             className="absolute inset-0 w-full h-full object-cover"
             style={{
-              filter: 'brightness(0.8) contrast(1.1) saturate(1.2)'
+              filter: 'brightness(0.8) contrast(1.1)'
             }}
           />
-          {/* Gradient overlay - Reduced opacity for better image visibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/70 via-[#0A0F14]/85 to-[#0A0F14]"></div>
-          {/* Subtle radial gradient for focus */}
-          <div className="absolute inset-0 bg-radial-gradient(at top center, rgba(10, 15, 20, 0.3), rgba(10, 15, 20, 0.7))"></div>
+          {/* Subtle overlay - More transparent for visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/40 via-[#0A0F14]/60 to-[#0A0F14]"></div>
         </div>
 
         <motion.div 
@@ -100,44 +98,38 @@ const Abouts = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "120px", opacity: 1 }}
             transition={{ delay: 0.6, duration: 1 }}
-            className="mx-auto mt-12 h-1.5 bg-gradient-to-r from-[#00D4AA] via-[#00D4AA] to-[#0066CC] rounded-full shadow-lg"
-          />
-          
-          {/* Decorative elements for header */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 0.3, scale: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-            className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-r from-[#00D4AA]/20 to-[#0066CC]/20 blur-2xl"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 0.2, scale: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-gradient-to-r from-[#0066CC]/20 to-[#00D4AA]/20 blur-2xl"
+            className="mx-auto mt-12 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] rounded-full shadow-lg"
           />
         </motion.div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-[#0A0F14] via-[#0A0F14] to-[#1A232E]/30">
-        <div className="max-w-6xl mx-auto px-4">
+      {/* Team Section - Glass Effect */}
+      <section className="py-16 md:py-20 relative">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 170, 0.2) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Meet Our Team
             </h2>
-            <div className="w-20 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-6 rounded-full shadow-lg"></div>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <div className="w-24 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-6 rounded-full shadow-lg"></div>
+            <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
               The team driving innovation and technology solutions across Africa
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {leaders.map((leader, index) => (
               <motion.div
                 key={index}
@@ -145,59 +137,55 @@ const Abouts = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                whileHover={{ y: -8, scale: 1.02 }}
+                whileHover={{ y: -6 }}
                 className="group"
               >
-                <div className="bg-gradient-to-b from-[#1A232E] to-[#0A0F14] rounded-2xl p-8 shadow-2xl hover:shadow-[0_25px_50px_rgba(0,212,170,0.15)] transition-all duration-300 border border-white/5 hover:border-[#00D4AA]/30 text-center h-full backdrop-blur-sm">
-                  <div className="relative mb-8">
-                    {/* Profile Image with Professional Styling */}
-                    <div className="relative w-44 h-44 mx-auto mb-8">
-                      {/* Outer gradient ring */}
-                      <div className="absolute inset-0 rounded-full p-1.5 bg-gradient-to-r from-[#00D4AA] via-[#00D4AA] to-[#0066CC] opacity-20 group-hover:opacity-40 group-hover:animate-pulse transition-all duration-500">
-                        <div className="w-full h-full rounded-full bg-[#0A0F14]"></div>
-                      </div>
+                {/* Glass Effect Card */}
+                <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,212,170,0.15)] transition-all duration-300 h-full">
+                  {/* Glow effect on hover */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00D4AA]/0 via-[#00D4AA]/5 to-[#0066CC]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative mb-6">
+                    {/* Profile Image Container */}
+                    <div className="relative w-36 h-36 mx-auto">
+                      {/* Glass ring */}
+                      <div className="absolute -inset-2 rounded-full backdrop-blur-sm bg-white/5 border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      {/* Image container with smooth overlay */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-[#0A0F14] shadow-2xl group-hover:border-transparent transition-all duration-500">
+                      {/* Image */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#00D4AA]/30 transition-all duration-300">
                         <img 
                           src={leader.image} 
                           alt={leader.name}
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover"
                           style={{ 
-                            filter: 'brightness(1.05) contrast(1.05)',
-                            objectPosition: 'center'
+                            filter: 'brightness(1.05) contrast(1.05)'
                           }}
                         />
-                        {/* Subtle overlay on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#00D4AA]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       </div>
-                      
-                      {/* Decorative animated dots */}
-                      <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gradient-to-r from-[#00D4AA] to-[#00D4AA] opacity-0 group-hover:opacity-80 transition-all duration-500 animate-pulse"></div>
-                      <div className="absolute -bottom-2 -left-2 w-5 h-5 rounded-full bg-gradient-to-r from-[#0066CC] to-[#0066CC] opacity-0 group-hover:opacity-80 transition-all duration-500 animate-pulse delay-300"></div>
                     </div>
                   </div>
                   
-                  {/* Name and Role */}
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00D4AA] transition-colors duration-300">
-                    {leader.name}
-                  </h3>
-                  <div className="relative mb-6">
-                    <p className="relative z-10 text-[#00D4AA] text-sm px-5 py-2 bg-gradient-to-r from-[#0A0F14] to-[#1A232E] rounded-full font-medium inline-block border border-[#00D4AA]/20 group-hover:border-[#00D4AA]/50 transition-all duration-300 shadow-lg">
-                      {leader.role}
-                    </p>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#00D4AA]/10 to-[#0066CC]/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                  {/* Content */}
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#00D4AA] transition-colors duration-300">
+                      {leader.name}
+                    </h3>
+                    
+                    <div className="mb-4">
+                      <p className="inline-block px-4 py-1.5 bg-white/5 backdrop-blur-sm rounded-full text-[#00D4AA] text-sm font-medium border border-[#00D4AA]/20 group-hover:border-[#00D4AA]/40 transition-all duration-300">
+                        {leader.role}
+                      </p>
+                    </div>
+                    
+                    {/* Email */}
+                    <a 
+                      href={`mailto:${leader.email}`}
+                      className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00D4AA] transition-all duration-300 text-sm group/email"
+                    >
+                      <Mail size={14} />
+                      {leader.email}
+                    </a>
                   </div>
-                  
-                  {/* Email with hover effect */}
-                  <a 
-                    href={`mailto:${leader.email}`}
-                    className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00D4AA] transition-all duration-300 text-sm mt-2 group/email hover:underline decoration-[#00D4AA]/30"
-                  >
-                    <Mail size={14} className="opacity-0 -translate-x-2 group-hover/email:opacity-100 group-hover/email:translate-x-0 transition-all duration-300" />
-                    {leader.email}
-                    <Mail size={14} className="opacity-0 translate-x-2 group-hover/email:opacity-100 group-hover/email:translate-x-0 transition-all duration-300" />
-                  </a>
                 </div>
               </motion.div>
             ))}
@@ -205,25 +193,34 @@ const Abouts = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-[#1A232E] via-[#0A0F14] to-[#0A0F14]">
-        <div className="max-w-4xl mx-auto px-4">
+      {/* Contact Section - Glass Effect */}
+      <section className="py-16 md:py-20 relative">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 102, 204, 0.2) 1px, transparent 0)`,
+              backgroundSize: '50px 50px'
+            }}></div>
+          </div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Contact Our Team
             </h2>
-            <div className="w-16 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-6 rounded-full shadow-lg"></div>
-            <p className="text-gray-300 text-lg max-w-md mx-auto">
+            <div className="w-20 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-6 rounded-full shadow-lg"></div>
+            <p className="text-gray-300 text-lg md:text-xl max-w-md mx-auto">
               We're here to help you with innovative solutions
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {/* Phone */}
             <motion.a
               href="tel:+263788605607"
@@ -231,18 +228,23 @@ const Abouts = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              whileHover={{ y: -10, scale: 1.03 }}
-              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#0066CC] hover:shadow-[0_25px_50px_rgba(0,102,204,0.2)] transition-all duration-300 group text-center backdrop-blur-sm"
+              whileHover={{ y: -6 }}
+              className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10 shadow-xl hover:shadow-[0_20px_40px_rgba(0,102,204,0.15)] transition-all duration-300 group text-center"
             >
-              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0066CC]/0 to-[#0066CC]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <Phone className="h-9 w-9 text-[#0066CC] relative z-10" />
+              {/* Hover glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#0066CC]/0 via-[#0066CC]/5 to-[#0066CC]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6">
+                <div className="relative w-16 h-16 mx-auto backdrop-blur-sm bg-white/5 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#0066CC]/30 transition-all duration-300">
+                  <Phone className="h-7 w-7 text-[#0066CC]" />
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-4">Call Us</h3>
-              <p className="text-gray-300 text-base font-medium mb-6">+263 788 605 607</p>
-              <div className="text-[#0066CC] text-sm font-medium mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-                Click to call
-                <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
+              
+              <h3 className="text-lg font-semibold text-white mb-3">Call Us</h3>
+              <p className="text-gray-300 text-base font-medium mb-4">+263 788 605 607</p>
+              
+              <div className="text-[#0066CC] text-sm font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Click to call →
               </div>
             </motion.a>
 
@@ -253,40 +255,50 @@ const Abouts = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover={{ y: -10, scale: 1.03 }}
-              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#00D4AA] hover:shadow-[0_25px_50px_rgba(0,212,170,0.2)] transition-all duration-300 group text-center backdrop-blur-sm"
+              whileHover={{ y: -6 }}
+              className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10 shadow-xl hover:shadow-[0_20px_40px_rgba(0,212,170,0.15)] transition-all duration-300 group text-center"
             >
-              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00D4AA]/0 to-[#00D4AA]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <Mail className="h-9 w-9 text-[#00D4AA] relative z-10" />
+              {/* Hover glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00D4AA]/0 via-[#00D4AA]/5 to-[#00D4AA]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6">
+                <div className="relative w-16 h-16 mx-auto backdrop-blur-sm bg-white/5 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00D4AA]/30 transition-all duration-300">
+                  <Mail className="h-7 w-7 text-[#00D4AA]" />
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-4">Email Us</h3>
-              <p className="text-gray-300 text-base font-medium mb-6">info@blazingtek.com</p>
-              <div className="text-[#00D4AA] text-sm font-medium mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-                Click to email
-                <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
+              
+              <h3 className="text-lg font-semibold text-white mb-3">Email Us</h3>
+              <p className="text-gray-300 text-base font-medium mb-4">info@blazingtek.com</p>
+              
+              <div className="text-[#00D4AA] text-sm font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Click to email →
               </div>
             </motion.a>
 
-            {/* Location - UPDATED */}
+            {/* Location */}
             <motion.a
               href="#"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -10, scale: 1.03 }}
-              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#0066CC] hover:shadow-[0_25px_50px_rgba(0,102,204,0.2)] transition-all duration-300 group text-center backdrop-blur-sm"
+              whileHover={{ y: -6 }}
+              className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10 shadow-xl hover:shadow-[0_20px_40px_rgba(0,102,204,0.15)] transition-all duration-300 group text-center"
             >
-              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-8 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0066CC]/0 to-[#0066CC]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <MapPin className="h-9 w-9 text-[#0066CC] relative z-10" />
+              {/* Hover glow */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#0066CC]/0 via-[#0066CC]/5 to-[#0066CC]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6">
+                <div className="relative w-16 h-16 mx-auto backdrop-blur-sm bg-white/5 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#0066CC]/30 transition-all duration-300">
+                  <MapPin className="h-7 w-7 text-[#0066CC]" />
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-4">Visit Us</h3>
-              <p className="text-gray-300 text-base font-medium mb-6">87 Engineering, Highfield, Harare</p>
-              <div className="text-[#0066CC] text-sm font-medium mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-                View location
-                <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
+              
+              <h3 className="text-lg font-semibold text-white mb-3">Visit Us</h3>
+              <p className="text-gray-300 text-base font-medium mb-4">87 Engineering, Highfield, Harare</p>
+              
+              <div className="text-[#0066CC] text-sm font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                View location →
               </div>
             </motion.a>
           </div>
@@ -299,7 +311,7 @@ const Abouts = () => {
             transition={{ delay: 0.4 }}
             className="mt-16 text-center"
           >
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-sm backdrop-blur-sm bg-white/5 inline-block px-4 py-2 rounded-full border border-white/10">
               Available Monday - Friday, 8:00 AM - 5:00 PM CAT
             </p>
           </motion.div>

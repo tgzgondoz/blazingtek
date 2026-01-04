@@ -4,15 +4,12 @@ import {
   User, 
   ExternalLink, 
   TrendingUp,
-  Award,
   Video,
-  Podcast,
   FileText,
   Bookmark,
   MessageCircle,
   ChevronRight,
   Globe,
-  Sparkles,
   Send,
   Clock,
   ArrowRight,
@@ -168,7 +165,6 @@ const News = () => {
   const getTypeIcon = (type) => {
     switch(type) {
       case 'video': return <Video className="h-4 w-4" />;
-      case 'podcast': return <Podcast className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
     }
   };
@@ -183,9 +179,9 @@ const News = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0F14]">
-      {/* Hero Section with Slideshow */}
-      <section className="relative text-white py-16 md:py-20 overflow-hidden">
-        {/* Background */}
+      {/* Hero Section with Slideshow - Glass Effect */}
+      <section className="relative text-white py-20 md:py-24 overflow-hidden">
+        {/* Background with visible slideshow */}
         <div className="absolute inset-0">
           {/* Slideshow Background */}
           <div className="absolute inset-0 overflow-hidden">
@@ -206,60 +202,37 @@ const News = () => {
               />
             </AnimatePresence>
             
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-[#0A0F14] opacity-90"></div>
-            
-            {/* Animated data points */}
-            <div className="absolute inset-0">
-              {[...Array(15)].map((_, i) => (
-                <motion.div
-                  key={`data-${i}`}
-                  className="absolute w-0.5 h-0.5 bg-[#00D4AA] rounded-full"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  animate={{
-                    y: [0, -30, 0],
-                    opacity: [0.2, 0.8, 0.2],
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 2,
-                    repeat: Infinity,
-                    delay: Math.random() * 2,
-                  }}
-                />
-              ))}
-            </div>
+            {/* Subtle overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/50 via-[#0A0F14]/70 to-[#0A0F14]"></div>
           </div>
         </div>
         
         {/* Slideshow Navigation */}
-        <div className="absolute inset-0 flex items-center justify-between px-4">
+        <div className="absolute inset-0 flex items-center justify-between px-4 z-20">
           <button
             onClick={prevSlide}
-            className="z-10 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/5 hover:bg-white/15 transition-all duration-300"
+            className="p-3 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300"
           >
             <ChevronLeft className="h-6 w-6 text-white" />
           </button>
           <button
             onClick={nextSlide}
-            className="z-10 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/5 hover:bg-white/15 transition-all duration-300"
+            className="p-3 rounded-full backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300"
           >
             <ChevronRightIcon className="h-6 w-6 text-white" />
           </button>
         </div>
         
         {/* Slide Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex gap-2">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
           {slideshowImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`h-2 rounded-full transition-all duration-300 ${
                 currentSlide === index 
-                  ? 'w-8 bg-[#00D4AA]' 
-                  : 'w-2 bg-white/40 hover:bg-white/60'
+                  ? 'w-8 bg-gradient-to-r from-[#00D4AA] to-[#0066CC]' 
+                  : 'w-2 backdrop-blur-sm bg-white/40 hover:bg-white/60'
               }`}
             />
           ))}
@@ -274,14 +247,14 @@ const News = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <motion.h1 
-                className="text-4xl md:text-5xl font-bold mb-6"
+                className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <span className="text-white">News &</span>
+                <span className="text-white drop-shadow-lg">News &</span>
                 <br />
-                <span className="text-[#00D4AA]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D4AA] to-[#0066CC] font-bold drop-shadow-lg">
                   Insights
                 </span>
               </motion.h1>
@@ -290,7 +263,7 @@ const News = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="text-lg text-gray-300 leading-relaxed mb-10 max-w-2xl"
+                className="text-xl text-gray-200 leading-relaxed mb-10 max-w-2xl drop-shadow-lg"
               >
                 Stay updated with our latest research breakthroughs, events, 
                 and thought leadership in emerging technologies.
@@ -304,34 +277,37 @@ const News = () => {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <button className="group relative inline-flex items-center gap-3 bg-[#0066CC] hover:bg-[#0052A3] text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300">
-                    <span>Subscribe to Newsletter</span>
-                    <Send className="h-5 w-5" />
+                  <button className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[#0066CC] to-[#00D4AA] text-white px-8 py-4 rounded-lg font-semibold overflow-hidden">
+                    <span className="relative z-10">Subscribe to Newsletter</span>
+                    <Send className="h-5 w-5 relative z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   </button>
                 </motion.div>
               </div>
             </div>
             
-            {/* Featured Article Card */}
+            {/* Featured Article Card - Glass Effect */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
               className="relative"
             >
-              <div className="relative bg-[#1A232E] rounded-xl p-8 border border-white/5">
-                <div className="absolute top-4 right-4 bg-[#00D4AA] text-white px-4 py-2 rounded-lg font-bold text-sm">
+              <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-8 border border-white/10 shadow-2xl">
+                {/* Featured badge */}
+                <div className="absolute top-4 right-4 backdrop-blur-sm bg-gradient-to-r from-[#00D4AA] to-[#0066CC] text-white px-4 py-2 rounded-lg font-bold text-sm">
                   Featured Story
                 </div>
                 
-                <div className="h-48 bg-[#0A0F14] rounded-xl mb-6 relative overflow-hidden border border-white/5">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                  <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg">
+                {/* Article image */}
+                <div className="h-48 backdrop-blur-sm bg-white/5 rounded-2xl mb-6 relative overflow-hidden border border-white/10">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  <div className="absolute top-4 left-4 backdrop-blur-sm bg-white/10 px-3 py-1 rounded-lg">
                     <span className="text-white text-sm font-medium">{featuredArticle.category}</span>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Clock className="h-4 w-4 text-gray-400" />
@@ -353,7 +329,7 @@ const News = () => {
                     {featuredArticle.title}
                   </h3>
                   
-                  <p className="text-gray-400 leading-relaxed line-clamp-2">
+                  <p className="text-gray-300 leading-relaxed line-clamp-2">
                     {featuredArticle.excerpt}
                   </p>
                   
@@ -367,10 +343,10 @@ const News = () => {
                     </div>
                     <Link 
                       to="/news/featured" 
-                      className="text-[#00D4AA] hover:text-[#00D4AA]/80 font-semibold inline-flex items-center"
+                      className="text-[#00D4AA] hover:text-white font-semibold inline-flex items-center gap-2 group"
                     >
                       <span>Read Full Story</span>
-                      <ArrowRight className="h-4 w-4 ml-2" />
+                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
@@ -380,24 +356,24 @@ const News = () => {
         </motion.div>
       </section>
 
-      {/* Categories */}
+      {/* Categories - Glass Effect */}
       <section className="py-12 bg-[#0A0F14] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-wrap gap-2 justify-center"
+            className="flex flex-wrap gap-3 justify-center"
           >
             {newsCategories.map((category) => (
               <motion.button
                 key={category.id}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-5 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 bg-[#1A232E] text-gray-300 hover:text-white border border-white/5"
+                className="px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 backdrop-blur-sm bg-white/5 text-gray-300 hover:text-white border border-white/10 hover:border-[#00D4AA]/30"
               >
                 {category.name}
-                <span className="px-2 py-0.5 rounded-full text-sm bg-[#0A0F14] text-[#00D4AA]">
+                <span className="px-2 py-1 rounded-full text-sm backdrop-blur-sm bg-white/5 text-[#00D4AA]">
                   {category.count}
                 </span>
               </motion.button>
@@ -406,13 +382,21 @@ const News = () => {
         </div>
       </section>
 
-      {/* News Grid */}
-      <section className="py-20 bg-[#0A0F14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-12">
+      {/* News Grid - Glass Effect */}
+      <section className="py-16 md:py-20 relative">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 212, 170, 0.2) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Main News Column */}
             <div className="lg:col-span-2">
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6">
                 {newsArticles.map((article, index) => (
                   <motion.article
                     key={article.id}
@@ -420,11 +404,15 @@ const News = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -10 }}
+                    whileHover={{ y: -6 }}
                     className="group"
                   >
-                    <div className="relative bg-[#1A232E] rounded-xl border border-white/5 hover:border-[#00D4AA]/30 transition-all duration-300 overflow-hidden">
-                      <div className="p-6">
+                    {/* Glass Effect Card */}
+                    <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 shadow-xl hover:shadow-[0_20px_40px_rgba(0,212,170,0.15)] transition-all duration-300 overflow-hidden">
+                      {/* Hover glow */}
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00D4AA]/0 via-[#00D4AA]/5 to-[#00D4AA]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div className="p-6 relative z-10">
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-2">
                             {getTypeIcon(article.type)}
@@ -436,7 +424,7 @@ const News = () => {
                           </div>
                         </div>
                         
-                        <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-semibold bg-[#0A0F14] text-[#00D4AA] border border-white/5 mb-4">
+                        <span className="inline-block px-4 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-sm bg-white/5 text-[#00D4AA] border border-white/10 mb-4">
                           {article.category}
                         </span>
                         
@@ -444,16 +432,16 @@ const News = () => {
                           {article.title}
                         </h3>
                         
-                        <p className="text-gray-400 mb-6 line-clamp-3 leading-relaxed">
+                        <p className="text-gray-300 mb-6 line-clamp-3 leading-relaxed">
                           {article.excerpt}
                         </p>
                         
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-[#0A0F14] border border-white/5"></div>
+                            <div className="w-8 h-8 rounded-full backdrop-blur-sm bg-white/5 border border-white/10"></div>
                             <div>
                               <div className="text-sm font-medium text-white">{article.author}</div>
-                              <div className="text-xs text-gray-500">{article.date}</div>
+                              <div className="text-xs text-gray-400">{article.date}</div>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -468,22 +456,22 @@ const News = () => {
                               onClick={() => toggleSaveArticle(article.id)}
                               className={`p-2 rounded-lg transition-all duration-300 ${
                                 savedArticles.includes(article.id)
-                                  ? 'text-[#00D4AA] bg-[#0A0F14]'
-                                  : 'text-gray-400 hover:text-[#00D4AA] hover:bg-[#0A0F14]'
+                                  ? 'text-[#00D4AA] backdrop-blur-sm bg-white/5'
+                                  : 'text-gray-400 hover:text-[#00D4AA] hover:backdrop-blur-sm hover:bg-white/5'
                               }`}
                             >
                               <Bookmark className="h-5 w-5" />
                             </button>
-                            <button className="p-2 rounded-lg text-gray-400 hover:text-[#00D4AA] hover:bg-[#0A0F14] transition-all duration-300">
+                            <button className="p-2 rounded-lg text-gray-400 hover:text-[#00D4AA] hover:backdrop-blur-sm hover:bg-white/5 transition-all duration-300">
                               <MessageCircle className="h-5 w-5" />
                             </button>
                           </div>
                           <Link 
                             to={`/news/${article.id}`}
-                            className="text-[#00D4AA] hover:text-[#00D4AA]/80 font-semibold text-sm flex items-center"
+                            className="text-[#00D4AA] hover:text-white font-semibold text-sm flex items-center gap-2 group/link"
                           >
                             <span>Read More</span>
-                            <ExternalLink className="h-4 w-4 ml-2" />
+                            <ExternalLink className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
                           </Link>
                         </div>
                       </div>
@@ -502,70 +490,73 @@ const News = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative inline-flex items-center gap-3 bg-[#0066CC] hover:bg-[#0052A3] text-white px-10 py-4 rounded-lg font-semibold transition-all duration-300"
+                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[#0066CC] to-[#00D4AA] hover:opacity-90 text-white px-10 py-4 rounded-lg font-semibold overflow-hidden"
                 >
-                  <span>Load More Articles</span>
-                  <ChevronRight className="h-5 w-5" />
+                  <span className="relative z-10">Load More Articles</span>
+                  <ChevronRight className="h-5 w-5 relative z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                 </motion.button>
               </motion.div>
             </div>
 
-            {/* Sidebar */}
+            {/* Sidebar - Glass Effect */}
             <div className="space-y-8">
               {/* Upcoming Events */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-[#1A232E] rounded-xl p-8 border border-white/5"
+                className="relative"
               >
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="p-2 rounded-lg bg-[#00D4AA]">
-                    <Calendar className="h-6 w-6 text-white" />
+                <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-8 border border-white/10 shadow-2xl">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10">
+                      <Calendar className="h-6 w-6 text-[#00D4AA]" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">Upcoming Events</h3>
+                      <p className="text-gray-300">Join our next gatherings</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white">Upcoming Events</h3>
-                    <p className="text-gray-400 text-sm">Join our next gatherings</p>
+                  <div className="space-y-6">
+                    {upcomingEvents.map((event, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: 10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1 }}
+                        className="group"
+                      >
+                        <div className="relative p-5 rounded-xl border border-white/10 hover:border-[#00D4AA]/30 transition-all duration-300 backdrop-blur-sm bg-white/5">
+                          <div className="flex justify-between items-start mb-4">
+                            <h4 className="font-bold text-white group-hover:text-[#00D4AA] transition-colors">{event.title}</h4>
+                            <span className="px-3 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm bg-gradient-to-r from-[#0066CC] to-[#00D4AA] text-white">
+                              {event.type}
+                            </span>
+                          </div>
+                          <div className="space-y-3 text-sm text-gray-300">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-gray-400" />
+                              <span className="font-medium">{event.date}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Globe className="h-4 w-4 text-gray-400" />
+                              <span className="font-medium">{event.location}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <User className="h-4 w-4 text-gray-400" />
+                              <span className="font-medium">Speaker: {event.speaker}</span>
+                            </div>
+                          </div>
+                          <button className="mt-4 group flex items-center text-[#00D4AA] hover:text-white font-semibold text-sm">
+                            <span>Register Now</span>
+                            <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
-                <div className="space-y-6">
-                  {upcomingEvents.map((event, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: 10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                      className="group"
-                    >
-                      <div className="relative p-5 rounded-xl border border-white/5 hover:border-[#00D4AA]/30 transition-all duration-300 bg-[#0A0F14]">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-bold text-white group-hover:text-[#00D4AA] transition-colors">{event.title}</h4>
-                          <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-[#0066CC] text-white">
-                            {event.type}
-                          </span>
-                        </div>
-                        <div className="space-y-3 text-sm text-gray-400">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-3 text-gray-500" />
-                            <span className="font-medium">{event.date}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Globe className="h-4 w-4 mr-3 text-gray-500" />
-                            <span className="font-medium">{event.location}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <User className="h-4 w-4 mr-3 text-gray-500" />
-                            <span className="font-medium">Speaker: {event.speaker}</span>
-                          </div>
-                        </div>
-                        <button className="mt-4 group flex items-center text-[#00D4AA] hover:text-[#00D4AA]/80 font-semibold text-sm">
-                          <span>Register Now</span>
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
                 </div>
               </motion.div>
 
@@ -575,34 +566,36 @@ const News = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
+                className="relative"
               >
-                <div className="bg-[#1A232E] rounded-xl p-8 border border-white/5">
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="p-2 rounded-lg bg-[#00D4AA]">
-                      <TrendingUp className="h-6 w-6 text-white" />
+                <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl p-8 border border-white/10 shadow-2xl">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10">
+                      <TrendingUp className="h-6 w-6 text-[#00D4AA]" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white">Stay Updated</h3>
-                      <p className="text-gray-400 text-sm">Get our weekly digest</p>
+                      <p className="text-gray-300">Get our weekly digest</p>
                     </div>
                   </div>
-                  <p className="text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-6 leading-relaxed">
                     Get our weekly research digest and exclusive content delivered to your inbox.
                   </p>
                   <form className="space-y-4">
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="w-full px-4 py-3.5 bg-[#0A0F14] border border-white/10 rounded-lg focus:border-[#00D4AA] transition-all duration-300 text-white"
+                      className="w-full px-4 py-3.5 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] transition-all duration-300 text-white"
                     />
                     <motion.button
                       type="submit"
                       whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className="group relative w-full inline-flex items-center justify-center gap-3 bg-[#0066CC] hover:bg-[#0052A3] text-white py-4 rounded-lg font-semibold transition-all duration-300"
+                      className="group relative w-full inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#0066CC] to-[#00D4AA] hover:opacity-90 text-white py-4 rounded-xl font-semibold overflow-hidden"
                     >
-                      <span>Subscribe Now</span>
-                      <Send className="h-5 w-5" />
+                      <span className="relative z-10">Subscribe Now</span>
+                      <Send className="h-5 w-5 relative z-10" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                     </motion.button>
                   </form>
                   <p className="text-xs text-gray-500 mt-4 text-center">

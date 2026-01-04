@@ -3,13 +3,11 @@ import {
   Phone, 
   MapPin, 
   Linkedin,
-  Heart,
   MessageCircle, // WhatsApp
   Instagram,
   Facebook,
-  Music // TikTok (Music icon is commonly used for TikTok)
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { FaTiktok } from 'react-icons/fa'; // Using react-icons for TikTok
 import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 
@@ -36,7 +34,7 @@ const Footer = () => {
       url: 'https://facebook.com/blazingtek' 
     },
     { 
-      icon: <Music size={16} />, 
+      icon: <FaTiktok size={16} />, // TikTok icon from react-icons
       name: 'TikTok', 
       url: 'https://tiktok.com/@blazingtek' 
     },
@@ -88,36 +86,7 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-right">
             <div className="flex items-center justify-center md:justify-end gap-2 text-sm text-gray-400">
-              <span className="flex items-center">
-                Made with 
-                <motion.span
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <Heart size={14} className="mx-1 text-[#00D4AA]" />
-                </motion.span>
-                in Africa
-              </span>
-              <span className="hidden md:inline">•</span>
-              <span>© {new Date().getFullYear()} BlazingTek</span>
-            </div>
-            <div className="flex flex-wrap justify-center md:justify-end gap-4 text-xs text-gray-500 mt-2">
-              {['Privacy', 'Terms', 'Cookies'].map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, y: 5 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link 
-                    to={`/${item.toLowerCase()}`} 
-                    className="hover:text-[#00D4AA] transition-colors"
-                  >
-                    {item}
-                  </Link>
-                </motion.div>
-              ))}
+              <span>© {new Date().getFullYear()} BlazingTek Research Labs</span>
             </div>
           </div>
         </div>
@@ -137,7 +106,7 @@ const Footer = () => {
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center gap-1">
               <MapPin size={12} />
-              <span>Harare, Zimbabwe</span>
+              <span>87 Engineering, Highfield, Harare</span>
             </div>
           </div>
         </div>

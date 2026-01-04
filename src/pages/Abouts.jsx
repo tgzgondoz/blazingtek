@@ -2,12 +2,12 @@ import { motion } from 'framer-motion';
 import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import bg2 from '../assets/bg2.jpg';
 
-// Import profile pictures
+// Import profile pictures - Swapped the images
 import AndrewChigona from '../assets/leaders/Andrew_Chigona.png';
-import GarryPayera from '../assets/leaders/Garry_Payera.png';
+import GarryPayera from '../assets/leaders/Claudius_Saranavo.png'; // SWAPPED: Using Claudius' image for Garry
 import FrankFarakezi from '../assets/leaders/Frank_Farakezi.png';
 import TakudzwaMasomera from '../assets/leaders/Takudzwa_Masomera.png';
-import ClaudiusSaranavo from '../assets/leaders/Claudius_Saranavo.png';
+import ClaudiusSaranavo from '../assets/leaders/Garry_Payera.png'; // SWAPPED: Using Garry's image for Claudius
 import TatendaGondo from '../assets/leaders/Tatenda_Gondo.jpg';
 
 const Abouts = () => {
@@ -22,7 +22,7 @@ const Abouts = () => {
       name: "Garry Payera", 
       role: "Brand Ambassador", 
       email: "garry@blazingtek.com",
-      image: GarryPayera // FIXED: Correct image for Garry
+      image: GarryPayera // SWAPPED: Now using Claudius' image
     },
     { 
       name: "Frank Farakezi", 
@@ -40,7 +40,7 @@ const Abouts = () => {
       name: "Claudius Saranavo", 
       role: "Creative Director", 
       email: "claudius@blazingtek.com",
-      image: ClaudiusSaranavo // FIXED: Correct image for Claudius
+      image: ClaudiusSaranavo // SWAPPED: Now using Garry's image
     },
     { 
       name: "Tatenda Gondo", 
@@ -61,6 +61,8 @@ const Abouts = () => {
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[#0A0F14] opacity-90"></div>
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/50 via-[#0A0F14]/80 to-[#0A0F14]" />
         </div>
 
         <motion.div 
@@ -92,7 +94,7 @@ const Abouts = () => {
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-[#00D4AA] rounded-full"
+            className="mx-auto mt-8 h-1 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] rounded-full"
           />
         </motion.div>
       </section>
@@ -109,7 +111,7 @@ const Abouts = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Meet Our Team
             </h2>
-            <div className="w-16 h-1 bg-[#00D4AA] mx-auto mb-4"></div>
+            <div className="w-16 h-1 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-4 rounded-full"></div>
             <p className="text-gray-400 max-w-xl mx-auto">
               The team driving innovation and technology solutions across Africa
             </p>
@@ -123,35 +125,58 @@ const Abouts = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -8, scale: 1.02 }}
                 className="group"
               >
-                <div className="bg-[#1A232E] rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/5 hover:border-[#00D4AA]/30 text-center h-full">
-                  <div className="relative mb-6">
-                    {/* Profile Image */}
-                    <div className="w-32 h-32 rounded-full mx-auto overflow-hidden border-4 border-[#0A0F14] shadow-lg mb-4 group-hover:border-[#00D4AA]/50 transition-all duration-300">
-                      <img 
-                        src={leader.image} 
-                        alt={leader.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                <div className="bg-gradient-to-b from-[#1A232E] to-[#0A0F14] rounded-2xl p-8 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,212,170,0.15)] transition-all duration-300 border border-white/5 hover:border-[#00D4AA]/30 text-center h-full backdrop-blur-sm">
+                  <div className="relative mb-8">
+                    {/* Profile Image with Professional Styling */}
+                    <div className="relative w-40 h-40 mx-auto mb-6">
+                      {/* Outer gradient ring */}
+                      <div className="absolute inset-0 rounded-full p-1 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] opacity-20 group-hover:opacity-40 transition-all duration-500">
+                        <div className="w-full h-full rounded-full bg-[#0A0F14]"></div>
+                      </div>
+                      
+                      {/* Image container with smooth overlay */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-[#0A0F14] shadow-2xl group-hover:border-transparent transition-all duration-500">
+                        <img 
+                          src={leader.image} 
+                          alt={leader.name}
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          style={{ 
+                            filter: 'brightness(1.05) contrast(1.05)',
+                            objectPosition: 'center'
+                          }}
+                        />
+                        {/* Subtle overlay on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#00D4AA]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </div>
+                      
+                      {/* Decorative dots */}
+                      <div className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[#00D4AA] opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
+                      <div className="absolute -bottom-2 -left-2 w-4 h-4 rounded-full bg-[#0066CC] opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
                     </div>
                   </div>
                   
                   {/* Name and Role */}
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00D4AA] transition-colors">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00D4AA] transition-colors duration-300">
                     {leader.name}
                   </h3>
-                  <p className="text-[#00D4AA] text-sm mb-4 px-3 py-1.5 bg-[#0A0F14] rounded-full font-medium inline-block">
-                    {leader.role}
-                  </p>
+                  <div className="relative mb-6">
+                    <p className="relative z-10 text-[#00D4AA] text-sm px-4 py-2 bg-gradient-to-r from-[#0A0F14] to-[#1A232E] rounded-full font-medium inline-block border border-[#00D4AA]/20 group-hover:border-[#00D4AA]/50 transition-all duration-300">
+                      {leader.role}
+                    </p>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#00D4AA]/10 to-[#0066CC]/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                  </div>
                   
-                  {/* Email */}
+                  {/* Email with hover effect */}
                   <a 
                     href={`mailto:${leader.email}`}
-                    className="inline-block text-gray-400 hover:text-[#00D4AA] transition-colors text-sm mt-2"
+                    className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00D4AA] transition-all duration-300 text-sm mt-2 group/email"
                   >
+                    <Mail size={14} className="opacity-0 -translate-x-2 group-hover/email:opacity-100 group-hover/email:translate-x-0 transition-all duration-300" />
                     {leader.email}
+                    <Mail size={14} className="opacity-0 translate-x-2 group-hover/email:opacity-100 group-hover/email:translate-x-0 transition-all duration-300" />
                   </a>
                 </div>
               </motion.div>
@@ -161,18 +186,18 @@ const Abouts = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-12 md:py-16 bg-[#1A232E]">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-[#1A232E] to-[#0A0F14]">
         <div className="max-w-4xl mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-12"
           >
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
               Contact Our Team
             </h2>
-            <div className="w-12 h-1 bg-[#00D4AA] mx-auto mb-4"></div>
+            <div className="w-12 h-1 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-4 rounded-full"></div>
             <p className="text-gray-400 max-w-md mx-auto">
               We're here to help you with innovative solutions
             </p>
@@ -186,16 +211,18 @@ const Abouts = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#0066CC] hover:shadow-xl transition-all duration-300 group text-center"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#0066CC] hover:shadow-[0_20px_40px_rgba(0,102,204,0.15)] transition-all duration-300 group text-center backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#0066CC]/20 transition-colors">
-                <Phone className="h-6 w-6 text-[#0066CC]" />
+              <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0066CC]/0 to-[#0066CC]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <Phone className="h-8 w-8 text-[#0066CC] relative z-10" />
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">Call Us</h3>
-              <p className="text-gray-300 text-sm font-medium">+263 788 605 607</p>
-              <div className="text-[#0066CC] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                Click to call →
+              <h3 className="text-lg font-semibold text-white mb-3">Call Us</h3>
+              <p className="text-gray-300 text-sm font-medium mb-4">+263 788 605 607</p>
+              <div className="text-[#0066CC] text-xs font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-1">
+                Click to call
+                <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
               </div>
             </motion.a>
 
@@ -206,16 +233,18 @@ const Abouts = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover={{ y: -5 }}
-              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#00D4AA] hover:shadow-xl transition-all duration-300 group text-center"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#00D4AA] hover:shadow-[0_20px_40px_rgba(0,212,170,0.15)] transition-all duration-300 group text-center backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#00D4AA]/20 transition-colors">
-                <Mail className="h-6 w-6 text-[#00D4AA]" />
+              <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00D4AA]/0 to-[#00D4AA]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <Mail className="h-8 w-8 text-[#00D4AA] relative z-10" />
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">Email Us</h3>
-              <p className="text-gray-300 text-sm font-medium">info@blazingtek.com</p>
-              <div className="text-[#00D4AA] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                Click to email →
+              <h3 className="text-lg font-semibold text-white mb-3">Email Us</h3>
+              <p className="text-gray-300 text-sm font-medium mb-4">info@blazingtek.com</p>
+              <div className="text-[#00D4AA] text-xs font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-1">
+                Click to email
+                <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
               </div>
             </motion.a>
 
@@ -226,16 +255,18 @@ const Abouts = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -5 }}
-              className="bg-[#0A0F14] p-6 rounded-xl border border-white/5 hover:border-[#0066CC] hover:shadow-xl transition-all duration-300 group text-center"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-gradient-to-b from-[#0A0F14] to-[#1A232E] p-8 rounded-2xl border border-white/5 hover:border-[#0066CC] hover:shadow-[0_20px_40px_rgba(0,102,204,0.15)] transition-all duration-300 group text-center backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-[#1A232E] mx-auto mb-4 flex items-center justify-center group-hover:bg-[#0066CC]/20 transition-colors">
-                <MapPin className="h-6 w-6 text-[#0066CC]" />
+              <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#1A232E] to-[#0A0F14] mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#0066CC]/0 to-[#0066CC]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <MapPin className="h-8 w-8 text-[#0066CC] relative z-10" />
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">Visit Us</h3>
-              <p className="text-gray-300 text-sm font-medium">Harare, Zimbabwe</p>
-              <div className="text-[#0066CC] text-xs font-medium mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                View location →
+              <h3 className="text-lg font-semibold text-white mb-3">Visit Us</h3>
+              <p className="text-gray-300 text-sm font-medium mb-4">Harare, Zimbabwe</p>
+              <div className="text-[#0066CC] text-xs font-medium mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-1">
+                View location
+                <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
               </div>
             </motion.a>
           </div>
@@ -246,7 +277,7 @@ const Abouts = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="mt-8 text-center"
+            className="mt-12 text-center"
           >
             <p className="text-gray-500 text-sm">
               Available Monday - Friday, 8:00 AM - 5:00 PM CAT

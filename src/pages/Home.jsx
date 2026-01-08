@@ -59,6 +59,69 @@ const Home = () => {
 
   return (
     <div className="bg-[#0A0F14]">
+      {/* Snowflakes Animation */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {[...Array(60)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute top-0 rounded-full bg-white"
+            style={{
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 4 + 2}px`,
+              height: `${Math.random() * 4 + 2}px`,
+              opacity: Math.random() * 0.6 + 0.1,
+              filter: "blur(0.5px)",
+            }}
+            initial={{ y: -20 }}
+            animate={{
+              y: "100vh",
+              x: [
+                Math.random() * 20 - 10,
+                Math.random() * 20 - 10,
+                Math.random() * 20 - 10,
+              ],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 10,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 5,
+            }}
+          />
+        ))}
+        
+        {/* Larger snowflakes */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={`large-${i}`}
+            className="absolute top-0 rounded-full bg-white"
+            style={{
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 6 + 3}px`,
+              height: `${Math.random() * 6 + 3}px`,
+              opacity: Math.random() * 0.4 + 0.1,
+              filter: "blur(1px)",
+            }}
+            initial={{ y: -20 }}
+            animate={{
+              y: "100vh",
+              x: [
+                Math.random() * 40 - 20,
+                Math.random() * 40 - 20,
+                Math.random() * 40 - 20,
+              ],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: Math.random() * 25 + 15,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 3,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Hero Section with Professional Glass Effects */}
       <section className="relative min-h-screen flex items-center text-white overflow-hidden">
         {/* Background with enhanced visibility */}

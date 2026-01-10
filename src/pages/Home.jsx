@@ -359,9 +359,9 @@ const Home = () => {
               })}
             </svg>
 
-            {/* Mouse-Interactive Dots */}
+            {/* Mouse-Interactive Glow (but NOT moving the background) */}
             <motion.div
-              className="absolute rounded-full"
+              className="absolute rounded-full pointer-events-none"
               style={{
                 width: "100px",
                 height: "100px",
@@ -378,13 +378,8 @@ const Home = () => {
           </div>
         </div>
 
-        <motion.div
-          className="relative max-w-7xl mx-auto px-4 sm:px6 lg:px-8 py-12 w-full z-10"
-          style={{
-            transform: `perspective(1000px) rotateY(${mousePosition.x * 1.5}deg) rotateX(${mousePosition.y * -1.5}deg)`,
-            transition: "transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)",
-          }}
-        >
+        {/* REMOVED the mouse-based transformation from this container */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text directly on background */}
             <motion.div
@@ -559,7 +554,7 @@ const Home = () => {
               </Link>
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </section>
     </div>
   );

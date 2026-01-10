@@ -50,94 +50,78 @@ const Partnerships = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0F14]">
-      {/* Hero Section - Glass Effect */}
-      <section className="relative overflow-hidden text-white py-20 md:py-24">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0, 102, 204, 0.2) 1px, transparent 0)`,
-            backgroundSize: '50px 50px'
-          }}></div>
-        </div>
-        
+      {/* Hero Section */}
+      <section className="relative overflow-hidden text-white py-20 md:py-28">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
-            <span className="text-white drop-shadow-lg">Strategic </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D4AA] to-[#0066CC] font-bold drop-shadow-lg">
-              Partnerships
-            </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            Strategic Partnerships
           </h1>
           
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-lg"
+            className="text-lg text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
           >
             Collaborate with us to drive technological innovation and sustainable development across Africa
           </motion.p>
 
-          {/* Accent line */}
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "80px" }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] rounded-full shadow-lg"
+            className="mx-auto mt-8 h-1 bg-white rounded-full"
           />
         </motion.div>
       </section>
 
-      {/* Partnership Registration Form - Glass Effect */}
-      <section id="partnership-form" className="py-16 md:py-20 relative">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Partnership Registration Form */}
+      <section id="partnership-form" className="py-16 md:py-20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Join Our Network
             </h2>
-            <div className="w-20 h-1.5 bg-gradient-to-r from-[#00D4AA] to-[#0066CC] mx-auto mb-6 rounded-full shadow-lg"></div>
-            <p className="text-gray-300 text-lg md:text-xl max-w-xl mx-auto">
+            <div className="w-16 h-1 bg-white mx-auto mb-6 rounded-full"></div>
+            <p className="text-gray-400 text-lg max-w-xl mx-auto">
               Submit your details to start a partnership conversation. We'll respond within 24 hours.
             </p>
           </motion.div>
 
-          {/* Glass Effect Form Container */}
+          {/* Form Container */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="relative"
           >
-            <div className="relative backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00D4AA]/5 to-[#0066CC]/5 opacity-30 blur-xl"></div>
-              
-              <div className="p-8 relative z-10">
+            <div className="bg-white/5 rounded-xl border border-white/10">
+              <div className="p-6 md:p-8">
                 {/* Form Header */}
-                <div className="flex items-center gap-4 mb-10 pb-6 border-b border-white/10">
-                  <div className="p-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10">
-                    <Handshake className="h-6 w-6 text-[#00D4AA]" />
+                <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Handshake className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">Partnership Details</h3>
-                    <p className="text-sm text-gray-300">All fields are required unless marked optional</p>
+                    <h3 className="text-lg font-semibold text-white">Partnership Details</h3>
+                    <p className="text-sm text-gray-400">All fields are required unless marked optional</p>
                   </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="grid md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         First Name *
                       </label>
                       <input
@@ -146,13 +130,13 @@ const Partnerships = () => {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="John"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Last Name *
                       </label>
                       <input
@@ -161,15 +145,15 @@ const Partnerships = () => {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="Doe"
                       />
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Email Address *
                       </label>
                       <input
@@ -178,13 +162,13 @@ const Partnerships = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="john@organization.com"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Phone Number
                       </label>
                       <input
@@ -192,15 +176,15 @@ const Partnerships = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="+263 788 605 607"
                       />
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Organization *
                       </label>
                       <input
@@ -209,13 +193,13 @@ const Partnerships = () => {
                         value={formData.organization}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="Organization name"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Position *
                       </label>
                       <input
@@ -224,14 +208,14 @@ const Partnerships = () => {
                         value={formData.position}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white placeholder-gray-500"
+                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white placeholder-gray-500"
                         placeholder="e.g., Director of Research"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Partnership Interest *
                     </label>
                     <select
@@ -239,7 +223,7 @@ const Partnerships = () => {
                       value={formData.partnershipType}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white"
                     >
                       <option value="">Select partnership type</option>
                       {partnershipTypes.map((type, index) => (
@@ -249,7 +233,7 @@ const Partnerships = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Partnership Proposal *
                     </label>
                     <textarea
@@ -257,14 +241,14 @@ const Partnerships = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       required
-                      rows={5}
-                      className="w-full px-5 py-4 backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl focus:border-[#00D4AA] focus:ring-2 focus:ring-[#00D4AA]/30 transition-all duration-300 text-white resize-none placeholder-gray-500"
+                      rows={4}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:border-white focus:outline-none transition-colors text-white resize-none placeholder-gray-500"
                       placeholder="Briefly describe your partnership interests and goals..."
                     />
                   </div>
 
-                  <div className="backdrop-blur-sm bg-white/5 p-5 rounded-xl border border-white/10">
-                    <div className="flex items-start gap-4">
+                  <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                    <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
                         id="agreement"
@@ -272,7 +256,7 @@ const Partnerships = () => {
                         checked={formData.agreement}
                         onChange={handleInputChange}
                         required
-                        className="h-5 w-5 text-[#00D4AA] rounded border-white/20 focus:ring-[#00D4AA] mt-0.5 backdrop-blur-sm bg-white/5"
+                        className="h-4 w-4 text-white rounded border-white/20 focus:ring-white mt-0.5 bg-white/5"
                       />
                       <label htmlFor="agreement" className="text-sm text-gray-300">
                         I confirm that I have the authority to represent my organization and agree to receive communications regarding this partnership inquiry.
@@ -280,25 +264,22 @@ const Partnerships = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4">
-                    <motion.button
+                  <div className="pt-2">
+                    <button
                       type="submit"
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative w-full inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#0066CC] to-[#00D4AA] hover:opacity-90 text-white font-semibold py-5 rounded-xl transition-all duration-300 overflow-hidden"
+                      className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
                     >
-                      <span className="relative z-10">Submit Application</span>
-                      <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                    </motion.button>
+                      <span>Submit Application</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
                     
                     <p className="text-center text-sm text-gray-500 mt-4">
                       By submitting, you agree to our{' '}
-                      <Link to="/privacy" className="text-[#00D4AA] hover:text-white font-medium transition-colors">
+                      <Link to="/privacy" className="text-white hover:text-gray-200 font-medium transition-colors">
                         Privacy Policy
                       </Link>{' '}
                       and{' '}
-                      <Link to="/terms" className="text-[#00D4AA] hover:text-white font-medium transition-colors">
+                      <Link to="/terms" className="text-white hover:text-gray-200 font-medium transition-colors">
                         Terms
                       </Link>
                     </p>
@@ -306,68 +287,68 @@ const Partnerships = () => {
                 </form>
               </div>
 
-              {/* Benefits & Contact - Glass Effect */}
-              <div className="backdrop-blur-sm bg-white/5 border-t border-white/10 p-8 rounded-b-2xl">
+              {/* Benefits & Contact */}
+              <div className="bg-white/5 border-t border-white/10 p-6 md:p-8">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10">
-                        <div className="h-5 w-5 text-[#00D4AA]">✓</div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                        <CheckCircle className="h-5 w-5 text-white" />
                       </div>
-                      <h4 className="text-lg font-bold text-white">
+                      <h4 className="text-base font-semibold text-white">
                         Partnership Benefits
                       </h4>
                     </div>
-                    <ul className="space-y-3">
-                      <li className="text-sm text-gray-300 flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-[#00D4AA]" />
+                    <ul className="space-y-2">
+                      <li className="text-sm text-gray-400 flex items-center gap-2">
+                        <CheckCircle className="h-3 w-3 text-white" />
                         Access to cutting-edge research
                       </li>
-                      <li className="text-sm text-gray-300 flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-[#00D4AA]" />
+                      <li className="text-sm text-gray-400 flex items-center gap-2">
+                        <CheckCircle className="h-3 w-3 text-white" />
                         Joint funding opportunities
                       </li>
-                      <li className="text-sm text-gray-300 flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-[#00D4AA]" />
+                      <li className="text-sm text-gray-400 flex items-center gap-2">
+                        <CheckCircle className="h-3 w-3 text-white" />
                         Talent development programs
                       </li>
-                      <li className="text-sm text-gray-300 flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-[#00D4AA]" />
+                      <li className="text-sm text-gray-400 flex items-center gap-2">
+                        <CheckCircle className="h-3 w-3 text-white" />
                         Technology transfer support
                       </li>
                     </ul>
                   </div>
                   
                   <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10">
-                        <Mail className="h-5 w-5 text-[#00D4AA]" />
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                        <Mail className="h-5 w-5 text-white" />
                       </div>
-                      <h4 className="text-lg font-bold text-white">
+                      <h4 className="text-base font-semibold text-white">
                         Contact Info
                       </h4>
                     </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg backdrop-blur-sm bg-white/5 border border-white/10">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
                           <Mail className="h-4 w-4 text-gray-400" />
                         </div>
-                        <span className="text-sm text-gray-300">info@blazingtek.com</span>
+                        <span className="text-sm text-gray-400">info@blazingtek.com</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg backdrop-blur-sm bg-white/5 border border-white/10">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
                           <Phone className="h-4 w-4 text-gray-400" />
                         </div>
-                        <span className="text-sm text-gray-300">+263 788 605 607</span>
+                        <span className="text-sm text-gray-400">+263 788 605 607</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg backdrop-blur-sm bg-white/5 border border-white/10">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
                           <MapPin className="h-4 w-4 text-gray-400" />
                         </div>
-                        <span className="text-sm text-gray-300">Harare, Zimbabwe</span>
+                        <span className="text-sm text-gray-400">Harare, Zimbabwe</span>
                       </div>
                     </div>
-                    <div className="mt-6 text-sm text-[#00D4AA] font-semibold backdrop-blur-sm bg-white/5 inline-block px-3 py-2 rounded-lg border border-white/10">
+                    <div className="mt-4 text-sm text-white font-medium bg-white/5 inline-block px-3 py-2 rounded border border-white/10">
                       Average response time: 24 hours
                     </div>
                   </div>

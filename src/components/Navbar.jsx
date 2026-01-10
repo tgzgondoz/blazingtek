@@ -41,177 +41,123 @@ const Navbar = () => {
   ];
 
   return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+    <nav 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-[#0A0F14]/90 backdrop-blur-lg border-b border-white/10' 
+          ? 'bg-[#0A0F14] border-b border-white/10' 
           : 'bg-[#0A0F14]'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-14">
           {/* Logo */}
-          <motion.div 
-            className="flex items-center"
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            <Link to="/" className="flex items-center gap-3 group">
-              {/* Logo Image */}
-              <div className="flex-shrink-0">
-                <img 
-                  src={logo} 
-                  alt="BlazingTek Logo" 
-                  className="h-8 w-8 object-contain"
-                />
-              </div>
-              
-              {/* Text Container */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center gap-2">
+              <img 
+                src={logo} 
+                alt="BlazingTek Logo" 
+                className="h-6 w-6 object-contain"
+              />
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
-                  <span className="text-xl font-bold text-white tracking-tight">BLAZING</span>
-                  <span className="text-xl font-bold text-[#00D4AA]">
-                    TEK
-                  </span>
+                  <span className="text-lg font-semibold text-white">BLAZING</span>
+                  <span className="text-lg font-semibold text-white">TEK</span>
                 </div>
                 <span className="text-xs text-gray-400">Research Labs</span>
               </div>
             </Link>
-          </motion.div>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
             {navItems.map((item, index) => (
               item.dropdown ? (
-                <motion.div 
+                <div 
                   key={item.name} 
                   className="relative"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 + 0.2 }}
                 >
                   <button 
                     onMouseEnter={() => setResearchOpen(true)}
                     onMouseLeave={() => setResearchOpen(false)}
-                    className={`relative px-4 py-2 transition-all duration-200 group ${
+                    className={`px-3 py-2 transition-colors duration-200 text-sm ${
                       location.pathname.startsWith(item.path) 
-                        ? 'text-[#00D4AA]' 
-                        : 'text-gray-300 hover:text-[#00D4AA]'
+                        ? 'text-white font-medium' 
+                        : 'text-gray-400 hover:text-white'
                     }`}
                   >
-                    <span className="font-medium text-sm flex items-center gap-1">
+                    <span className="flex items-center gap-1">
                       {item.name}
-                      <motion.div
-                        animate={{ rotate: researchOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <ChevronDown className="h-3 w-3" />
-                      </motion.div>
+                      <ChevronDown className="h-3 w-3" />
                     </span>
-                    {location.pathname.startsWith(item.path) && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00D4AA]"></div>
-                    )}
                   </button>
                   
                   <AnimatePresence>
                     {researchOpen && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
                         onMouseEnter={() => setResearchOpen(true)}
                         onMouseLeave={() => setResearchOpen(false)}
-                        className="absolute left-0 mt-1 w-56 bg-[#0A0F14]/95 backdrop-blur-lg shadow-lg overflow-hidden border border-white/5"
+                        className="absolute left-0 mt-1 w-48 bg-[#0A0F14] border border-white/10"
                       >
-                        <div className="p-2">
+                        <div className="p-1">
                           <div className="px-2 py-1 mb-1">
-                            <span className="text-xs font-semibold text-gray-400">Research Areas</span>
+                            <span className="text-xs text-gray-400">Research Areas</span>
                           </div>
                           {item.dropdown.map((subItem, idx) => (
-                            <motion.div
+                            <Link
                               key={subItem.name}
-                              initial={{ opacity: 0, x: -5 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.05 }}
+                              to={subItem.path}
+                              className="block px-3 py-2 text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => setResearchOpen(false)}
                             >
-                              <Link
-                                to={subItem.path}
-                                className="flex items-center justify-between px-3 py-2 hover:bg-white/5 transition-all duration-200 group/item text-sm"
-                                onClick={() => setResearchOpen(false)}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className="w-1 h-3 bg-[#00D4AA] opacity-0 group-hover/item:opacity-100 transition-opacity duration-200" />
-                                  <span className="text-gray-300 group-hover/item:text-[#00D4AA]">
-                                    {subItem.name}
-                                  </span>
-                                </div>
-                              </Link>
-                            </motion.div>
+                              {subItem.name}
+                            </Link>
                           ))}
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </motion.div>
+                </div>
               ) : (
-                <motion.div
+                <Link
                   key={item.name}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 + 0.2 }}
+                  to={item.path}
+                  className={`px-3 py-2 text-sm transition-colors duration-200 ${
+                    location.pathname === item.path
+                      ? 'text-white font-medium'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
                 >
-                  <Link
-                    to={item.path}
-                    className={`relative px-4 py-2 transition-all duration-200 text-sm font-medium ${
-                      location.pathname === item.path
-                        ? 'text-[#00D4AA]'
-                        : 'text-gray-300 hover:text-[#00D4AA]'
-                    }`}
-                  >
-                    {item.name}
-                    {location.pathname === item.path && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00D4AA]"></div>
-                    )}
-                  </Link>
-                </motion.div>
+                  {item.name}
+                </Link>
               )
             ))}
             
             {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex items-center"
-            >
-              <div className="h-6 w-px bg-white/10 mx-3" />
+            <div className="flex items-center ml-2">
+              <div className="h-5 w-px bg-white/10 mx-2" />
               <Link
                 to="/contact"
-                className="relative"
+                className="px-3 py-2 bg-white text-[#0A0F14] hover:bg-gray-100 text-sm font-medium transition-colors"
               >
-                <div className="px-4 py-2 bg-[#0066CC] hover:bg-[#0052A3] text-white text-sm font-medium transition-all duration-200 border border-[#0066CC]/30"
-                >
-                  Join Research
-                </div>
+                Join Research
               </Link>
-            </motion.div>
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <motion.button
+          <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 hover:bg-white/5 transition-all duration-200"
-            whileTap={{ scale: 0.95 }}
+            className="lg:hidden p-1 hover:bg-white/5 transition-colors"
           >
             {isOpen ? (
               <X className="h-5 w-5 text-white" />
             ) : (
-              <Menu className="h-5 w-5 text-gray-300 hover:text-white" />
+              <Menu className="h-5 w-5 text-gray-400 hover:text-white" />
             )}
-          </motion.button>
+          </button>
         </div>
 
         {/* Mobile Navigation */}
@@ -223,77 +169,63 @@ const Navbar = () => {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden overflow-hidden"
             >
-              <div className="bg-[#0A0F14] border border-white/5 mt-1 mb-2 p-4">
+              <div className="bg-[#0A0F14] border border-white/10 mt-1 mb-2 p-3">
                 <div className="space-y-1">
                   {navItems.map((item, index) => (
-                    <motion.div
+                    <div
                       key={item.name}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
                     >
                       {item.dropdown ? (
                         <div className="py-1">
-                          <div className="text-gray-300 font-medium px-3 py-2 flex items-center justify-between text-sm border-l-2 border-[#00D4AA]">
+                          <div className="text-white font-medium px-2 py-2 flex items-center justify-between text-sm">
                             {item.name}
                             <ChevronDown className="h-3 w-3" />
                           </div>
-                          <div className="ml-4 space-y-1 border-l border-white/10 pl-3">
+                          <div className="ml-3 space-y-1 border-l border-white/10 pl-2">
                             {item.dropdown.map((subItem, idx) => (
-                              <motion.div
+                              <Link
                                 key={subItem.name}
-                                initial={{ opacity: 0, x: -5 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: idx * 0.05 + 0.1 }}
+                                to={subItem.path}
+                                className="block px-2 py-2 text-sm text-gray-400 hover:text-white transition-colors"
+                                onClick={() => setIsOpen(false)}
                               >
-                                <Link
-                                  to={subItem.path}
-                                  className="block px-3 py-2 text-gray-400 hover:text-[#00D4AA] hover:bg-white/5 transition-all duration-200 text-sm"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  {subItem.name}
-                                </Link>
-                              </motion.div>
+                                {subItem.name}
+                              </Link>
                             ))}
                           </div>
                         </div>
                       ) : (
                         <Link
                           to={item.path}
-                          className={`block px-3 py-2 transition-all duration-200 text-sm font-medium border-l-2 ${
+                          className={`block px-2 py-2 text-sm transition-colors ${
                             location.pathname === item.path
-                              ? 'text-[#00D4AA] border-[#00D4AA] bg-[#00D4AA]/5'
-                              : 'text-gray-300 hover:text-[#00D4AA] hover:bg-white/5 border-transparent'
+                              ? 'text-white font-medium'
+                              : 'text-gray-400 hover:text-white'
                           }`}
                           onClick={() => setIsOpen(false)}
                         >
                           {item.name}
                         </Link>
                       )}
-                    </motion.div>
+                    </div>
                   ))}
                   
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="pt-4 border-t border-white/10 mt-2"
-                  >
+                  <div className="pt-3 border-t border-white/10 mt-2">
                     <Link
                       to="/contact"
-                      className="block w-full px-4 py-3 bg-[#0066CC] text-white font-medium text-sm text-center hover:bg-[#0052A3] transition-all duration-200"
+                      className="block w-full px-3 py-2 bg-white text-[#0A0F14] font-medium text-sm text-center hover:bg-gray-100 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Join Research Program
                     </Link>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 

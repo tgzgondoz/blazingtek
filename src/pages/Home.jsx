@@ -59,149 +59,88 @@ const Home = () => {
 
   return (
     <div className="bg-[#0A0F14]">
-      {/* Professional Snowflakes Animation */}
+      {/* Optimized Subtle Animation Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Layer 1: Very subtle small particles */}
-        {[...Array(40)].map((_, i) => (
+        {/* Minimal subtle particles */}
+        {[...Array(15)].map((_, i) => (
           <motion.div
-            key={`subtle-${i}`}
+            key={`particle-${i}`}
             className="absolute top-0 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               width: `${Math.random() * 1 + 0.5}px`,
               height: `${Math.random() * 1 + 0.5}px`,
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 0 2px rgba(255, 255, 255, 0.2)",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
             }}
             initial={{ y: -20 }}
             animate={{
               y: "100vh",
-              x: [
-                0,
-                Math.random() * 5 - 2.5,
-                Math.random() * 5 - 2.5,
-              ],
+              x: Math.random() * 10 - 5,
             }}
             transition={{
-              duration: Math.random() * 30 + 40,
+              duration: Math.random() * 40 + 60,
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 10,
+              delay: Math.random() * 20,
             }}
           />
         ))}
         
-        {/* Layer 2: Medium particles with slight glow */}
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={`medium-${i}`}
-            className="absolute top-0 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2 + 1}px`,
-              height: `${Math.random() * 2 + 1}px`,
-              backgroundColor: "rgba(255, 255, 255, 0.15)",
-              boxShadow: `
-                0 0 3px rgba(255, 255, 255, 0.3),
-                0 0 6px rgba(0, 212, 170, 0.1)
-              `,
-            }}
-            initial={{ y: -40 }}
-            animate={{
-              y: "100vh",
-              x: [
-                Math.random() * 10 - 5,
-                Math.random() * 15 - 7.5,
-                Math.random() * 10 - 5,
-              ],
-              rotate: [0, 90, 180],
-            }}
-            transition={{
-              duration: Math.random() * 25 + 30,
-              repeat: Infinity,
-              ease: "linear",
-              delay: Math.random() * 8,
-            }}
-          />
-        ))}
-        
-        {/* Layer 3: Accent particles with brand color */}
-        {[...Array(15)].map((_, i) => (
+        {/* Subtle brand color accent particles */}
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={`accent-${i}`}
             className="absolute top-0 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              backgroundColor: "rgba(0, 212, 170, 0.1)",
-              boxShadow: `
-                0 0 4px rgba(0, 212, 170, 0.3),
-                0 0 8px rgba(0, 212, 170, 0.1),
-                inset 0 0 2px rgba(255, 255, 255, 0.2)
-              `,
+              width: `${Math.random() * 1.5 + 0.5}px`,
+              height: `${Math.random() * 1.5 + 0.5}px`,
+              backgroundColor: "rgba(0, 212, 170, 0.15)",
             }}
-            initial={{ y: -60 }}
+            initial={{ y: -40 }}
             animate={{
               y: "100vh",
-              x: [
-                Math.random() * 20 - 10,
-                Math.random() * 25 - 12.5,
-                Math.random() * 20 - 10,
-              ],
-              rotate: [0, 180, 360],
-              scale: [1, 1.1, 1],
+              x: Math.random() * 15 - 7.5,
             }}
             transition={{
-              duration: Math.random() * 20 + 25,
+              duration: Math.random() * 35 + 50,
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 5,
+              delay: Math.random() * 15,
             }}
           />
         ))}
         
-        {/* Layer 4: Rare larger particles for depth */}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`large-${i}`}
-            className="absolute top-0 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 4 + 2}px`,
-              height: `${Math.random() * 4 + 2}px`,
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
-              boxShadow: `
-                0 0 6px rgba(255, 255, 255, 0.2),
-                0 0 12px rgba(0, 102, 204, 0.15),
-                inset 0 0 3px rgba(255, 255, 255, 0.1)
-              `,
-            }}
-            initial={{ y: -80 }}
-            animate={{
-              y: "100vh",
-              x: [
-                Math.random() * 30 - 15,
-                Math.random() * 40 - 20,
-                Math.random() * 30 - 15,
-              ],
-              rotate: [0, 270, 540],
-              scale: [1, 1.2, 0.9, 1],
-            }}
-            transition={{
-              duration: Math.random() * 35 + 40,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: Math.random() * 12,
-            }}
-          />
-        ))}
+        {/* Static subtle grid */}
+        <div className="absolute inset-0 opacity-10">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern 
+                id="dots-pattern" 
+                x="0" 
+                y="0" 
+                width="100" 
+                height="100" 
+                patternUnits="userSpaceOnUse"
+              >
+                <circle 
+                  cx="50" 
+                  cy="50" 
+                  r="1" 
+                  fill="#00D4AA"
+                  fillOpacity="0.3"
+                />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dots-pattern)" />
+          </svg>
+        </div>
         
         {/* Subtle ambient glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00D4AA]/[0.02] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00D4AA]/[0.01]"></div>
       </div>
 
-      {/* Hero Section with Professional Glass Effects */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center text-white overflow-hidden">
         {/* Background with enhanced visibility */}
         <div className="absolute inset-0">
@@ -216,172 +155,63 @@ const Home = () => {
             }}
           />
           
-          {/* Reduced overlay opacity for better background visibility */}
+          {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#0A0F14]/70 via-[#0A0F14]/60 to-[#0A0F14]/50"></div>
           
-          {/* Animated grid pattern - reduced opacity */}
-          <div className="absolute inset-0 opacity-5">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-                  <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#00D4AA" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
-          
-          {/* VISIBLE Animated Dots Background */}
-          <div className="absolute inset-0">
-            {/* Main Dots Grid - Highly Visible */}
-            <div className="absolute inset-0 opacity-20">
-              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern 
-                    id="dots-pattern" 
-                    x="0" 
-                    y="0" 
-                    width="80" 
-                    height="80" 
-                    patternUnits="userSpaceOnUse"
-                  >
-                    {/* Create a grid of 3x3 dots */}
-                    {[...Array(3)].map((_, i) => 
-                      [...Array(3)].map((_, j) => (
-                        <circle 
-                          key={`${i}-${j}`}
-                          cx={i * 40 + 20} 
-                          cy={j * 40 + 20} 
-                          r="1.5" 
-                          fill="#00D4AA"
-                          fillOpacity="0.8"
-                        />
-                      ))
-                    )}
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#dots-pattern)" />
-              </svg>
-            </div>
-
-            {/* Floating Dots - Highly Visible */}
-            {[...Array(30)].map((_, i) => (
-              <motion.div
-                key={`float-dot-${i}`}
-                className="absolute rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  width: "4px",
-                  height: "4px",
-                  backgroundColor: "#00D4AA",
-                  boxShadow: "0 0 10px #00D4AA, 0 0 20px #00D4AA",
-                  filter: "blur(0.5px)",
-                }}
-                animate={{
-                  y: [
-                    `${Math.random() * 50 - 25}px`,
-                    `${Math.random() * 50 - 25}px`,
-                    `${Math.random() * 50 - 25}px`,
-                  ],
-                  x: [
-                    `${Math.random() * 40 - 20}px`,
-                    `${Math.random() * 40 - 20}px`,
-                    `${Math.random() * 40 - 20}px`,
-                  ],
-                  scale: [1, 1.5, 1],
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{
-                  duration: Math.random() * 6 + 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: Math.random() * 2,
-                }}
-              />
-            ))}
-
-            {/* Large Pulsing Dots - Highly Visible */}
-            {[...Array(15)].map((_, i) => (
-              <motion.div
-                key={`pulse-dot-${i}`}
-                className="absolute rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  width: "6px",
-                  height: "6px",
-                  backgroundColor: "#0066CC",
-                  boxShadow: "0 0 15px #0066CC, 0 0 30px rgba(0, 102, 204, 0.5)",
-                }}
-                animate={{
-                  scale: [0.8, 2, 0.8],
-                  opacity: [0.4, 0.9, 0.4],
-                }}
-                transition={{
-                  duration: Math.random() * 4 + 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: Math.random() * 1.5,
-                }}
-              />
-            ))}
-
-            {/* Connecting Lines Between Dots */}
-            <svg className="absolute inset-0 opacity-10" width="100%" height="100%">
-              {[...Array(20)].map((_, i) => {
-                const x1 = Math.random() * 100;
-                const y1 = Math.random() * 100;
-                const x2 = Math.random() * 100;
-                const y2 = Math.random() * 100;
-                
-                return (
-                  <motion.line
-                    key={`line-${i}`}
-                    x1={`${x1}%`}
-                    y1={`${y1}%`}
-                    x2={`${x2}%`}
-                    y2={`${y2}%`}
-                    stroke="#00D4AA"
-                    strokeWidth="0.5"
-                    strokeOpacity="0.5"
-                    animate={{
-                      strokeOpacity: [0.2, 0.5, 0.2],
-                      strokeDashoffset: [0, 20, 0],
-                    }}
-                    transition={{
-                      duration: Math.random() * 8 + 4,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                );
-              })}
-            </svg>
-
-            {/* Mouse-Interactive Glow (but NOT moving the background) */}
+          {/* Minimal animated dots - reduced quantity */}
+          {[...Array(12)].map((_, i) => (
             <motion.div
-              className="absolute rounded-full pointer-events-none"
+              key={`dot-${i}`}
+              className="absolute rounded-full"
               style={{
-                width: "100px",
-                height: "100px",
-                backgroundColor: "rgba(0, 212, 170, 0.05)",
-                boxShadow: "0 0 100px rgba(0, 212, 170, 0.1)",
-                filter: "blur(20px)",
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: "3px",
+                height: "3px",
+                backgroundColor: "#00D4AA",
+                opacity: 0.5,
               }}
               animate={{
-                x: mousePosition.x * 50,
-                y: mousePosition.y * 50,
+                y: [
+                  `${Math.random() * 20 - 10}px`,
+                  `${Math.random() * 20 - 10}px`,
+                ],
+                x: [
+                  `${Math.random() * 20 - 10}px`,
+                  `${Math.random() * 20 - 10}px`,
+                ],
+                opacity: [0.3, 0.6, 0.3],
               }}
-              transition={{ type: "spring", stiffness: 150, damping: 15 }}
+              transition={{
+                duration: Math.random() * 8 + 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             />
-          </div>
+          ))}
+
+          {/* Mouse-Interactive Glow - smaller */}
+          <motion.div
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              width: "60px",
+              height: "60px",
+              backgroundColor: "rgba(0, 212, 170, 0.03)",
+              boxShadow: "0 0 60px rgba(0, 212, 170, 0.05)",
+              filter: "blur(15px)",
+            }}
+            animate={{
+              x: mousePosition.x * 30,
+              y: mousePosition.y * 30,
+            }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          />
         </div>
 
-        {/* REMOVED the mouse-based transformation from this container */}
+        {/* Main Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Text directly on background */}
+            {/* Left Column - Text */}
             <motion.div
               className="relative z-10"
               initial={{ opacity: 0, y: 30 }}
@@ -425,7 +255,7 @@ const Home = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right Column - Enhanced Glass Carousel without text */}
+            {/* Right Column - Enhanced Glass Carousel */}
             <motion.div
               className="relative"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -443,7 +273,7 @@ const Home = () => {
 
                 {/* Carousel Container */}
                 <div className="relative">
-                  {/* Main Carousel Image - Larger and cleaner */}
+                  {/* Main Carousel Image */}
                   <div className="relative h-96 rounded-xl overflow-hidden">
                     {breakthroughs.map((breakthrough, index) => (
                       <motion.div
@@ -466,14 +296,14 @@ const Home = () => {
                               e.target.src = `https://via.placeholder.com/600x400/0A0F14/00D4AA?text=${encodeURIComponent(breakthrough.title)}`;
                             }}
                           />
-                          {/* Subtle overlay for better image visibility */}
+                          {/* Subtle overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                         </div>
                       </motion.div>
                     ))}
                   </div>
 
-                  {/* Navigation and Progress only */}
+                  {/* Navigation and Progress */}
                   <div className="mt-6 flex items-center justify-between">
                     {/* Progress dots */}
                     <div className="flex gap-3">
@@ -529,14 +359,14 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Decorative floating elements - reduced opacity */}
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-[#00D4AA]/5 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#0066CC]/5 rounded-full blur-xl"></div>
+                {/* Decorative elements - minimal */}
+                <div className="absolute -top-4 -right-4 w-16 h-16 bg-[#00D4AA]/3 rounded-full blur-xl"></div>
+                <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-[#0066CC]/3 rounded-full blur-xl"></div>
               </div>
             </motion.div>
           </div>
 
-          {/* Bottom callout - Minimal */}
+          {/* Bottom callout */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

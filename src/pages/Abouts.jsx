@@ -15,37 +15,37 @@ const Abouts = () => {
     { 
       name: "Andrew Chigona", 
       role: "CEO", 
-      email: "andrew@blazingtek.com",
+      email: "andrew@blazingtek.co",
       image: AndrewChigona
     },
     { 
       name: "Garry Payera", 
       role: "Brand Ambassador", 
-      email: "garry@blazingtek.com",
+      email: "garry@blazingtek.co",
       image: GarryPayera
     },
     { 
       name: "Frank Farakezi", 
       role: "Events Coordinator", 
-      email: "frank@blazingtek.com",
+      email: "frank@blazingtek.co",
       image: FrankFarakezi
     },
     { 
       name: "Takudzwa Masomera", 
       role: "Project Lead", 
-      email: "takudzwa@blazingtek.com",
+      email: "takudzwa@blazingtek.co",
       image: TakudzwaMasomera
     },
     { 
       name: "Claudius Saranavo", 
       role: "Creative Director", 
-      email: "claudius@blazingtek.com",
+      email: "claudius@blazingtek.co",
       image: ClaudiusSaranavo
     },
     { 
       name: "Tatenda Gondo", 
       role: "IT Specialist", 
-      email: "tatenda@blazingtek.com",
+      email: "tatenda@blazingtek.co",
       image: TatendaGondo
     }
   ];
@@ -211,7 +211,7 @@ const Abouts = () => {
 
             {/* Email */}
             <motion.a
-              href="mailto:info@blazingtek.com"
+              href="mailto:info@blazingtek.co"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -226,7 +226,7 @@ const Abouts = () => {
               </div>
               
               <h3 className="text-base font-semibold text-white mb-3">Email Us</h3>
-              <p className="text-gray-300 text-sm mb-4">info@blazingtek.com</p>
+              <p className="text-gray-300 text-sm mb-4">info@blazingtek.co</p>
               
               <div className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 Click to email

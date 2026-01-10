@@ -333,7 +333,7 @@ const Partnerships = () => {
                         <div className="p-2 rounded bg-white/5 border border-white/10">
                           <Mail className="h-4 w-4 text-gray-400" />
                         </div>
-                        <span className="text-sm text-gray-400">info@blazingtek.com</span>
+                        <span className="text-sm text-gray-400">info@blazingtek.co</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="p-2 rounded bg-white/5 border border-white/10">

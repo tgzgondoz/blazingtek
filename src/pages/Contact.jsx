@@ -10,8 +10,8 @@ const Contact = () => {
   });
 
   const contactInfo = [
-    { icon: <Mail className="h-4 w-4" />, title: "General Inquiries", info: "info@blazingtek.com", link: "mailto:info@blazingtek.com" },
-    { icon: <Mail className="h-4 w-4" />, title: "Sales", info: "sales@blazingtek.com", link: "mailto:sales@blazingtek.com" },
+    { icon: <Mail className="h-4 w-4" />, title: "General Inquiries", info: "info@blazingtek.co", link: "mailto:info@blazingtek.co" },
+    { icon: <Mail className="h-4 w-4" />, title: "Sales", info: "sales@blazingtek.co", link: "mailto:sales@blazingtek.co" },
     { icon: <Phone className="h-4 w-4" />, title: "Phone", info: "+263 788 605 607", link: "tel:+263788605607" },
     { icon: <MapPin className="h-4 w-4" />, title: "Location", info: "Harare, Zimbabwe", link: "#" },
   ];

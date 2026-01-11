@@ -17,7 +17,10 @@ import {
   Heart,
   ChevronLeft,
   ChevronRight as ChevronRightIcon,
-  AlertCircle
+  AlertCircle,
+  MapPin,
+  Users as UsersIcon,
+  Megaphone
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -42,6 +45,7 @@ const News = () => {
   });
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
   const slideshowImages = [
     s1,
@@ -62,12 +66,32 @@ const News = () => {
   // Load news content from localStorage
   useEffect(() => {
     const loadNewsContent = () => {
-      const savedContent = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
+      // Load news articles from AdminUpload
+      const savedNews = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
       
-      // Separate featured article (first article is featured by default, or look for featured flag)
-      const featured = savedContent.length > 0 ? savedContent[0] : getDefaultFeaturedArticle();
-      const articles = savedContent.length > 0 ? savedContent : getDefaultArticles();
-      const events = getDefaultUpcomingEvents(); // Events are separate in news page
+      // Load events from AdminUpload
+      const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
+      
+      // Determine featured article (first article is featured, or find one with featured flag)
+      let featured = savedNews.length > 0 ? savedNews[0] : getDefaultFeaturedArticle();
+      const articles = savedNews.length > 0 ? savedNews : getDefaultArticles();
+      
+      // Transform events data from AdminUpload format to News page format
+      const events = savedEvents.length > 0 
+        ? savedEvents.map(event => ({
+            id: event.id,
+            title: event.title,
+            date: event.date,
+            time: event.time,
+            location: event.location,
+            type: event.type,
+            speaker: event.speaker,
+            registrationLink: event.registrationLink,
+            status: event.status,
+            imageUrl: event.imageUrl,
+            description: event.description
+          }))
+        : getDefaultUpcomingEvents();
       
       setNewsContent({
         articles,
@@ -84,12 +108,25 @@ const News = () => {
     loadNewsContent();
     
     // Listen for content updates
-    const handleStorageChange = () => {
-      loadNewsContent();
+    const handleStorageChange = (e) => {
+      if (e.key === 'blazingtek-news' || e.key === 'blazingtek-events') {
+        loadNewsContent();
+      }
     };
     
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    
+    // Also listen for changes within the same tab
+    const handleCustomStorage = () => {
+      loadNewsContent();
+    };
+    
+    window.addEventListener('blazingtek-content-updated', handleCustomStorage);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('blazingtek-content-updated', handleCustomStorage);
+    };
   }, []);
   
   const nextSlide = () => {
@@ -125,14 +162,15 @@ const News = () => {
     id: 'featured',
     title: "AI-Powered Farming Robot Increases Crop Yields by 40% in Pilot Study",
     excerpt: "Our latest research shows promising results in sustainable agriculture using autonomous robots equipped with computer vision and machine learning algorithms.",
-    category: "Research",
+    category: "research",
     date: "March 15, 2024",
     readTime: "5 min read",
     author: "Dr. Amina Diallo",
     authorRole: "Lead AI Researcher",
     views: "2.4K",
     likes: 156,
-    type: "article"
+    type: "article",
+    imageUrl: ""
   });
 
   const getDefaultArticles = () => [
@@ -140,56 +178,71 @@ const News = () => {
       id: 1,
       title: "BlazingTek Wins Google AI Impact Challenge Grant",
       excerpt: "Selected among 1000+ applicants for our work on assistive technology for people with disabilities.",
-      category: "Awards",
+      category: "awards",
       date: "March 10, 2024",
       type: "article",
       readTime: "3 min read",
       author: "Fatima Bello",
+      authorRole: "Project Manager",
       views: "1.8K",
+      likes: 89,
+      imageUrl: ""
     },
     {
       id: 2,
       title: "New Partnership with University of Nairobi",
       excerpt: "Launching joint research program focused on sustainable energy solutions for robotics.",
-      category: "Partnerships",
+      category: "partnerships",
       date: "March 5, 2024",
-      type: "video",
-      readTime: "8 min watch",
+      type: "article",
+      readTime: "4 min read",
       author: "Kwame Osei",
-      views: "3.2K",
+      authorRole: "Partnership Director",
+      views: "2.2K",
+      likes: 112,
+      imageUrl: ""
     },
     {
       id: 3,
       title: "Robotics Workshop Trains 500+ Students Across Ghana",
       excerpt: "STEM outreach program expands to reach more young innovators in rural communities.",
-      category: "Events",
-      date: "February 20, 2024",
+      category: "events",
+      date: "February 28, 2024",
       type: "article",
       readTime: "4 min read",
       author: "Maria Rodriguez",
-      views: "1.2K",
+      authorRole: "Community Outreach Lead",
+      views: "1.5K",
+      likes: 76,
+      imageUrl: ""
     },
     {
       id: 4,
       title: "New Patent Filed for Solar-Powered Navigation System",
       excerpt: "Innovative technology enables autonomous robots to operate 24/7 using renewable energy.",
-      category: "Research",
-      date: "February 15, 2024",
+      category: "research",
+      date: "February 20, 2024",
       type: "article",
       readTime: "6 min read",
       author: "Dr. Samuel Adeyemi",
+      authorRole: "Senior Research Scientist",
       views: "2.9K",
+      likes: 134,
+      imageUrl: ""
     },
     {
       id: 5,
       title: "Featured at UN Technology Innovation Labs",
       excerpt: "Showcasing our work on AI for social good at United Nations headquarters.",
-      category: "Events",
-      date: "February 10, 2024",
-      type: "video",
-      readTime: "12 min watch",
+      category: "events",
+      date: "February 15, 2024",
+      type: "article",
+      readTime: "5 min read",
       author: "Dr. Amina Diallo",
-      views: "4.3K",
+      authorRole: "Lead AI Researcher",
+      views: "3.2K",
+      likes: 198,
+      imageUrl: ""
     }
   ];
 
@@ -198,31 +251,44 @@ const News = () => {
       id: 1,
       title: "Africa Tech Summit 2024",
       date: "April 15-17, 2024",
+      time: "9:00 AM",
       location: "Kigali, Rwanda",
       type: "Conference",
       speaker: "Kwame Osei",
+      registrationLink: "",
+      status: "Upcoming",
+      imageUrl: ""
     },
     {
       id: 2,
       title: "Women in AI Africa Conference",
       date: "May 8, 2024",
+      time: "2:00 PM",
       location: "Virtual",
       type: "Webinar",
       speaker: "Dr. Amina Diallo",
+      registrationLink: "",
+      status: "Registration Open",
+      imageUrl: ""
     },
     {
       id: 3,
       title: "IEEE Robotics Symposium",
       date: "June 20-22, 2024",
+      time: "10:00 AM",
       location: "Cape Town, South Africa",
       type: "Symposium",
       speaker: "Dr. Samuel Adeyemi",
+      registrationLink: "",
+      status: "Upcoming",
+      imageUrl: ""
     }
   ];
 
   const getTypeIcon = (type) => {
     switch(type) {
       case 'video': return <Video className="h-4 w-4" />;
+      case 'event': return <Calendar className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
     }
   };
@@ -250,7 +316,9 @@ const News = () => {
       });
       localStorage.setItem('blazingtek-newsletter-subscriptions', JSON.stringify(subscriptions));
       
-      alert('Thank you for subscribing to our newsletter!');
+      // Show success message
+      setSuccessMessage('Thank you for subscribing to our newsletter!');
+      setTimeout(() => setSuccessMessage(''), 3000);
       setNewsletterEmail('');
     }
   };
@@ -266,11 +334,62 @@ const News = () => {
   };
 
   const handleRegisterEvent = (eventId) => {
-    alert(`Registering for event ${eventId}. In production, this would open a registration form.`);
+    const event = newsContent.upcomingEvents.find(e => e.id === eventId);
+    if (event && event.registrationLink) {
+      window.open(event.registrationLink, '_blank');
+    } else {
+      alert(`Registration details for "${event?.title}" coming soon!`);
+    }
+  };
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Date TBD';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Format time for display
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    } catch {
+      return timeString;
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0A0F14]">
+      {/* Success Message */}
+      <AnimatePresence>
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 right-4 z-50 bg-green-500/10 border border-green-500/20 rounded-lg p-4 backdrop-blur-sm"
+          >
+            <div className="flex items-center gap-3 text-green-500">
+              <AlertCircle className="h-5 w-5" />
+              <span className="font-medium">{successMessage}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
         {/* Slideshow Background */}
@@ -368,9 +487,9 @@ const News = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative">
                 {/* Featured badge */}
-                <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm">
+                <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm z-10">
                   Featured Story
                 </div>
                 
@@ -387,7 +506,10 @@ const News = () => {
                     </div>
                   )}
                   <div className="absolute top-3 left-3 bg-white/10 px-2 py-1 rounded text-white text-sm font-medium">
-                    {newsContent.featuredArticle?.category || "Research"}
+                    {newsContent.featuredArticle?.category ? 
+                      newsContent.featuredArticle.category.charAt(0).toUpperCase() + newsContent.featuredArticle.category.slice(1) 
+                      : "Research"
+                    }
                   </div>
                 </div>
                 
@@ -409,11 +531,11 @@ const News = () => {
                     </div>
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="text-lg font-semibold text-white line-clamp-2">
                     {newsContent.featuredArticle?.title || "AI-Powered Farming Robot Increases Crop Yields by 40% in Pilot Study"}
                   </h3>
                   
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
                     {newsContent.featuredArticle?.excerpt || "Our latest research shows promising results in sustainable agriculture using autonomous robots equipped with computer vision and machine learning algorithms."}
                   </p>
                   
@@ -474,7 +596,13 @@ const News = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main News Column */}
             <div className="lg:col-span-2">
-              {filteredArticles.length === 0 ? (
+              {newsContent.isLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Loading Content</h3>
+                  <p className="text-gray-400">Fetching the latest news...</p>
+                </div>
+              ) : filteredArticles.length === 0 ? (
                 <div className="text-center py-12">
                   <Newspaper className="h-12 w-12 text-white/20 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-white mb-2">No Articles Found</h3>
@@ -499,7 +627,16 @@ const News = () => {
                         key={article.id || index}
                         className="group"
                       >
-                        <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                        <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
+                          {article.imageUrl && (
+                            <div className="h-48 w-full overflow-hidden rounded-t-xl">
+                              <img 
+                                src={article.imageUrl} 
+                                alt={article.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                          )}
                           <div className="p-6">
                             <div className="flex items-center justify-between mb-4">
                               <div className="flex items-center gap-2">
@@ -515,14 +652,17 @@ const News = () => {
                             </div>
                             
                             <span className="inline-block px-3 py-1 rounded text-xs font-medium bg-white/5 text-white border border-white/10 mb-3 capitalize">
-                              {article.category || "Research"}
+                              {article.category ? 
+                                article.category.charAt(0).toUpperCase() + article.category.slice(1) 
+                                : "Research"
+                              }
                             </span>
                             
-                            <h3 className="text-base font-semibold text-white mb-3">
+                            <h3 className="text-base font-semibold text-white mb-3 line-clamp-2">
                               {article.title}
                             </h3>
                             
-                            <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                            <p className="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2">
                               {article.excerpt}
                             </p>
                             
@@ -535,7 +675,9 @@ const News = () => {
                                 </div>
                                 <div>
                                   <div className="text-sm text-white">{article.author || "Anonymous"}</div>
-                                  <div className="text-xs text-gray-400">{article.date || "Recent"}</div>
+                                  <div className="text-xs text-gray-400">
+                                    {formatDate(article.date) || "Recent"}
+                                  </div>
                                 </div>
                               </div>
                               <div className="flex items-center gap-1 text-sm text-gray-400">
@@ -578,15 +720,17 @@ const News = () => {
                   </div>
                   
                   {/* Load More */}
-                  <div className="mt-12 text-center">
-                    <button 
-                      onClick={handleLoadMore}
-                      className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-300 flex items-center gap-2 mx-auto"
-                    >
-                      <span>Load More Articles</span>
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
+                  {filteredArticles.length > 0 && (
+                    <div className="mt-12 text-center">
+                      <button 
+                        onClick={handleLoadMore}
+                        className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-300 flex items-center gap-2 mx-auto"
+                      >
+                        <span>Load More Articles</span>
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -606,43 +750,79 @@ const News = () => {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    {newsContent.upcomingEvents.map((event, index) => (
-                      <div
-                        key={event.id || index}
-                        className="p-4 rounded-lg border border-white/10 hover:border-white/20 transition-colors bg-white/5"
-                      >
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-medium text-white text-sm">{event.title}</h4>
-                          <span className="px-2 py-1 rounded text-xs font-medium bg-white text-[#0A0F14] capitalize">
-                            {event.type || "Event"}
-                          </span>
-                        </div>
-                        <div className="space-y-2 text-xs text-gray-400">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            <span className="font-medium">{event.date}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Globe className="h-3 w-3" />
-                            <span className="font-medium">{event.location}</span>
-                          </div>
-                          {event.speaker && (
-                            <div className="flex items-center gap-1">
-                              <User className="h-3 w-3" />
-                              <span className="font-medium">Speaker: {event.speaker}</span>
-                            </div>
-                          )}
-                        </div>
-                        <button 
-                          onClick={() => handleRegisterEvent(event.id || index)}
-                          className="mt-3 text-white hover:text-gray-200 text-xs font-medium flex items-center gap-1"
+                    {newsContent.upcomingEvents.length === 0 ? (
+                      <div className="text-center py-4">
+                        <Calendar className="h-8 w-8 text-white/20 mx-auto mb-2" />
+                        <p className="text-gray-400 text-sm">No upcoming events scheduled</p>
+                        <Link 
+                          to="/admin/upload"
+                          className="inline-flex items-center gap-1 mt-2 text-xs text-amber-400 hover:text-amber-300"
                         >
-                          <span>Register</span>
+                          <span>Add events in Admin Panel</span>
                           <ArrowRight className="h-3 w-3" />
-                        </button>
+                        </Link>
                       </div>
-                    ))}
+                    ) : (
+                      newsContent.upcomingEvents.map((event, index) => (
+                        <div
+                          key={event.id || index}
+                          className="p-4 rounded-lg border border-white/10 hover:border-white/20 transition-colors bg-white/5"
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-medium text-white text-sm line-clamp-2">{event.title}</h4>
+                            <span className="px-2 py-1 rounded text-xs font-medium bg-white text-[#0A0F14] capitalize whitespace-nowrap ml-2">
+                              {event.type || "Event"}
+                            </span>
+                          </div>
+                          <div className="space-y-2 text-xs text-gray-400">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              <span className="font-medium">
+                                {formatDate(event.date)}
+                                {event.time && ` • ${formatTime(event.time)}`}
+                              </span>
+                            </div>
+                            {event.location && (
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                <span className="font-medium">{event.location}</span>
+                              </div>
+                            )}
+                            {event.speaker && (
+                              <div className="flex items-center gap-1">
+                                <User className="h-3 w-3" />
+                                <span className="font-medium">Speaker: {event.speaker}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                            <span className={`text-xs px-2 py-1 rounded ${
+                              event.status === 'Registration Open' ? 'bg-green-500/20 text-green-400' :
+                              event.status === 'Sold Out' ? 'bg-red-500/20 text-red-400' :
+                              event.status === 'Upcoming' ? 'bg-blue-500/20 text-blue-400' :
+                              'bg-gray-500/20 text-gray-400'
+                            }`}>
+                              {event.status}
+                            </span>
+                            <button 
+                              onClick={() => handleRegisterEvent(event.id || index)}
+                              className="text-white hover:text-gray-200 text-xs font-medium flex items-center gap-1"
+                            >
+                              <span>Details</span>
+                              <ArrowRight className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
+                  <Link 
+                    to="/admin/upload"
+                    className="mt-6 inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+                  >
+                    <Megaphone className="h-4 w-4" />
+                    <span>Add your event to our calendar</span>
+                  </Link>
                 </div>
               </div>
 
@@ -667,7 +847,7 @@ const News = () => {
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-white text-sm"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-white text-sm placeholder-gray-500"
                       required
                     />
                     <button
@@ -683,6 +863,44 @@ const News = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Content Stats */}
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded bg-white/5 border border-white/10">
+                    <Newspaper className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Content Stats</h3>
+                    <p className="text-gray-400 text-sm">Latest updates</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-2xl font-bold text-white mb-1">
+                      {newsContent.articles.length}
+                    </div>
+                    <div className="text-xs text-gray-400">Articles</div>
+                  </div>
+                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-2xl font-bold text-white mb-1">
+                      {newsContent.upcomingEvents.length}
+                    </div>
+                    <div className="text-xs text-gray-400">Events</div>
+                  </div>
+                </div>
+                <div className="mt-4 text-center">
+                  <div className="text-xs text-gray-500">
+                    Last updated: {new Date().toLocaleDateString()}
+                  </div>
+                  <Link 
+                    to="/admin/upload"
+                    className="inline-block mt-2 text-xs text-amber-400 hover:text-amber-300"
+                  >
+                    Manage content in Admin Panel
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -690,14 +908,18 @@ const News = () => {
 
       {/* Admin Content Notice (development only) */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="fixed bottom-4 left-4 bg-[#0A0F14]/90 backdrop-blur-sm border border-white/10 rounded-lg p-3 text-xs text-gray-400">
+        <div className="fixed bottom-4 left-4 bg-[#0A0F14]/90 backdrop-blur-sm border border-white/10 rounded-lg p-3 text-xs text-gray-400 z-40">
           <div className="flex items-center gap-2 mb-1">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+            <div className={`h-2 w-2 rounded-full ${newsContent.articles.length > 0 ? 'bg-green-500' : 'bg-yellow-500'} animate-pulse`}></div>
             <span>News Content: {newsContent.articles.length > 0 ? 'Admin' : 'Default'}</span>
           </div>
-          <div className="text-xs">
-            <Link to="/admin/upload" className="text-amber-400 hover:text-amber-300">
-              Edit in Admin →
+          <div className="text-xs mt-1">
+            <div className="flex items-center justify-between">
+              <span>Articles: {newsContent.articles.length}</span>
+              <span>Events: {newsContent.upcomingEvents.length}</span>
+            </div>
+            <Link to="/admin/upload" className="inline-flex items-center gap-1 mt-2 text-amber-400 hover:text-amber-300">
+              <span>Edit in Admin →</span>
             </Link>
           </div>
         </div>

@@ -12,6 +12,15 @@ const Community = () => {
     isLoading: true
   });
 
+  // Default placeholder images
+  const placeholderImages = {
+    communityHero: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+    featureStory: "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    newsBrief: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    event: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    columnist: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+  };
+
   // Load content from localStorage (saved by AdminUpload)
   useEffect(() => {
     const loadContent = () => {
@@ -52,7 +61,7 @@ const Community = () => {
       category: "COVER STORY",
       author: "MA Editorial",
       readTime: "5 min read",
-      image: "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+      image: placeholderImages.featureStory
     },
     {
       id: 2,
@@ -61,7 +70,7 @@ const Community = () => {
       category: "COMMUNITY",
       author: "Kwame Osei",
       readTime: "4 min read",
-      image: "https://images.unsplash.com/photo-1551828335-9534c7f5bb64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+      image: placeholderImages.featureStory
     },
     {
       id: 3,
@@ -70,7 +79,7 @@ const Community = () => {
       category: "FEATURE",
       author: "Nadia Diallo",
       readTime: "6 min read",
-      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+      image: placeholderImages.featureStory
     },
   ];
 
@@ -80,21 +89,21 @@ const Community = () => {
       title: "AI Hackathon Produces Solutions",
       summary: "500+ developers participated in innovation marathon",
       category: "UPDATE",
-      image: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.newsBrief
     },
     {
       id: 2,
       title: "Student Startups Secure Funding",
       summary: "Incubator graduates raise significant investments",
       category: "BUSINESS",
-      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.newsBrief
     },
     {
       id: 3,
       title: "Open Source Research Expands",
       summary: "Global collaboration on African innovation challenges",
       category: "RESEARCH",
-      image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.newsBrief
     },
   ];
 
@@ -104,14 +113,14 @@ const Community = () => {
       date: "April 20-22",
       location: "Accra",
       status: "Registration Open",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.event
     },
     {
       title: "Women in Tech Forum",
       date: "May 15",
       location: "Virtual & Nairobi",
       status: "Applications Open",
-      image: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.event
     },
   ];
 
@@ -121,14 +130,14 @@ const Community = () => {
       title: "From the Editor",
       author: "Dr. Amina Bello",
       excerpt: "Celebrating innovation happening across Africa through education and community collaboration...",
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.columnist
     },
     {
       id: 2,
       title: "Innovator Spotlight",
       author: "David Chen",
       excerpt: "Meet Samuel Kofi, whose agricultural drone startup emerged from our Tech Incubator program...",
-      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+      image: placeholderImages.columnist
     },
   ];
 
@@ -136,7 +145,7 @@ const Community = () => {
   const filteredStories = activeTab === 'all' 
     ? communityContent.featureStories 
     : communityContent.featureStories.filter(story => 
-        story.category.toLowerCase().includes(activeTab)
+        story.category && story.category.toLowerCase().includes(activeTab)
       );
 
   // Handle newsletter subscription
@@ -144,9 +153,21 @@ const Community = () => {
     e.preventDefault();
     const email = e.target.email.value;
     // In production, send to backend
-    console.log('Subscribing:', email);
+    const subscriptions = JSON.parse(localStorage.getItem('blazingtek-newsletter-subscriptions')) || [];
+    subscriptions.push({
+      email: email,
+      date: new Date().toISOString(),
+      source: 'community-page'
+    });
+    localStorage.setItem('blazingtek-newsletter-subscriptions', JSON.stringify(subscriptions));
+    
     alert('Thank you for subscribing to MA Community!');
     e.target.reset();
+  };
+
+  // Handle event registration
+  const handleEventRegistration = (eventTitle) => {
+    alert(`Registration for "${eventTitle}" would open a form in production.`);
   };
 
   return (
@@ -208,7 +229,7 @@ const Community = () => {
             >
               <div className="relative aspect-[4/5] rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  src={placeholderImages.communityHero}
                   alt="African innovators collaborating on technology"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -245,7 +266,7 @@ const Community = () => {
                     {/* Story Image */}
                     <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
                       <img 
-                        src={story.image || "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+                        src={story.image || placeholderImages.featureStory}
                         alt={story.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -253,11 +274,15 @@ const Community = () => {
                     
                     {/* Story Content */}
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-white mb-2">{story.category || "FEATURE"}</div>
+                      <div className="text-sm font-semibold text-white mb-2">
+                        {story.category || "FEATURE"}
+                      </div>
                       <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors cursor-pointer">
                         {story.title}
                       </h3>
-                      <p className="text-gray-400 mb-4 text-sm">{story.description || story.excerpt}</p>
+                      <p className="text-gray-400 mb-4 text-sm">
+                        {story.description || story.excerpt || "Read the full story for more details."}
+                      </p>
                       <div className="text-xs text-gray-500">
                         By {story.author || "MA Editorial"} • {story.readTime || "5 min read"}
                       </div>
@@ -298,7 +323,7 @@ const Community = () => {
                   {/* News Image */}
                   <div className="h-48 overflow-hidden">
                     <img 
-                      src={brief.image || "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
+                      src={brief.image || placeholderImages.newsBrief}
                       alt={brief.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -308,12 +333,16 @@ const Community = () => {
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="h-2 w-2 rounded-full bg-white"></div>
-                      <span className="text-sm font-semibold text-white">{brief.category || "UPDATE"}</span>
+                      <span className="text-sm font-semibold text-white">
+                        {brief.category || "UPDATE"}
+                      </span>
                     </div>
                     <h3 className="text-lg font-bold mb-3 group-hover:text-white transition-colors">
                       {brief.title}
                     </h3>
-                    <p className="text-sm text-gray-400">{brief.summary || brief.excerpt || brief.description}</p>
+                    <p className="text-sm text-gray-400">
+                      {brief.summary || brief.excerpt || brief.description}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -353,66 +382,81 @@ const Community = () => {
 
           {/* Stories */}
           <div className="space-y-8">
-            {filteredStories.map((story, index) => (
-              <motion.article
-                key={story.id || index}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-white/10 transition-all duration-300"
-              >
-                <div className="flex flex-col lg:flex-row">
-                  {/* Image Column */}
-                  <div className="lg:w-2/5">
-                    <div className="h-64 lg:h-full overflow-hidden">
-                      <img 
-                        src={story.image || "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
-                        alt={story.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Content Column */}
-                  <div className="lg:w-3/5 p-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold">
-                        {story.category || "FEATURE"}
-                      </span>
-                      <span className="text-xs text-gray-500">• {story.readTime || "5 min read"}</span>
+            {filteredStories.length > 0 ? (
+              filteredStories.map((story, index) => (
+                <motion.article
+                  key={story.id || index}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-white/10 transition-all duration-300"
+                >
+                  <div className="flex flex-col lg:flex-row">
+                    {/* Image Column */}
+                    <div className="lg:w-2/5">
+                      <div className="h-64 lg:h-full overflow-hidden">
+                        <img 
+                          src={story.image || placeholderImages.featureStory}
+                          alt={story.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
                     </div>
                     
-                    <h3 className="text-2xl font-bold mb-4 group-hover:text-white transition-colors">
-                      {story.title}
-                    </h3>
-                    
-                    <p className="text-gray-300 mb-6 leading-relaxed">
-                      {story.description || story.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center">
-                          <span className="text-sm font-bold">{story.author ? story.author.split(' ')[0][0] : "M"}</span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{story.author || "MA Editorial"}</p>
-                          <p className="text-xs text-gray-500">Contributor</p>
-                        </div>
+                    {/* Content Column */}
+                    <div className="lg:w-3/5 p-8">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold">
+                          {story.category || "FEATURE"}
+                        </span>
+                        <span className="text-xs text-gray-500">• {story.readTime || "5 min read"}</span>
                       </div>
                       
-                      <Link 
-                        to={`/community/story/${story.id || index}`} 
-                        className="text-sm font-medium hover:text-white transition-colors flex items-center gap-2"
-                      >
-                        Read Full Story
-                        <span className="group-hover:translate-x-1 transition-transform">→</span>
-                      </Link>
+                      <h3 className="text-2xl font-bold mb-4 group-hover:text-white transition-colors">
+                        {story.title}
+                      </h3>
+                      
+                      <p className="text-gray-300 mb-6 leading-relaxed">
+                        {story.description || story.excerpt || "Discover more about this inspiring story."}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center">
+                            <span className="text-sm font-bold">
+                              {story.author ? story.author.split(' ')[0][0] : "M"}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">{story.author || "MA Editorial"}</p>
+                            <p className="text-xs text-gray-500">Contributor</p>
+                          </div>
+                        </div>
+                        
+                        <Link 
+                          to={`/community/story/${story.id || index}`} 
+                          className="text-sm font-medium hover:text-white transition-colors flex items-center gap-2"
+                        >
+                          Read Full Story
+                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.article>
-            ))}
+                </motion.article>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-400">No feature stories found for this category.</p>
+                <Link 
+                  to="/admin/upload" 
+                  className="inline-flex items-center gap-2 mt-4 text-amber-400 hover:text-amber-300"
+                >
+                  <span>Add feature stories in Admin Panel</span>
+                  <span>→</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -448,7 +492,7 @@ const Community = () => {
                       <div className="flex-shrink-0">
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20">
                           <img 
-                            src={column.image || "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
+                            src={column.image || placeholderImages.columnist}
                             alt={column.author}
                             className="w-full h-full object-cover"
                           />
@@ -467,7 +511,7 @@ const Community = () => {
                         <div className="text-sm text-white mb-4">By {column.author || "Anonymous"}</div>
                         
                         <p className="text-gray-400 mb-4">
-                          {column.excerpt || column.description}
+                          {column.excerpt || column.description || "Read the full column for more insights."}
                         </p>
                         
                         <Link 
@@ -508,7 +552,7 @@ const Community = () => {
                     {/* Event Image */}
                     <div className="absolute inset-0">
                       <img 
-                        src={event.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
+                        src={event.image || placeholderImages.event}
                         alt={event.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
@@ -542,7 +586,10 @@ const Community = () => {
                         )}
                       </div>
                       
-                      <button className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
+                      <button 
+                        onClick={() => handleEventRegistration(event.title)}
+                        className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl"
+                      >
                         Register Now
                       </button>
                     </div>

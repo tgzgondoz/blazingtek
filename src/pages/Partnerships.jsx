@@ -1,11 +1,10 @@
 import { 
   Handshake,
-  ExternalLink,
+  CheckCircle,
+  ArrowRight,
   Mail,
   Phone,
-  MapPin,
-  CheckCircle,
-  ArrowRight
+  MapPin
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -49,50 +48,49 @@ const Partnerships = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0F14]">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden text-white py-20 md:py-28">
+    <div className="min-h-screen bg-black">
+      {/* Header */}
+      <section className="relative text-white py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-[#0A0F14]"></div>
+        
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          className="relative max-w-4xl mx-auto px-4 text-center"
         >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="text-4xl md:text-5xl font-bold mb-4 text-white"
+          >
             Strategic Partnerships
-          </h1>
+          </motion.h1>
           
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8"
           >
             Collaborate with us to drive technological innovation and sustainable development across Africa
           </motion.p>
-
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "80px" }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-white rounded-full"
-          />
         </motion.div>
       </section>
 
       {/* Partnership Registration Form */}
       <section id="partnership-form" className="py-16 md:py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Join Our Network
             </h2>
-            <div className="w-16 h-1 bg-white mx-auto mb-6 rounded-full"></div>
             <p className="text-gray-400 text-lg max-w-xl mx-auto">
               Submit your details to start a partnership conversation. We'll respond within 24 hours.
             </p>
@@ -106,7 +104,7 @@ const Partnerships = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="bg-white/5 rounded-xl border border-white/10">
-              <div className="p-6 md:p-8">
+              <div className="p-8">
                 {/* Form Header */}
                 <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
@@ -267,7 +265,7 @@ const Partnerships = () => {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
+                      className="w-full bg-white text-black hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
                     >
                       <span>Submit Application</span>
                       <ArrowRight className="h-4 w-4" />
@@ -288,7 +286,7 @@ const Partnerships = () => {
               </div>
 
               {/* Benefits & Contact */}
-              <div className="bg-white/5 border-t border-white/10 p-6 md:p-8">
+              <div className="bg-white/5 border-t border-white/10 p-8">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
                     <div className="flex items-center gap-3 mb-4">

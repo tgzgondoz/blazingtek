@@ -38,8 +38,8 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0F14]">
-      {/* Header */}
+    <div className="min-h-screen bg-black">
+      {/* Header - Original background styling */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -60,7 +60,7 @@ const Services = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+            className="text-4xl md:text-5xl font-bold mb-4 text-white"
           >
             Our Services
           </motion.h1>
@@ -69,17 +69,10 @@ const Services = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8"
           >
             Professional robotics solutions tailored for your needs
           </motion.p>
-
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "80px" }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-white rounded-full"
-          />
         </motion.div>
       </section>
 
@@ -90,12 +83,11 @@ const Services = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Professional Robotics Solutions
             </h2>
-            <div className="w-20 h-1 bg-white mx-auto mb-6 rounded-full"></div>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               Comprehensive robotics solutions for education, industry, and research
             </p>
@@ -123,21 +115,21 @@ const Services = () => {
                       />
                     </div>
                     
-                    <div className="p-6">
-                      <h3 className="text-lg font-semibold text-white mb-3">
+                    <div className="p-8">
+                      <h3 className="text-lg font-semibold text-white mb-4">
                         {service.title}
                       </h3>
-                      <p className="text-gray-400 mb-4 leading-relaxed text-sm">
+                      <p className="text-gray-400 leading-relaxed">
                         {service.description}
                       </p>
                       
-                      <div className="pt-4 border-t border-white/10">
+                      <div className="pt-6 mt-6 border-t border-white/10">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-medium text-sm flex items-center">
+                          <span className="text-white font-medium flex items-center">
                             Learn more
-                            <ArrowRight className="w-3 h-3 ml-2" />
+                            <ArrowRight className="w-4 h-4 ml-2" />
                           </span>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-sm text-gray-500">
                             Click to explore
                           </div>
                         </div>
@@ -154,19 +146,19 @@ const Services = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 rounded-xl p-6 border border-white/10"
+            className="bg-white/5 rounded-xl p-8 border border-white/10"
           >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-white mb-3">
                   Explore More
                 </h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400">
                   Discover other areas of our work and expertise
                 </p>
               </div>
               
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                 {otherPages.map((page, index) => (
                   <motion.div
                     key={page.path}
@@ -177,7 +169,7 @@ const Services = () => {
                   >
                     <Link
                       to={page.path}
-                      className="block text-center px-3 py-2 bg-white/5 hover:bg-white/10 rounded border border-white/10 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-300"
+                      className="block text-center px-4 py-3 bg-white/5 hover:bg-white/10 rounded border border-white/10 font-medium text-gray-300 hover:text-white transition-colors duration-300"
                     >
                       {page.name}
                     </Link>

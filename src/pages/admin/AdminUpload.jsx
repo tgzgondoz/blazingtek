@@ -209,27 +209,37 @@ const AdminUpload = () => {
     return `${Math.floor(Math.random() * 5) + 1} min read`;
   };
 
-  // Handle image upload
+  // Handle image upload - FIXED VERSION
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     setIsUploading(true);
     
     setTimeout(() => {
-      const newImages = files.map(file => ({
-        id: Date.now() + Math.random(),
-        name: file.name,
-        url: URL.createObjectURL(file),
-        size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-        type: file.type
-      }));
-      
-      setUploadedImages(prev => [...prev, ...newImages]);
-      setIsUploading(false);
-      
-      // Auto-fill image URL for active form
-      if (newImages.length > 0) {
-        setFormData(prev => ({ ...prev, imageUrl: newImages[0].url }));
-      }
+      const newImages = files.map(file => {
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+          reader.onloadend = () => {
+            resolve({
+              id: Date.now() + Math.random(),
+              name: file.name,
+              url: reader.result, // Use FileReader result as data URL
+              size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
+              type: file.type
+            });
+          };
+          reader.readAsDataURL(file); // Read as data URL
+        });
+      });
+
+      Promise.all(newImages).then(images => {
+        setUploadedImages(prev => [...prev, ...images]);
+        setIsUploading(false);
+        
+        // Auto-fill image URL for active form
+        if (images.length > 0) {
+          setFormData(prev => ({ ...prev, imageUrl: images[0].url }));
+        }
+      });
     }, 1000);
   };
 
@@ -725,24 +735,33 @@ const AdminUpload = () => {
                     </div>
                   </div>
 
-                  {/* Uploaded Images */}
+                  {/* Uploaded Images - FIXED VERSION */}
                   {uploadedImages.length > 0 && (
-                    <div className="mt-4 grid grid-cols-3 gap-3">
-                      {uploadedImages.map(img => (
-                        <div key={img.id} className="relative group">
-                          <img 
-                            src={img.url} 
-                            alt={img.name}
-                            className="w-full h-24 object-cover rounded-lg"
-                          />
-                          <button
-                            onClick={() => handleFormChange('imageUrl', img.url)}
-                            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center"
-                          >
-                            <EyeIcon className="h-5 w-5 text-white" />
-                          </button>
-                        </div>
-                      ))}
+                    <div className="mt-4">
+                      <div className="text-sm font-medium text-gray-700 mb-2">Uploaded Images:</div>
+                      <div className="grid grid-cols-3 gap-3">
+                        {uploadedImages.map(img => (
+                          <div key={img.id} className="relative group">
+                            <img 
+                              src={img.url} 
+                              alt={img.name}
+                              className="w-full h-24 object-cover rounded-lg"
+                            />
+                            <button
+                              onClick={() => handleFormChange('imageUrl', img.url)}
+                              className={`absolute inset-0 bg-black/60 transition-opacity rounded-lg flex items-center justify-center ${
+                                formData.imageUrl === img.url ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                              }`}
+                            >
+                              {formData.imageUrl === img.url ? (
+                                <Check className="h-5 w-5 text-white" />
+                              ) : (
+                                <EyeIcon className="h-5 w-5 text-white" />
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1089,14 +1108,35 @@ const AdminUpload = () => {
                   </div>
                 </div>
 
-                {/* Image Preview or Gradient */}
+                {/* Image Preview or Gradient - FIXED VERSION */}
                 <div className="mb-4 rounded-lg overflow-hidden">
                   {formData.imageUrl ? (
-                    <img 
-                      src={formData.imageUrl}
-                      alt="Preview" 
-                      className="w-full h-48 object-cover"
-                    />
+                    <div className="w-full h-48 bg-gray-900 relative">
+                      <img 
+                        src={formData.imageUrl}
+                        alt="Preview" 
+                        className="absolute inset-0 w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `
+                            <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
+                              <div class="text-white/80 text-sm text-center">
+                                <p>Image failed to load</p>
+                                <p class="text-xs mt-1">Using gradient instead</p>
+                              </div>
+                            </div>
+                          `;
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                        {formData.imageUrl.startsWith('blob:') && (
+                          <div className="text-white text-sm text-center p-4 bg-black/50 rounded-lg">
+                            <p>Local image uploaded</p>
+                            <p className="text-xs mt-1">Will save when published</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ) : (
                     <div 
                       className="w-full h-48"

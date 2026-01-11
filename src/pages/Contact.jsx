@@ -2,6 +2,9 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+// Import the image directly (adjust the path based on your project structure)
+import bgImage from '../assets/bg4.jpg'; // Assuming bg4.jpg is in the assets folder
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -24,15 +27,33 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0F14]">
+    <div className="min-h-screen bg-black">
       {/* Header Section */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
+        {/* Background Image with Overlay - Using the same pattern as Services */}
+        <div className="absolute inset-0">
+          <img
+            src={bgImage}
+            alt="Contact Background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-[#0A0F14]/80"></div>
+          {/* Optional gradient overlay for visual enhancement */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative max-w-4xl mx-auto px-4 text-center z-10"
+        >
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+            className="text-4xl md:text-5xl font-bold mb-4 text-white"
           >
             Contact Our Team
           </motion.h1>
@@ -41,32 +62,24 @@ const Contact = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8"
           >
             We're here to help you with innovative solutions and answer your questions.
           </motion.p>
-
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "80px" }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="mx-auto mt-8 h-1 bg-white rounded-full"
-          />
-        </div>
+        </motion.div>
       </section>
 
       {/* Contact Form Section */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <section className="max-w-6xl mx-auto px-4 py-16 md:py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Reach Out to Us
           </h2>
-          <div className="w-16 h-1 bg-white mx-auto mb-6 rounded-full"></div>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Fill out the form below and our team will get back to you promptly
           </p>
@@ -79,13 +92,13 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white/5 rounded-xl p-8 border border-white/10">
               <div className="mb-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                     <Send className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white">Send a Message</h3>
+                  <h3 className="text-lg font-semibold text-white">Send a Message</h3>
                 </div>
                 <p className="text-gray-400">Fill out the form and we'll get back to you soon.</p>
               </div>
@@ -135,7 +148,7 @@ const Contact = () => {
                 
                 <button
                   type="submit"
-                  className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-white text-black hover:bg-gray-100 font-medium py-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
                 >
                   <span>Send Message</span>
                   <Send className="h-4 w-4" />
@@ -150,13 +163,13 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10 h-full">
+            <div className="bg-white/5 rounded-xl p-8 border border-white/10 h-full">
               <div className="mb-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                     <Mail className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white">Contact Information</h3>
+                  <h3 className="text-lg font-semibold text-white">Contact Information</h3>
                 </div>
                 <p className="text-gray-400">Reach us through any of these channels.</p>
               </div>

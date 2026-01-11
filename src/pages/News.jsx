@@ -9,8 +9,6 @@ import {
   Bookmark,
   MessageCircle,
   ChevronRight,
-  Globe,
-  Send,
   Clock,
   ArrowRight,
   Eye,
@@ -19,7 +17,6 @@ import {
   ChevronRight as ChevronRightIcon,
   AlertCircle,
   MapPin,
-  Users as UsersIcon,
   Megaphone
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -73,8 +70,8 @@ const News = () => {
       const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
       
       // Determine featured article (first article is featured, or find one with featured flag)
-      let featured = savedNews.length > 0 ? savedNews[0] : getDefaultFeaturedArticle();
-      const articles = savedNews.length > 0 ? savedNews : getDefaultArticles();
+      let featured = savedNews.length > 0 ? savedNews[0] : null;
+      const articles = savedNews.length > 0 ? savedNews : [];
       
       // Transform events data from AdminUpload format to News page format
       const events = savedEvents.length > 0 
@@ -91,7 +88,7 @@ const News = () => {
             imageUrl: event.imageUrl,
             description: event.description
           }))
-        : getDefaultUpcomingEvents();
+        : [];
       
       setNewsContent({
         articles,
@@ -157,134 +154,6 @@ const News = () => {
     }
   }, [newsContent.articles]);
 
-  // Default content
-  const getDefaultFeaturedArticle = () => ({
-    id: 'featured',
-    title: "AI-Powered Farming Robot Increases Crop Yields by 40% in Pilot Study",
-    excerpt: "Our latest research shows promising results in sustainable agriculture using autonomous robots equipped with computer vision and machine learning algorithms.",
-    category: "research",
-    date: "March 15, 2024",
-    readTime: "5 min read",
-    author: "Dr. Amina Diallo",
-    authorRole: "Lead AI Researcher",
-    views: "2.4K",
-    likes: 156,
-    type: "article",
-    imageUrl: ""
-  });
-
-  const getDefaultArticles = () => [
-    {
-      id: 1,
-      title: "BlazingTek Wins Google AI Impact Challenge Grant",
-      excerpt: "Selected among 1000+ applicants for our work on assistive technology for people with disabilities.",
-      category: "awards",
-      date: "March 10, 2024",
-      type: "article",
-      readTime: "3 min read",
-      author: "Fatima Bello",
-      authorRole: "Project Manager",
-      views: "1.8K",
-      likes: 89,
-      imageUrl: ""
-    },
-    {
-      id: 2,
-      title: "New Partnership with University of Nairobi",
-      excerpt: "Launching joint research program focused on sustainable energy solutions for robotics.",
-      category: "partnerships",
-      date: "March 5, 2024",
-      type: "article",
-      readTime: "4 min read",
-      author: "Kwame Osei",
-      authorRole: "Partnership Director",
-      views: "2.2K",
-      likes: 112,
-      imageUrl: ""
-    },
-    {
-      id: 3,
-      title: "Robotics Workshop Trains 500+ Students Across Ghana",
-      excerpt: "STEM outreach program expands to reach more young innovators in rural communities.",
-      category: "events",
-      date: "February 28, 2024",
-      type: "article",
-      readTime: "4 min read",
-      author: "Maria Rodriguez",
-      authorRole: "Community Outreach Lead",
-      views: "1.5K",
-      likes: 76,
-      imageUrl: ""
-    },
-    {
-      id: 4,
-      title: "New Patent Filed for Solar-Powered Navigation System",
-      excerpt: "Innovative technology enables autonomous robots to operate 24/7 using renewable energy.",
-      category: "research",
-      date: "February 20, 2024",
-      type: "article",
-      readTime: "6 min read",
-      author: "Dr. Samuel Adeyemi",
-      authorRole: "Senior Research Scientist",
-      views: "2.9K",
-      likes: 134,
-      imageUrl: ""
-    },
-    {
-      id: 5,
-      title: "Featured at UN Technology Innovation Labs",
-      excerpt: "Showcasing our work on AI for social good at United Nations headquarters.",
-      category: "events",
-      date: "February 15, 2024",
-      type: "article",
-      readTime: "5 min read",
-      author: "Dr. Amina Diallo",
-      authorRole: "Lead AI Researcher",
-      views: "3.2K",
-      likes: 198,
-      imageUrl: ""
-    }
-  ];
-
-  const getDefaultUpcomingEvents = () => [
-    {
-      id: 1,
-      title: "Africa Tech Summit 2024",
-      date: "April 15-17, 2024",
-      time: "9:00 AM",
-      location: "Kigali, Rwanda",
-      type: "Conference",
-      speaker: "Kwame Osei",
-      registrationLink: "",
-      status: "Upcoming",
-      imageUrl: ""
-    },
-    {
-      id: 2,
-      title: "Women in AI Africa Conference",
-      date: "May 8, 2024",
-      time: "2:00 PM",
-      location: "Virtual",
-      type: "Webinar",
-      speaker: "Dr. Amina Diallo",
-      registrationLink: "",
-      status: "Registration Open",
-      imageUrl: ""
-    },
-    {
-      id: 3,
-      title: "IEEE Robotics Symposium",
-      date: "June 20-22, 2024",
-      time: "10:00 AM",
-      location: "Cape Town, South Africa",
-      type: "Symposium",
-      speaker: "Dr. Samuel Adeyemi",
-      registrationLink: "",
-      status: "Upcoming",
-      imageUrl: ""
-    }
-  ];
-
   const getTypeIcon = (type) => {
     switch(type) {
       case 'video': return <Video className="h-4 w-4" />;
@@ -328,11 +197,6 @@ const News = () => {
     ? newsContent.articles
     : newsContent.articles.filter(article => article.category === selectedCategory);
 
-  const handleLoadMore = () => {
-    // In a real app, this would load more articles from an API
-    alert('Load more functionality would connect to your backend API');
-  };
-
   const handleRegisterEvent = (eventId) => {
     const event = newsContent.upcomingEvents.find(e => e.id === eventId);
     if (event && event.registrationLink) {
@@ -370,6 +234,19 @@ const News = () => {
       return timeString;
     }
   };
+
+  // Show loading screen if still loading
+  if (newsContent.isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0A0F14] flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white/20 border-t-white mb-6"></div>
+          <h1 className="text-3xl font-bold text-white mb-4">Loading News Content...</h1>
+          <p className="text-gray-400">Fetching the latest updates from AdminUpload</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0F14]">
@@ -477,118 +354,121 @@ const News = () => {
                 className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-6 rounded-lg transition-colors duration-300 flex items-center gap-2"
               >
                 <span>Subscribe to Newsletter</span>
-                <Send className="h-4 w-4" />
               </button>
             </div>
             
-            {/* Featured Article Card */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative">
-                {/* Featured badge */}
-                <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm z-10">
-                  Featured Story
-                </div>
-                
-                <div className="h-40 bg-white/5 rounded-lg mb-6 relative overflow-hidden">
-                  {newsContent.featuredArticle?.imageUrl ? (
-                    <img 
-                      src={newsContent.featuredArticle.imageUrl} 
-                      alt={newsContent.featuredArticle.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 flex items-center justify-center">
-                      <Newspaper className="h-12 w-12 text-white/40" />
-                    </div>
-                  )}
-                  <div className="absolute top-3 left-3 bg-white/10 px-2 py-1 rounded text-white text-sm font-medium">
-                    {newsContent.featuredArticle?.category ? 
-                      newsContent.featuredArticle.category.charAt(0).toUpperCase() + newsContent.featuredArticle.category.slice(1) 
-                      : "Research"
-                    }
+            {/* Featured Article Card - Only show if we have one */}
+            {newsContent.featuredArticle && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative">
+                  {/* Featured badge */}
+                  <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm z-10">
+                    Featured Story
                   </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between text-sm text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      <span>{newsContent.featuredArticle?.readTime || "5 min read"}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{newsContent.featuredArticle?.views || "2.4K"}</span>
+                  
+                  <div className="h-40 bg-white/5 rounded-lg mb-6 relative overflow-hidden">
+                    {newsContent.featuredArticle?.imageUrl ? (
+                      <img 
+                        src={newsContent.featuredArticle.imageUrl} 
+                        alt={newsContent.featuredArticle.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 flex items-center justify-center">
+                        <Newspaper className="h-12 w-12 text-white/40" />
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Heart className="h-4 w-4" />
-                        <span>{newsContent.featuredArticle?.likes || "156"}</span>
-                      </div>
+                    )}
+                    <div className="absolute top-3 left-3 bg-white/10 px-2 py-1 rounded text-white text-sm font-medium">
+                      {newsContent.featuredArticle?.category ? 
+                        newsContent.featuredArticle.category.charAt(0).toUpperCase() + newsContent.featuredArticle.category.slice(1) 
+                        : "Article"
+                      }
                     </div>
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-white line-clamp-2">
-                    {newsContent.featuredArticle?.title || "AI-Powered Farming Robot Increases Crop Yields by 40% in Pilot Study"}
-                  </h3>
-                  
-                  <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                    {newsContent.featuredArticle?.excerpt || "Our latest research shows promising results in sustainable agriculture using autonomous robots equipped with computer vision and machine learning algorithms."}
-                  </p>
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                    <div className="flex items-center">
-                      <User className="h-5 w-5 text-gray-400 mr-2" />
-                      <div>
-                        <div className="text-sm text-white font-medium">
-                          {newsContent.featuredArticle?.author || "Dr. Amina Diallo"}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-sm text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        <span>{newsContent.featuredArticle?.readTime || "5 min read"}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-4 w-4" />
+                          <span>{newsContent.featuredArticle?.views || "2.4K"}</span>
                         </div>
-                        <div className="text-xs text-gray-400">
-                          {newsContent.featuredArticle?.authorRole || "Lead AI Researcher"}
+                        <div className="flex items-center gap-1">
+                          <Heart className="h-4 w-4" />
+                          <span>{newsContent.featuredArticle?.likes || "156"}</span>
                         </div>
                       </div>
                     </div>
-                    <Link 
-                      to={`/news/${newsContent.featuredArticle?.id || 'featured'}`}
-                      className="text-white hover:text-gray-200 text-sm font-medium flex items-center gap-1"
-                    >
-                      <span>Read</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </Link>
+                    
+                    <h3 className="text-lg font-semibold text-white line-clamp-2">
+                      {newsContent.featuredArticle.title}
+                    </h3>
+                    
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
+                      {newsContent.featuredArticle.excerpt}
+                    </p>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div className="flex items-center">
+                        <User className="h-5 w-5 text-gray-400 mr-2" />
+                        <div>
+                          <div className="text-sm text-white font-medium">
+                            {newsContent.featuredArticle.author || "Anonymous"}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {newsContent.featuredArticle.authorRole || "Author"}
+                          </div>
+                        </div>
+                      </div>
+                      <Link 
+                        to={`/news/${newsContent.featuredArticle.id}`}
+                        className="text-white hover:text-gray-200 text-sm font-medium flex items-center gap-1"
+                      >
+                        <span>Read</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </section>
 
-      {/* Categories */}
-      <section className="py-8 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {newsCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 border ${
-                  selectedCategory === category.id
-                    ? 'bg-white text-[#0A0F14] border-white'
-                    : 'bg-white/5 text-gray-300 hover:text-white border-white/10'
-                }`}
-              >
-                {category.name}
-                <span className="px-2 py-0.5 rounded text-xs bg-white/5 text-white">
-                  {category.count}
-                </span>
-              </button>
-            ))}
+      {/* Categories - Only show if we have articles */}
+      {newsContent.articles.length > 0 && (
+        <section className="py-8 border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {newsCategories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 border ${
+                    selectedCategory === category.id
+                      ? 'bg-white text-[#0A0F14] border-white'
+                      : 'bg-white/5 text-gray-300 hover:text-white border-white/10'
+                  }`}
+                >
+                  {category.name}
+                  <span className="px-2 py-0.5 rounded text-xs bg-white/5 text-white">
+                    {category.count}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* News Grid */}
       <section className="py-16 md:py-20">
@@ -596,20 +476,12 @@ const News = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main News Column */}
             <div className="lg:col-span-2">
-              {newsContent.isLoading ? (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Loading Content</h3>
-                  <p className="text-gray-400">Fetching the latest news...</p>
-                </div>
-              ) : filteredArticles.length === 0 ? (
+              {newsContent.articles.length === 0 ? (
                 <div className="text-center py-12">
                   <Newspaper className="h-12 w-12 text-white/20 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-white mb-2">No Articles Found</h3>
                   <p className="text-gray-400">
-                    {selectedCategory === 'all' 
-                      ? 'No news articles have been added yet.' 
-                      : `No articles in the ${selectedCategory} category.`}
+                    No news articles have been added yet.
                   </p>
                   <Link 
                     to="/admin/upload"
@@ -654,7 +526,7 @@ const News = () => {
                             <span className="inline-block px-3 py-1 rounded text-xs font-medium bg-white/5 text-white border border-white/10 mb-3 capitalize">
                               {article.category ? 
                                 article.category.charAt(0).toUpperCase() + article.category.slice(1) 
-                                : "Research"
+                                : "Article"
                               }
                             </span>
                             
@@ -718,19 +590,6 @@ const News = () => {
                       </article>
                     ))}
                   </div>
-                  
-                  {/* Load More */}
-                  {filteredArticles.length > 0 && (
-                    <div className="mt-12 text-center">
-                      <button 
-                        onClick={handleLoadMore}
-                        className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-300 flex items-center gap-2 mx-auto"
-                      >
-                        <span>Load More Articles</span>
-                        <ChevronRight className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
                 </>
               )}
             </div>
@@ -855,7 +714,6 @@ const News = () => {
                       className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
                     >
                       <span>Subscribe Now</span>
-                      <Send className="h-3 w-3" />
                     </button>
                   </form>
                   <p className="text-xs text-gray-500 mt-3 text-center">
@@ -905,25 +763,6 @@ const News = () => {
           </div>
         </div>
       </section>
-
-      {/* Admin Content Notice (development only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="fixed bottom-4 left-4 bg-[#0A0F14]/90 backdrop-blur-sm border border-white/10 rounded-lg p-3 text-xs text-gray-400 z-40">
-          <div className="flex items-center gap-2 mb-1">
-            <div className={`h-2 w-2 rounded-full ${newsContent.articles.length > 0 ? 'bg-green-500' : 'bg-yellow-500'} animate-pulse`}></div>
-            <span>News Content: {newsContent.articles.length > 0 ? 'Admin' : 'Default'}</span>
-          </div>
-          <div className="text-xs mt-1">
-            <div className="flex items-center justify-between">
-              <span>Articles: {newsContent.articles.length}</span>
-              <span>Events: {newsContent.upcomingEvents.length}</span>
-            </div>
-            <Link to="/admin/upload" className="inline-flex items-center gap-1 mt-2 text-amber-400 hover:text-amber-300">
-              <span>Edit in Admin →</span>
-            </Link>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

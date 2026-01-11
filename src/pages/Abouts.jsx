@@ -1,274 +1,157 @@
-import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
-import bg2 from '../assets/bg2.jpg';
-
-// Import profile pictures
-import AndrewChigona from '../assets/leaders/Andrew_Chigona.png';
-import GarryPayera from '../assets/leaders/Claudius_Saranavo.png';
-import FrankFarakezi from '../assets/leaders/Frank_Farakezi.png';
-import TakudzwaMasomera from '../assets/leaders/Takudzwa_Masomera.png';
-import ClaudiusSaranavo from '../assets/leaders/Garry_Payera.png';
-import TatendaGondo from '../assets/leaders/Tatenda_Gondo.jpg';
 
 const Abouts = () => {
-  const leaders = [
-    { 
-      name: "Andrew Chigona", 
-      role: "CEO", 
-      email: "andrew@blazingtek.co",
-      image: AndrewChigona
-    },
-    { 
-      name: "Garry Payera", 
-      role: "Brand Ambassador", 
-      email: "garry@blazingtek.co",
-      image: GarryPayera
-    },
-    { 
-      name: "Frank Farakezi", 
-      role: "Events Coordinator", 
-      email: "frank@blazingtek.co",
-      image: FrankFarakezi
-    },
-    { 
-      name: "Takudzwa Masomera", 
-      role: "Project Lead", 
-      email: "takudzwa@blazingtek.co",
-      image: TakudzwaMasomera
-    },
-    { 
-      name: "Claudius Saranavo", 
-      role: "Creative Director", 
-      email: "claudius@blazingtek.co",
-      image: ClaudiusSaranavo
-    },
-    { 
-      name: "Tatenda Gondo", 
-      role: "IT Specialist", 
-      email: "tatenda@blazingtek.co",
-      image: TatendaGondo
-    }
-  ];
-  
+  const backgroundImage = 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80';
+
   return (
-    <div className="min-h-screen bg-[#0A0F14]">
-      {/* Hero Section */}
-      <section className="relative text-white py-20 md:py-28 overflow-hidden">
+    <div className="min-h-screen bg-black">
+      {/* Combined Hero & About Section */}
+      <section className="relative text-white py-12 md:py-20 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={bg2}
-            alt="About Background"
-            className="absolute inset-0 w-full h-full object-cover"
+            src={backgroundImage}
+            alt="Robotics Technology Background"
+            className="absolute inset-0 w-full h-full object-cover opacity-10"
+            loading="lazy"
           />
-          <div className="absolute inset-0 bg-[#0A0F14]/80"></div>
+          <div className="absolute inset-0 bg-black/95"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black"></div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative max-w-4xl mx-auto px-4 text-center"
-        >
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-          >
-            About BlazingTek
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed"
-          >
-            Pioneering African innovation through cutting-edge technology
-          </motion.p>
-
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "100px", opacity: 1 }}
-            transition={{ delay: 0.6, duration: 1 }}
-            className="mx-auto mt-12 h-1 bg-white rounded-full"
-          />
-        </motion.div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-16 md:py-20 relative">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Meet Our Team
-            </h2>
-            <div className="w-20 h-1 bg-white mx-auto mb-6 rounded-full"></div>
-            <p className="text-gray-400 text-lg max-w-xl mx-auto">
-              The team driving innovation and technology solutions across Africa
+        <div className="relative max-w-6xl mx-auto px-4">
+          {/* Header - Adjusted spacing */}
+          <div className="text-center mb-8"> {/* Changed from mb-16 to mb-8 (2rem less) */}
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              About BlazingTek
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Pioneering African innovation through cutting-edge technology
             </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {leaders.map((leader, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="group"
+          </div>
+
+          {/* Mission & Values Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+            {/* Mission Statement */}
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white">Our Mission</h2>
+              </div>
+              <p className="text-gray-300 leading-relaxed">
+                BlazingTek is at the forefront of technological innovation in Africa, specializing in 
+                advanced robotics solutions, AI integration, and custom technological systems. Based in 
+                Harare, Zimbabwe, we empower educational institutions, research facilities, and industries 
+                with cutting-edge tools and training.
+              </p>
+            </div>
+
+            {/* Vision */}
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white">Our Vision</h2>
+              </div>
+              <p className="text-gray-300 leading-relaxed">
+                To bridge the technology gap while fostering local expertise and driving sustainable 
+                technological advancement across the African continent. We aim to become the leading 
+                technology partner for innovation and development in emerging markets.
+              </p>
+            </div>
+          </div>
+
+          {/* Contact Section */}
+          <div>
+            <div className="text-center mb-12">
+              <div className="mb-4">
+                <h2 className="text-3xl font-bold text-white">Contact Our Team</h2>
+              </div>
+              <p className="text-gray-400">We're here to help you with innovative technology solutions</p>
+            </div>
+
+            {/* Contact Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+              {/* Phone */}
+              <a
+                href="tel:+263788605607"
+                className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10"
               >
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
-                  <div className="relative mb-6">
-                    <div className="relative w-32 h-32 mx-auto">
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      
-                      <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/10">
-                        <img 
-                          src={leader.image} 
-                          alt={leader.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      {leader.name}
-                    </h3>
-                    
-                    <div className="mb-4">
-                      <p className="inline-block px-3 py-1 bg-white/10 rounded-full text-white text-sm">
-                        {leader.role}
-                      </p>
-                    </div>
-                    
-                    <a 
-                      href={`mailto:${leader.email}`}
-                      className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300 text-sm"
-                    >
-                      <Mail size={14} />
-                      {leader.email}
-                    </a>
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
+                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
+                    <Phone className="h-8 w-8 text-white" />
                   </div>
                 </div>
-              </motion.div>
-            ))}
+                <h3 className="text-lg font-semibold text-white mb-2">Call Us</h3>
+                <p className="text-white text-lg font-medium">+263 788 605 607</p>
+              </a>
+
+              {/* Email */}
+              <a
+                href="mailto:info@blazingtek.co"
+                className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10"
+              >
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
+                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
+                    <Mail className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Email Us</h3>
+                <p className="text-white text-lg font-medium">info@blazingtek.co</p>
+              </a>
+
+              {/* Location */}
+              <div className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10">
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
+                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
+                    <MapPin className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">Visit Us</h3>
+                <p className="text-white text-lg font-medium">Harare, Zimbabwe</p>
+              </div>
+            </div>
+
+            {/* Business Info - Removed backgrounds and borders */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+              {/* Hours */}
+              <div className="p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white">Business Hours</h3>
+                </div>
+                <ul className="space-y-3">
+                  <li className="flex justify-between text-gray-300">
+                    <span>Mon - Fri</span>
+                    <span className="text-white font-medium">8:00 AM - 5:00 PM</span>
+                  </li>
+                  <li className="flex justify-between text-gray-300">
+                    <span>Saturday</span>
+                    <span className="text-white font-medium">9:00 AM - 1:00 PM</span>
+                  </li>
+                  <li className="flex justify-between text-gray-300">
+                    <span>Sunday</span>
+                    <span className="text-white font-medium">Closed</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Timezone */}
+              <div className="p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-white">Timezone</h3>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-gray-300 text-sm">Local Time</p>
+                    <p className="text-white text-lg font-medium">Central Africa Time (CAT)</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-300 text-sm">UTC Offset</p>
+                    <p className="text-white text-lg font-medium">UTC +2</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-16 md:py-20 relative">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Contact Our Team
-            </h2>
-            <div className="w-16 h-1 bg-white mx-auto mb-6 rounded-full"></div>
-            <p className="text-gray-400 text-lg max-w-md mx-auto">
-              We're here to help you with innovative solutions
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {/* Phone */}
-            <motion.a
-              href="tel:+263788605607"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              whileHover={{ y: -4 }}
-              className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 group text-center"
-            >
-              <div className="relative mb-6">
-                <div className="relative w-14 h-14 mx-auto bg-white/10 rounded-full flex items-center justify-center">
-                  <Phone className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              
-              <h3 className="text-base font-semibold text-white mb-3">Call Us</h3>
-              <p className="text-gray-300 text-sm mb-4">+263 788 605 607</p>
-              
-              <div className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Click to call
-              </div>
-            </motion.a>
-
-            {/* Email */}
-            <motion.a
-              href="mailto:info@blazingtek.co"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ y: -4 }}
-              className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 group text-center"
-            >
-              <div className="relative mb-6">
-                <div className="relative w-14 h-14 mx-auto bg-white/10 rounded-full flex items-center justify-center">
-                  <Mail className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              
-              <h3 className="text-base font-semibold text-white mb-3">Email Us</h3>
-              <p className="text-gray-300 text-sm mb-4">info@blazingtek.co</p>
-              
-              <div className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Click to email
-              </div>
-            </motion.a>
-
-            {/* Location */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ y: -4 }}
-              className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 group text-center"
-            >
-              <div className="relative mb-6">
-                <div className="relative w-14 h-14 mx-auto bg-white/10 rounded-full flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              
-              <h3 className="text-base font-semibold text-white mb-3">Visit Us</h3>
-              <p className="text-gray-300 text-sm mb-4">87 Engineering, Highfield, Harare</p>
-              
-              <div className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Our location
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Contact Hours */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="mt-16 text-center"
-          >
-            <p className="text-gray-400 text-sm">
-              Available Monday - Friday, 8:00 AM - 5:00 PM CAT
-            </p>
-          </motion.div>
         </div>
       </section>
     </div>

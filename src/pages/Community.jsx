@@ -197,8 +197,8 @@ const Community = () => {
                     
                     {/* Story Content */}
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-blue-400 mb-2">{story.category}</div>
-                      <h3 className="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors cursor-pointer">
+                      <div className="text-sm font-semibold text-white mb-2">{story.category}</div>
+                      <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors cursor-pointer">
                         {story.title}
                       </h3>
                       <p className="text-gray-400 mb-4 text-sm">{story.description}</p>
@@ -223,7 +223,7 @@ const Community = () => {
             viewport={{ once: true }}
             className="text-3xl font-bold mb-8 text-center"
           >
-            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+            <span className="text-white">
               LATEST UPDATES
             </span>
           </motion.h2>
@@ -251,8 +251,8 @@ const Community = () => {
                   {/* News Content */}
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <span className="text-sm font-semibold text-blue-400">{brief.category}</span>
+                      <div className="h-2 w-2 rounded-full bg-white"></div>
+                      <span className="text-sm font-semibold text-white">{brief.category}</span>
                     </div>
                     <h3 className="text-lg font-bold mb-3 group-hover:text-white transition-colors">
                       {brief.title}
@@ -286,7 +286,7 @@ const Community = () => {
                 onClick={() => setActiveTab(tab.toLowerCase())}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.toLowerCase() 
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25' 
+                    ? 'bg-white text-[#0A0F14] shadow-lg shadow-white/25' 
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -303,7 +303,7 @@ const Community = () => {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300"
+                className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-white/10 transition-all duration-300"
               >
                 <div className="flex flex-col lg:flex-row">
                   {/* Image Column */}
@@ -326,7 +326,7 @@ const Community = () => {
                       <span className="text-xs text-gray-500">• {story.readTime}</span>
                     </div>
                     
-                    <h3 className="text-2xl font-bold mb-4 group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-2xl font-bold mb-4 group-hover:text-white transition-colors">
                       {story.title}
                     </h3>
                     
@@ -336,7 +336,7 @@ const Community = () => {
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center">
                           <span className="text-sm font-bold">{story.author.split(' ')[0][0]}</span>
                         </div>
                         <div>
@@ -345,7 +345,7 @@ const Community = () => {
                         </div>
                       </div>
                       
-                      <button className="text-sm font-medium hover:text-blue-400 transition-colors flex items-center gap-2">
+                      <button className="text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
                         Read Full Story
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </button>
@@ -370,7 +370,7 @@ const Community = () => {
                 viewport={{ once: true }}
                 className="text-2xl font-bold mb-6"
               >
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <span className="text-white">
                   COLUMNS & OPINION
                 </span>
               </motion.h2>
@@ -405,13 +405,13 @@ const Community = () => {
                           <div className="h-px flex-1 bg-white/10"></div>
                         </div>
                         
-                        <div className="text-sm text-blue-400 mb-4">By {column.author}</div>
+                        <div className="text-sm text-white mb-4">By {column.author}</div>
                         
                         <p className="text-gray-400 mb-4">
                           {column.excerpt}
                         </p>
                         
-                        <button className="text-sm font-medium hover:text-blue-400 transition-colors flex items-center gap-1">
+                        <button className="text-sm font-medium hover:text-white transition-colors flex items-center gap-1">
                           Read full column
                           <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </button>
@@ -456,7 +456,7 @@ const Community = () => {
                     {/* Event Content */}
                     <div className="relative p-6">
                       <div className="mb-4">
-                        <span className="px-3 py-1 bg-blue-500/20 backdrop-blur-sm rounded-full text-xs font-semibold">
+                        <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold">
                           {event.status}
                         </span>
                       </div>
@@ -487,11 +487,11 @@ const Community = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mt-8 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl p-6 border border-white/10 backdrop-blur-sm"
+                className="mt-8 bg-gradient-to-br from-white/10 via-white/5 to-white/10 rounded-2xl p-6 border border-white/10 backdrop-blur-sm"
               >
                 <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4">
-                    <span className="text-white text-lg">✉️</span>
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-white to-gray-300 mb-4">
+                    <span className="text-[#0A0F14] text-lg">✉️</span>
                   </div>
                   <h3 className="text-xl font-bold mb-2">STAY UPDATED</h3>
                   <p className="text-gray-400 text-sm">
@@ -503,9 +503,9 @@ const Community = () => {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
-                  <button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
+                  <button className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 text-white py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
                     Subscribe Now
                   </button>
                 </div>
@@ -518,36 +518,6 @@ const Community = () => {
           </div>
         </div>
       </section>
-
-      {/* Minimal Professional Footer */}
-      <footer className="py-8 border-t border-white/10">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* MA Brand */}
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">MA</span>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">MA COMMUNITY</h3>
-                <p className="text-gray-400 text-sm">African Innovation Magazine</p>
-              </div>
-            </div>
-            
-            {/* Links */}
-            <div className="flex items-center gap-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
-              <a href="#" className="hover:text-white transition-colors">Archive</a>
-              <a href="#" className="hover:text-white transition-colors">Submit Story</a>
-            </div>
-            
-            {/* Copyright */}
-            <div className="text-sm text-gray-500">
-              © 2024 MA Community. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -32,9 +32,7 @@ const Navbar = () => {
       name: 'Research', 
       path: '/research',
       dropdown: [
-        { name: 'AI Integration', path: '/research/ai' },
         { name: 'Sustainable Robotics', path: '/research/sustainability' },
-        { name: 'Assistive Tech', path: '/research/assistive' },
         { name: 'Lab Projects', path: '/research/lab' }
       ]
     },

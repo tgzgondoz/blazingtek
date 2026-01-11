@@ -67,7 +67,7 @@ const Footer = () => {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 rounded bg-white/5 hover:bg-white/10 transition-colors border border-white/10"
+                className="p-1.5 rounded bg-white/5 hover:bg-white/10 transition-colors border border-white/10 outline-none focus:outline-none focus:ring-0"
                 aria-label={social.name}
                 title={social.name}
               >
@@ -89,12 +89,12 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Mail size={10} />
-              <a href="mailto:info@blazingtek.co" className="hover:text-white transition-colors">info@blazingtek.co</a>
+              <a href="mailto:info@blazingtek.co" className="hover:text-white transition-colors outline-none focus:outline-none">info@blazingtek.co</a>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center gap-1">
               <Phone size={10} />
-              <a href="tel:+263788605607" className="hover:text-white transition-colors">+263 788 605 607</a>
+              <a href="tel:+263788605607" className="hover:text-white transition-colors outline-none focus:outline-none">+263 788 605 607</a>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center gap-1">

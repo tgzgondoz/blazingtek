@@ -1,33 +1,40 @@
-// App.jsx - Updated with new pages
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import Contact from './pages/Contact.jsx'
-import Navbar from './components/Navbar.jsx'
-import Abouts from './pages/Abouts.jsx'
-import Services from './pages/Services.jsx'
-import Research from './pages/Research.jsx'
-import Community from './pages/Community.jsx'
-import Partnerships from './pages/Partnerships.jsx'
-import News from './pages/News.jsx'
-import Footer from './components/Footer.jsx'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Abouts from './pages/Abouts';  // Changed from About to Abouts
+import Services from './pages/Services';
+import Community from './pages/Community';
+import Partnerships from './pages/Partnerships';
+import News from './pages/News';
+import Contact from './pages/Contact';
+import Research from './pages/Research';
+import SustainableRobotics from './pages/SustainableRobotics';
+import LabProjects from './pages/LabProjects';
 
-const App = () => {
+function App() {
   return (
-    <BrowserRouter>
-      <Navbar/>
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/contact' element={<Contact/>}/>
-        <Route path='/about' element={<Abouts/>}/>
-        <Route path='/services' element={<Services/>}/>
-        <Route path='/research' element={<Research/>}/>
-        <Route path='/community' element={<Community/>}/>
-        <Route path='/partnerships' element={<Partnerships/>}/>
-        <Route path='/news' element={<News/>}/>
-      </Routes>
-      <Footer/>
-    </BrowserRouter>
-  )
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<Abouts />} />  {/* Updated to Abouts */}
+            <Route path="/services" element={<Services />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/research" element={<Research />} />
+            <Route path="/research/sustainability" element={<SustainableRobotics />} />
+            <Route path="/research/lab" element={<LabProjects />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

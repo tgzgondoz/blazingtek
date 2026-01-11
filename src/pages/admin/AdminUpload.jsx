@@ -29,13 +29,15 @@ import {
   Megaphone,
   MessageSquare,
   TrendingUp,
-  Star
+  Star,
+  Target,
+  BookOpen
 } from 'lucide-react';
 
 const AdminUpload = () => {
   // State for active page type
-  const [activePage, setActivePage] = useState('news'); // 'news' or 'community'
-  const [activeCommunityTab, setActiveCommunityTab] = useState('updates'); // 'updates', 'featured', 'events', 'columns'
+  const [activePage, setActivePage] = useState('community'); // Default to 'community'
+  const [activeCommunityTab, setActiveCommunityTab] = useState('featured'); // 'featured', 'updates', 'events', 'columns'
   
   // Form states - simplified
   const [formData, setFormData] = useState({
@@ -43,10 +45,11 @@ const AdminUpload = () => {
     title: '',
     excerpt: '',
     description: '',
-    category: 'research',
+    summary: '',
+    category: 'FEATURE STORIES',
     date: new Date().toISOString().split('T')[0],
     type: 'article',
-    readTime: '',
+    readTime: '5 min read',
     author: '',
     authorRole: '',
     views: '',
@@ -79,36 +82,61 @@ const AdminUpload = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Categories
-  const newsCategories = [
-    { value: 'research', label: 'Research', icon: <FileText className="h-4 w-4" /> },
-    { value: 'events', label: 'Events', icon: <Calendar className="h-4 w-4" /> },
-    { value: 'partnerships', label: 'Partnerships', icon: <Users className="h-4 w-4" /> },
-    { value: 'awards', label: 'Awards', icon: <Award className="h-4 w-4" /> }
-  ];
+  // Gradient colors for image placeholders - MUST match Community component
+  const getGradientColor = (index = 0) => {
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    ];
+    return gradients[index % gradients.length];
+  };
 
+  // Categories that match the Community component
   const communityCategories = [
-    { value: 'LATEST UPDATES', label: 'Latest Updates', color: 'bg-blue-500', icon: <TrendingUp className="h-3 w-3" /> },
-    { value: 'FEATURE STORIES', label: 'Feature Stories', color: 'bg-purple-500', icon: <Star className="h-3 w-3" /> },
-    { value: 'UPCOMING EVENTS', label: 'Upcoming Events', color: 'bg-green-500', icon: <Calendar className="h-3 w-3" /> },
-    { value: 'COLUMNS & OPINION', label: 'Columns & Opinion', color: 'bg-yellow-500', icon: <MessageSquare className="h-3 w-3" /> }
+    { value: 'FEATURE STORIES', label: 'Feature Stories', icon: <Star className="h-4 w-4" /> },
+    { value: 'COMMUNITY', label: 'Community', icon: <Users className="h-4 w-4" /> },
+    { value: 'UPDATE', label: 'Latest Update', icon: <TrendingUp className="h-4 w-4" /> },
+    { value: 'BUSINESS', label: 'Business', icon: <Target className="h-4 w-4" /> },
+    { value: 'RESEARCH', label: 'Research', icon: <BookOpen className="h-4 w-4" /> },
+    { value: 'UPCOMING EVENTS', label: 'Upcoming Events', icon: <Calendar className="h-4 w-4" /> },
+    { value: 'COLUMNS & OPINION', label: 'Columns & Opinion', icon: <MessageSquare className="h-4 w-4" /> }
   ];
 
   const columnTypes = [
-    { value: 'opinion', label: 'Opinion Piece' },
-    { value: 'analysis', label: 'Industry Analysis' },
-    { value: 'interview', label: 'Expert Interview' },
+    { value: 'opinion', label: 'Opinion' },
+    { value: 'interview', label: 'Interview' },
+    { value: 'analysis', label: 'Analysis' },
+    { value: 'editorial', label: 'Editorial' },
     { value: 'tutorial', label: 'Tutorial/Guide' }
   ];
 
   const eventTypes = [
+    { value: 'Summit', label: 'Summit' },
     { value: 'Conference', label: 'Conference' },
     { value: 'Webinar', label: 'Webinar' },
     { value: 'Workshop', label: 'Workshop' },
     { value: 'Meetup', label: 'Meetup' },
     { value: 'Hackathon', label: 'Hackathon' },
-    { value: 'Summit', label: 'Summit' }
+    { value: 'Forum', label: 'Forum' }
   ];
+
+  // Get category icon for Community component
+  const getCategoryIcon = (category) => {
+    switch(category) {
+      case 'FEATURE STORIES': return <Star className="h-4 w-4" />;
+      case 'COMMUNITY': return <Users className="h-4 w-4" />;
+      case 'UPDATE': return <TrendingUp className="h-4 w-4" />;
+      case 'BUSINESS': return <Target className="h-4 w-4" />;
+      case 'RESEARCH': return <BookOpen className="h-4 w-4" />;
+      case 'COLUMNS & OPINION': return <MessageSquare className="h-4 w-4" />;
+      case 'UPCOMING EVENTS': return <Calendar className="h-4 w-4" />;
+      default: return <Newspaper className="h-4 w-4" />;
+    }
+  };
 
   // Load existing data from localStorage
   useEffect(() => {
@@ -141,10 +169,11 @@ const AdminUpload = () => {
       title: '',
       excerpt: '',
       description: '',
-      category: activePage === 'news' ? 'research' : 'LATEST UPDATES',
+      summary: '',
+      category: getDefaultCategory(),
       date: new Date().toISOString().split('T')[0],
       type: 'article',
-      readTime: '',
+      readTime: getDefaultReadTime(),
       author: '',
       authorRole: '',
       views: '',
@@ -161,6 +190,24 @@ const AdminUpload = () => {
       tags: []
     });
   }, [activePage, activeCommunityTab]);
+
+  // Helper functions
+  const getDefaultCategory = () => {
+    if (activePage === 'community') {
+      switch(activeCommunityTab) {
+        case 'featured': return 'FEATURE STORIES';
+        case 'updates': return 'UPDATE';
+        case 'events': return 'UPCOMING EVENTS';
+        case 'columns': return 'COLUMNS & OPINION';
+        default: return 'FEATURE STORIES';
+      }
+    }
+    return 'research';
+  };
+
+  const getDefaultReadTime = () => {
+    return `${Math.floor(Math.random() * 5) + 1} min read`;
+  };
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -193,10 +240,91 @@ const AdminUpload = () => {
 
   // Generate ID for new content
   const generateId = () => {
-    return 'id-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    return Date.now() + Math.floor(Math.random() * 1000);
   };
 
-  // Save news content
+  // Format date for Community component
+  const formatDateForCommunity = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch {
+      return new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+  };
+
+  // Save community content - UPDATED to match Community component structure
+  const saveCommunityContent = () => {
+    if (!formData.title || !formData.description || !formData.author) {
+      setErrorMessage('Please fill in all required fields');
+      setTimeout(() => setErrorMessage(''), 3000);
+      return;
+    }
+
+    // Prepare data in the format Community component expects
+    const newCommunityItem = {
+      id: formData.id || generateId(),
+      title: formData.title,
+      description: formData.description,
+      excerpt: formData.excerpt || formData.description.substring(0, 150) + '...',
+      summary: formData.summary || formData.description,
+      category: formData.category,
+      author: formData.author,
+      authorRole: formData.authorRole || 'Contributor',
+      readTime: formData.readTime || getDefaultReadTime(),
+      imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
+      date: formatDateForCommunity(formData.date),
+      content: formData.content,
+      // Event specific
+      eventDate: formData.eventDate || formData.date,
+      eventTime: formData.eventTime,
+      eventLocation: formData.eventLocation,
+      location: formData.eventLocation,
+      status: formData.status,
+      type: formData.type,
+      speaker: formData.speaker,
+      registrationLink: formData.registrationLink,
+      // Column specific
+      columnType: formData.columnType
+    };
+
+    let updatedCommunity = { ...previewCommunity };
+    
+    // Determine which category to save to based on active tab
+    if (activeCommunityTab === 'featured') {
+      updatedCommunity.featured = [newCommunityItem, ...previewCommunity.featured];
+    } else if (activeCommunityTab === 'updates') {
+      updatedCommunity.updates = [newCommunityItem, ...previewCommunity.updates];
+    } else if (activeCommunityTab === 'events') {
+      updatedCommunity.events = [newCommunityItem, ...previewCommunity.events];
+    } else if (activeCommunityTab === 'columns') {
+      updatedCommunity.columns = [newCommunityItem, ...previewCommunity.columns];
+    }
+
+    setPreviewCommunity(updatedCommunity);
+    
+    // Save to localStorage - THIS IS CRITICAL for Community component
+    localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
+    
+    // Dispatch event to notify Community component - THIS IS CRITICAL
+    window.dispatchEvent(new Event('blazingtek-content-updated'));
+    window.dispatchEvent(new CustomEvent('blazingtek-community-updated', { 
+      detail: updatedCommunity 
+    }));
+
+    setSuccessMessage('Community content saved successfully! Page will update automatically.');
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
+  // Save news content (for News section)
   const saveNewsContent = () => {
     if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
@@ -207,11 +335,7 @@ const AdminUpload = () => {
     const newNews = {
       ...formData,
       id: formData.id || generateId(),
-      date: formData.date || new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      }),
+      date: formatDateForCommunity(formData.date),
       views: formData.views || Math.floor(Math.random() * 5000) + 1000,
       likes: formData.likes || Math.floor(Math.random() * 300) + 50
     };
@@ -236,13 +360,13 @@ const AdminUpload = () => {
       id: formData.id || generateId(),
       title: formData.title,
       description: formData.description,
-      date: formData.date,
+      date: formatDateForCommunity(formData.date),
       time: formData.eventTime,
       location: formData.eventLocation,
       type: formData.type,
       speaker: formData.speaker,
       registrationLink: formData.registrationLink,
-      imageUrl: formData.imageUrl,
+      imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
       status: formData.status || 'Upcoming'
     };
 
@@ -251,40 +375,6 @@ const AdminUpload = () => {
     localStorage.setItem('blazingtek-events', JSON.stringify(updatedEvents));
 
     setSuccessMessage('Event saved successfully!');
-    setTimeout(() => setSuccessMessage(''), 3000);
-  };
-
-  // Save community content
-  const saveCommunityContent = () => {
-    if (!formData.title || !formData.description || !formData.author) {
-      setErrorMessage('Please fill in all required fields');
-      setTimeout(() => setErrorMessage(''), 3000);
-      return;
-    }
-
-    const newCommunity = {
-      ...formData,
-      id: formData.id || generateId(),
-      readTime: formData.readTime || `${Math.floor(Math.random() * 5) + 1} min read`
-    };
-
-    let updatedCommunity = { ...previewCommunity };
-    
-    // Determine which category to save to based on active tab
-    if (activeCommunityTab === 'featured') {
-      updatedCommunity.featured = [newCommunity, ...previewCommunity.featured];
-    } else if (activeCommunityTab === 'updates') {
-      updatedCommunity.updates = [newCommunity, ...previewCommunity.updates];
-    } else if (activeCommunityTab === 'events') {
-      updatedCommunity.events = [newCommunity, ...previewCommunity.events];
-    } else if (activeCommunityTab === 'columns') {
-      updatedCommunity.columns = [newCommunity, ...previewCommunity.columns];
-    }
-
-    setPreviewCommunity(updatedCommunity);
-    localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
-
-    setSuccessMessage('Community content saved successfully!');
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
@@ -303,14 +393,31 @@ const AdminUpload = () => {
 
   // Edit existing content
   const editContent = (content) => {
+    // Convert date back to input format if needed
+    const editData = { ...content };
+    
+    // Try to parse the date if it's in the Community format
+    if (content.date && content.date.includes(',')) {
+      try {
+        const dateObj = new Date(content.date);
+        editData.date = dateObj.toISOString().split('T')[0];
+      } catch (e) {
+        // Keep original date
+      }
+    }
+    
     setFormData({
       ...formData,
-      ...content
+      ...editData,
+      summary: content.summary || content.description,
+      excerpt: content.excerpt || content.description
     });
   };
 
   // Delete content
   const deleteContent = (id) => {
+    if (!window.confirm('Are you sure you want to delete this item?')) return;
+
     if (activePage === 'news') {
       if (activeCommunityTab === 'events') {
         const updated = previewEvents.filter(item => item.id !== id);
@@ -336,6 +443,9 @@ const AdminUpload = () => {
       
       setPreviewCommunity(updatedCommunity);
       localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
+      
+      // Notify Community component of deletion
+      window.dispatchEvent(new Event('blazingtek-content-updated'));
     }
   };
 
@@ -354,6 +464,9 @@ const AdminUpload = () => {
         const updatedCommunity = { featured: [], updates: [], events: [], columns: [] };
         setPreviewCommunity(updatedCommunity);
         localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
+        
+        // Notify Community component
+        window.dispatchEvent(new Event('blazingtek-content-updated'));
       }
     }
   };
@@ -375,6 +488,19 @@ const AdminUpload = () => {
   const getContentCount = () => {
     const list = getCurrentContentList();
     return Array.isArray(list) ? list.length : 0;
+  };
+
+  // Get current category options
+  const getCurrentCategories = () => {
+    if (activePage === 'community') {
+      return communityCategories;
+    }
+    return [
+      { value: 'research', label: 'Research', icon: <FileText className="h-4 w-4" /> },
+      { value: 'events', label: 'Events', icon: <Calendar className="h-4 w-4" /> },
+      { value: 'partnerships', label: 'Partnerships', icon: <Users className="h-4 w-4" /> },
+      { value: 'awards', label: 'Awards', icon: <Award className="h-4 w-4" /> }
+    ];
   };
 
   return (
@@ -448,17 +574,6 @@ const AdminUpload = () => {
             ) : (
               <>
                 <button
-                  onClick={() => setActiveCommunityTab('updates')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
-                    activeCommunityTab === 'updates'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
-                  }`}
-                >
-                  <TrendingUp className="h-4 w-4" />
-                  Latest Updates
-                </button>
-                <button
                   onClick={() => setActiveCommunityTab('featured')}
                   className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
                     activeCommunityTab === 'featured'
@@ -468,6 +583,17 @@ const AdminUpload = () => {
                 >
                   <Star className="h-4 w-4" />
                   Feature Stories
+                </button>
+                <button
+                  onClick={() => setActiveCommunityTab('updates')}
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                    activeCommunityTab === 'updates'
+                      ? 'border-[#0A0F14] text-[#0A0F14]'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                  }`}
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  Latest Updates
                 </button>
                 <button
                   onClick={() => setActiveCommunityTab('events')}
@@ -570,7 +696,7 @@ const AdminUpload = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     <div className="flex items-center gap-2">
                       <Image className="h-4 w-4" />
-                      Upload Image
+                      Upload Image (Optional)
                     </div>
                   </label>
                   
@@ -581,7 +707,7 @@ const AdminUpload = () => {
                         Drag & drop or click to upload
                       </p>
                       <p className="text-xs text-gray-500 mb-4">
-                        Recommended: 1200x630px • Max 5MB
+                        Leave empty for automatic gradient background
                       </p>
                       <input
                         type="file"
@@ -670,34 +796,48 @@ const AdminUpload = () => {
                     </div>
                   )}
 
-                  {/* Category/Type Selection */}
-                  {activePage === 'news' && activeCommunityTab !== 'events' ? (
+                  {/* Summary field for featured stories */}
+                  {activePage === 'community' && activeCommunityTab === 'featured' && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Category *
+                        Summary
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {newsCategories.map(cat => (
-                          <button
-                            key={cat.value}
-                            type="button"
-                            onClick={() => handleFormChange('category', cat.value)}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                              formData.category === cat.value
-                                ? 'border-[#0A0F14] bg-[#0A0F14]/5'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            {cat.icon}
-                            <span className="text-sm">{cat.label}</span>
-                          </button>
-                        ))}
-                      </div>
+                      <textarea
+                        value={formData.summary}
+                        onChange={(e) => handleFormChange('summary', e.target.value)}
+                        rows="2"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="Brief summary for featured cards"
+                      />
                     </div>
-                  ) : null}
+                  )}
+
+                  {/* Category/Type Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category *
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {getCurrentCategories().map(cat => (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => handleFormChange('category', cat.value)}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                            formData.category === cat.value
+                              ? 'border-[#0A0F14] bg-[#0A0F14]/5'
+                              : 'border-gray-300 hover:border-gray-400'
+                          }`}
+                        >
+                          {cat.icon || getCategoryIcon(cat.value)}
+                          <span className="text-sm">{cat.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   {/* Event specific fields */}
-                  {activeCommunityTab === 'events' && (
+                  {(activeCommunityTab === 'events' || (activePage === 'news' && activeCommunityTab === 'events')) && (
                     <>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
@@ -728,6 +868,7 @@ const AdminUpload = () => {
                           >
                             <option>Upcoming</option>
                             <option>Registration Open</option>
+                            <option>Applications Open</option>
                             <option>Sold Out</option>
                             <option>Ongoing</option>
                             <option>Completed</option>
@@ -871,14 +1012,14 @@ const AdminUpload = () => {
                   {/* Full Content */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Content
+                      Full Content (Optional)
                     </label>
                     <textarea
                       value={formData.content}
                       onChange={(e) => handleFormChange('content', e.target.value)}
                       rows="6"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
-                      placeholder="Write the full content here..."
+                      placeholder="Write the full content here (supports Markdown)..."
                     />
                   </div>
                 </div>
@@ -901,6 +1042,22 @@ const AdminUpload = () => {
                     Clear All
                   </button>
                 </div>
+
+                {/* Integration Note */}
+                {activePage === 'community' && (
+                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-blue-800">Integration Note</p>
+                        <p className="text-xs text-blue-600 mt-1">
+                          Content saved here will automatically appear on the Community page. 
+                          The Community component listens for updates in real-time.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -932,16 +1089,25 @@ const AdminUpload = () => {
                   </div>
                 </div>
 
-                {/* Image Preview */}
-                {formData.imageUrl && (
-                  <div className="mb-4">
+                {/* Image Preview or Gradient */}
+                <div className="mb-4 rounded-lg overflow-hidden">
+                  {formData.imageUrl ? (
                     <img 
                       src={formData.imageUrl}
                       alt="Preview" 
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div 
+                      className="w-full h-48"
+                      style={{ background: getGradientColor(0) }}
+                    >
+                      <div className="w-full h-full flex items-center justify-center text-white/80 text-sm">
+                        Gradient background (auto-generated)
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div className="space-y-3">
                   {/* Title Preview */}
@@ -967,12 +1133,12 @@ const AdminUpload = () => {
                   )}
 
                   {/* Category Preview */}
-                  {formData.category && activeCommunityTab !== 'events' && (
+                  {formData.category && (
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Category</div>
                       <div className="text-sm">
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100">
-                          <Tag className="h-3 w-3" />
+                          {getCategoryIcon(formData.category)}
                           {formData.category}
                         </span>
                       </div>
@@ -1005,9 +1171,9 @@ const AdminUpload = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {getCurrentContentList().map((item) => (
+                    {getCurrentContentList().map((item, index) => (
                       <div
-                        key={item.id}
+                        key={item.id || index}
                         className="p-3 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
                       >
                         <div className="flex justify-between items-start">
@@ -1017,15 +1183,20 @@ const AdminUpload = () => {
                                 {item.category || item.type || 'Content'}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {item.date || new Date().toLocaleDateString()}
+                                {item.date || 'No date'}
                               </span>
                             </div>
                             <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
                               {item.title}
                             </h4>
                             <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                              {item.excerpt || item.description || 'No description'}
+                              {item.excerpt || item.description || item.summary || 'No description'}
                             </p>
+                            {item.author && (
+                              <p className="text-xs text-gray-400 mt-1">
+                                By {item.author}
+                              </p>
+                            )}
                           </div>
                           
                           <div className="flex gap-1 ml-2">

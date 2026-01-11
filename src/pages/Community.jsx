@@ -243,32 +243,68 @@ const Community = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header Section */}
+      {/* Header Section - Updated with Gradient */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-[#0A0F14]"></div>
+        {/* Updated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0A0F14] via-[#1a1f2e] to-[#0A0F14]">
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-blue-500/5 to-cyan-400/10 animate-gradient-x"></div>
+          
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]"></div>
+          
+          {/* Animated orbs */}
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
         
+        {/* Content */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="relative max-w-4xl mx-auto px-4 text-center"
         >
+         
+          
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold mb-4 text-white"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
           >
-            MA Community
+            <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+             Community
+            </span>
           </motion.h1>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="relative"
+          >
+            {/* Animated underline */}
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-shimmer"></div>
+            
+            <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-8">
+              The Voice of{" "}
+              <span className="relative">
+                <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent font-semibold">
+                  African Innovation
+                </span>
+                <span className="absolute -bottom-1 left-0 w-full h-px bg-gradient-to-r from-purple-500 to-blue-500"></span>
+              </span>
+            </p>
+          </motion.div>
           
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-xl text-gray-300 max-w-2xl mx-auto mb-8"
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="text-gray-400 max-w-2xl mx-auto mb-12 text-lg"
           >
-            The Voice of African Innovation
+            Discover stories, insights, and events from innovators shaping Africa's tech future
           </motion.p>
         </motion.div>
       </section>
@@ -729,6 +765,42 @@ const Community = () => {
           </div>
         </div>
       </section>
+
+      {/* Add CSS animations */}
+      <style>
+        {`
+          @keyframes gradient-x {
+            0%, 100% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+          }
+          
+          .animate-gradient-x {
+            background-size: 200% 200%;
+            animation: gradient-x 15s ease infinite;
+          }
+          
+          @keyframes shimmer {
+            0% {
+              transform: translateX(-100%) translateY(-50%);
+            }
+            100% {
+              transform: translateX(100%) translateY(-50%);
+            }
+          }
+          
+          .animate-shimmer {
+            animation: shimmer 2s infinite;
+          }
+          
+          .bg-grid-white\\/\\[0\\.02\\] {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.02)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+          }
+        `}
+      </style>
     </div>
   );
 };

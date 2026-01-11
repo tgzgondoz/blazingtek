@@ -1,11 +1,50 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [communityContent, setCommunityContent] = useState({
+    featureStories: [],
+    newsBriefs: [],
+    upcomingEvents: [],
+    columns: [],
+    isLoading: true
+  });
 
-  const featureStories = [
+  // Load content from localStorage (saved by AdminUpload)
+  useEffect(() => {
+    const loadContent = () => {
+      const savedContent = JSON.parse(localStorage.getItem('blazingtek-community')) || [];
+      
+      // Filter content by type
+      const featureStories = savedContent.filter(item => item.storyType === 'feature');
+      const newsBriefs = savedContent.filter(item => item.storyType === 'news');
+      const columns = savedContent.filter(item => item.storyType === 'column');
+      const events = savedContent.filter(item => item.storyType === 'event');
+      
+      setCommunityContent({
+        featureStories: featureStories.length > 0 ? featureStories : getDefaultFeatureStories(),
+        newsBriefs: newsBriefs.length > 0 ? newsBriefs : getDefaultNewsBriefs(),
+        upcomingEvents: events.length > 0 ? events : getDefaultUpcomingEvents(),
+        columns: columns.length > 0 ? columns : getDefaultColumns(),
+        isLoading: false
+      });
+    };
+
+    loadContent();
+    
+    // Listen for content updates (in case AdminUpload page adds new content)
+    const handleStorageChange = () => {
+      loadContent();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Default content (used if no admin content exists)
+  const getDefaultFeatureStories = () => [
     {
       id: 1,
       title: "The Robotics Revolution",
@@ -35,7 +74,7 @@ const Community = () => {
     },
   ];
 
-  const newsBriefs = [
+  const getDefaultNewsBriefs = () => [
     {
       id: 1,
       title: "AI Hackathon Produces Solutions",
@@ -59,7 +98,7 @@ const Community = () => {
     },
   ];
 
-  const upcomingEvents = [
+  const getDefaultUpcomingEvents = () => [
     {
       title: "Innovation Summit 2024",
       date: "April 20-22",
@@ -76,7 +115,7 @@ const Community = () => {
     },
   ];
 
-  const columns = [
+  const getDefaultColumns = () => [
     {
       id: 1,
       title: "From the Editor",
@@ -92,6 +131,23 @@ const Community = () => {
       image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
     },
   ];
+
+  // Filter stories based on active tab
+  const filteredStories = activeTab === 'all' 
+    ? communityContent.featureStories 
+    : communityContent.featureStories.filter(story => 
+        story.category.toLowerCase().includes(activeTab)
+      );
+
+  // Handle newsletter subscription
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    // In production, send to backend
+    console.log('Subscribing:', email);
+    alert('Thank you for subscribing to MA Community!');
+    e.target.reset();
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0F14] text-white">
@@ -177,9 +233,9 @@ const Community = () => {
 
             {/* Featured Stories */}
             <div className="space-y-8">
-              {featureStories.slice(0, 2).map((story, index) => (
+              {communityContent.featureStories.slice(0, 2).map((story, index) => (
                 <motion.article
-                  key={story.id}
+                  key={story.id || index}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.2 }}
@@ -189,7 +245,7 @@ const Community = () => {
                     {/* Story Image */}
                     <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
                       <img 
-                        src={story.image}
+                        src={story.image || "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
                         alt={story.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
@@ -197,13 +253,13 @@ const Community = () => {
                     
                     {/* Story Content */}
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-white mb-2">{story.category}</div>
+                      <div className="text-sm font-semibold text-white mb-2">{story.category || "FEATURE"}</div>
                       <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors cursor-pointer">
                         {story.title}
                       </h3>
-                      <p className="text-gray-400 mb-4 text-sm">{story.description}</p>
+                      <p className="text-gray-400 mb-4 text-sm">{story.description || story.excerpt}</p>
                       <div className="text-xs text-gray-500">
-                        By {story.author} • {story.readTime}
+                        By {story.author || "MA Editorial"} • {story.readTime || "5 min read"}
                       </div>
                     </div>
                   </div>
@@ -229,9 +285,9 @@ const Community = () => {
           </motion.h2>
           
           <div className="grid md:grid-cols-3 gap-6">
-            {newsBriefs.map((brief, index) => (
+            {communityContent.newsBriefs.map((brief, index) => (
               <motion.div
-                key={brief.id}
+                key={brief.id || index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -242,7 +298,7 @@ const Community = () => {
                   {/* News Image */}
                   <div className="h-48 overflow-hidden">
                     <img 
-                      src={brief.image}
+                      src={brief.image || "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
                       alt={brief.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -252,12 +308,12 @@ const Community = () => {
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="h-2 w-2 rounded-full bg-white"></div>
-                      <span className="text-sm font-semibold text-white">{brief.category}</span>
+                      <span className="text-sm font-semibold text-white">{brief.category || "UPDATE"}</span>
                     </div>
                     <h3 className="text-lg font-bold mb-3 group-hover:text-white transition-colors">
                       {brief.title}
                     </h3>
-                    <p className="text-sm text-gray-400">{brief.summary}</p>
+                    <p className="text-sm text-gray-400">{brief.summary || brief.excerpt || brief.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -297,9 +353,9 @@ const Community = () => {
 
           {/* Stories */}
           <div className="space-y-8">
-            {featureStories.map((story) => (
+            {filteredStories.map((story, index) => (
               <motion.article
-                key={story.id}
+                key={story.id || index}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
@@ -310,7 +366,7 @@ const Community = () => {
                   <div className="lg:w-2/5">
                     <div className="h-64 lg:h-full overflow-hidden">
                       <img 
-                        src={story.image}
+                        src={story.image || "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
                         alt={story.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -321,9 +377,9 @@ const Community = () => {
                   <div className="lg:w-3/5 p-8">
                     <div className="flex items-center gap-3 mb-4">
                       <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold">
-                        {story.category}
+                        {story.category || "FEATURE"}
                       </span>
-                      <span className="text-xs text-gray-500">• {story.readTime}</span>
+                      <span className="text-xs text-gray-500">• {story.readTime || "5 min read"}</span>
                     </div>
                     
                     <h3 className="text-2xl font-bold mb-4 group-hover:text-white transition-colors">
@@ -331,24 +387,27 @@ const Community = () => {
                     </h3>
                     
                     <p className="text-gray-300 mb-6 leading-relaxed">
-                      {story.description}
+                      {story.description || story.excerpt}
                     </p>
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center">
-                          <span className="text-sm font-bold">{story.author.split(' ')[0][0]}</span>
+                          <span className="text-sm font-bold">{story.author ? story.author.split(' ')[0][0] : "M"}</span>
                         </div>
                         <div>
-                          <p className="font-medium text-sm">{story.author}</p>
+                          <p className="font-medium text-sm">{story.author || "MA Editorial"}</p>
                           <p className="text-xs text-gray-500">Contributor</p>
                         </div>
                       </div>
                       
-                      <button className="text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
+                      <Link 
+                        to={`/community/story/${story.id || index}`} 
+                        className="text-sm font-medium hover:text-white transition-colors flex items-center gap-2"
+                      >
                         Read Full Story
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -376,9 +435,9 @@ const Community = () => {
               </motion.h2>
               
               <div className="space-y-6">
-                {columns.map((column) => (
+                {communityContent.columns.map((column, index) => (
                   <motion.article
-                    key={column.id}
+                    key={column.id || index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -389,7 +448,7 @@ const Community = () => {
                       <div className="flex-shrink-0">
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20">
                           <img 
-                            src={column.image}
+                            src={column.image || "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
                             alt={column.author}
                             className="w-full h-full object-cover"
                           />
@@ -405,16 +464,19 @@ const Community = () => {
                           <div className="h-px flex-1 bg-white/10"></div>
                         </div>
                         
-                        <div className="text-sm text-white mb-4">By {column.author}</div>
+                        <div className="text-sm text-white mb-4">By {column.author || "Anonymous"}</div>
                         
                         <p className="text-gray-400 mb-4">
-                          {column.excerpt}
+                          {column.excerpt || column.description}
                         </p>
                         
-                        <button className="text-sm font-medium hover:text-white transition-colors flex items-center gap-1">
+                        <Link 
+                          to={`/community/column/${column.id || index}`} 
+                          className="text-sm font-medium hover:text-white transition-colors flex items-center gap-1"
+                        >
                           Read full column
                           <span className="group-hover:translate-x-1 transition-transform">→</span>
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </motion.article>
@@ -434,7 +496,7 @@ const Community = () => {
               </motion.h2>
               
               <div className="space-y-6">
-                {upcomingEvents.map((event, index) => (
+                {communityContent.upcomingEvents.map((event, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
@@ -446,7 +508,7 @@ const Community = () => {
                     {/* Event Image */}
                     <div className="absolute inset-0">
                       <img 
-                        src={event.image}
+                        src={event.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"}
                         alt={event.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
@@ -457,7 +519,7 @@ const Community = () => {
                     <div className="relative p-6">
                       <div className="mb-4">
                         <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold">
-                          {event.status}
+                          {event.status || "Upcoming"}
                         </span>
                       </div>
                       
@@ -466,12 +528,18 @@ const Community = () => {
                       <div className="space-y-3 text-sm text-gray-300 mb-6">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">📅 Date:</span>
-                          <span>{event.date}</span>
+                          <span>{event.date || "TBA"}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">📍 Location:</span>
-                          <span>{event.location}</span>
+                          <span>{event.location || "TBA"}</span>
                         </div>
+                        {event.speaker && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">👤 Speaker:</span>
+                            <span>{event.speaker}</span>
+                          </div>
+                        )}
                       </div>
                       
                       <button className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 py-3 rounded-lg font-medium transition-colors shadow-lg hover:shadow-xl">
@@ -499,16 +567,21 @@ const Community = () => {
                   </p>
                 </div>
                 
-                <div className="space-y-4">
+                <form onSubmit={handleSubscribe} className="space-y-4">
                   <input
                     type="email"
+                    name="email"
                     placeholder="Enter your email"
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    required
                   />
-                  <button className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 text-white py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
+                  <button 
+                    type="submit"
+                    className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-xl"
+                  >
                     Subscribe Now
                   </button>
-                </div>
+                </form>
                 
                 <p className="text-xs text-gray-500 text-center mt-4">
                   No spam. Unsubscribe anytime.
@@ -518,6 +591,21 @@ const Community = () => {
           </div>
         </div>
       </section>
+
+      {/* Admin Content Notice (only visible in development) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 right-4 bg-[#0A0F14]/90 backdrop-blur-sm border border-white/10 rounded-lg p-3 text-xs text-gray-400">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span>Using {communityContent.featureStories.length > 0 && communityContent.featureStories[0].id ? 'Admin' : 'Default'} content</span>
+          </div>
+          <div className="mt-1">
+            <Link to="/admin/upload" className="text-amber-400 hover:text-amber-300">
+              Edit content →
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -28,16 +28,20 @@ const Community = () => {
     isLoading: true
   });
 
-  // Default placeholder images
-  const placeholderImages = {
-    communityHero: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-    featureStory: "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    newsBrief: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    event: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    columnist: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+  // Get gradient color for placeholder images
+  const getGradientColor = (index = 0) => {
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    ];
+    return gradients[index % gradients.length];
   };
 
-  // Default content functions (moved inside useEffect to avoid circular reference)
+  // Default content functions
   const getDefaultFeaturedStories = () => [
     {
       id: 1,
@@ -47,7 +51,7 @@ const Community = () => {
       author: "Dr. Amina Diallo",
       authorRole: "Lead AI Researcher",
       readTime: "8 min read",
-      imageUrl: placeholderImages.featureStory,
+      imageUrl: getGradientColor(0),
       date: "March 15, 2024",
       content: "",
       summary: "Exploring the rise of robotics education across Africa"
@@ -60,7 +64,7 @@ const Community = () => {
       author: "Kwame Osei",
       authorRole: "Community Director",
       readTime: "6 min read",
-      imageUrl: placeholderImages.featureStory,
+      imageUrl: getGradientColor(1),
       date: "March 10, 2024",
       content: "",
       summary: "Transforming remote areas through accessible technology training"
@@ -73,7 +77,7 @@ const Community = () => {
       author: "Nadia Bello",
       authorRole: "AI Ethics Specialist",
       readTime: "7 min read",
-      imageUrl: placeholderImages.featureStory,
+      imageUrl: getGradientColor(2),
       date: "March 5, 2024",
       content: "",
       summary: "Spotlight on female tech leaders across the continent"
@@ -90,7 +94,7 @@ const Community = () => {
       author: "MA Editorial",
       authorRole: "News Team",
       readTime: "3 min read",
-      imageUrl: placeholderImages.newsBrief,
+      imageUrl: getGradientColor(3),
       date: "March 12, 2024",
       content: ""
     },
@@ -103,7 +107,7 @@ const Community = () => {
       author: "Financial Times Africa",
       authorRole: "Business Reporter",
       readTime: "4 min read",
-      imageUrl: placeholderImages.newsBrief,
+      imageUrl: getGradientColor(4),
       date: "March 8, 2024",
       content: ""
     },
@@ -116,7 +120,7 @@ const Community = () => {
       author: "TechCrunch Africa",
       authorRole: "Tech Journalist",
       readTime: "5 min read",
-      imageUrl: placeholderImages.newsBrief,
+      imageUrl: getGradientColor(5),
       date: "March 3, 2024",
       content: ""
     },
@@ -136,7 +140,7 @@ const Community = () => {
       type: "Summit",
       speaker: "Dr. Amina Diallo, Kwame Osei",
       registrationLink: "",
-      imageUrl: placeholderImages.event,
+      imageUrl: getGradientColor(0),
       author: "MA Events Team",
       readTime: "Event",
       content: "",
@@ -155,7 +159,7 @@ const Community = () => {
       type: "Forum",
       speaker: "Nadia Bello, Maria Rodriguez",
       registrationLink: "",
-      imageUrl: placeholderImages.event,
+      imageUrl: getGradientColor(1),
       author: "Women in Tech Africa",
       readTime: "Event",
       content: "",
@@ -174,7 +178,7 @@ const Community = () => {
       type: "Hackathon",
       speaker: "Samuel Adeyemi",
       registrationLink: "",
-      imageUrl: placeholderImages.event,
+      imageUrl: getGradientColor(2),
       author: "Tech for Good Initiative",
       readTime: "Event",
       content: "",
@@ -191,7 +195,7 @@ const Community = () => {
       author: "Dr. Amina Bello",
       authorRole: "Editor-in-Chief",
       readTime: "4 min read",
-      imageUrl: placeholderImages.columnist,
+      imageUrl: getGradientColor(3),
       date: "March 15, 2024",
       content: "",
       category: "COLUMNS & OPINION",
@@ -205,7 +209,7 @@ const Community = () => {
       author: "David Chen",
       authorRole: "Senior Correspondent",
       readTime: "6 min read",
-      imageUrl: placeholderImages.columnist,
+      imageUrl: getGradientColor(4),
       date: "March 10, 2024",
       content: "",
       category: "COLUMNS & OPINION",
@@ -219,7 +223,7 @@ const Community = () => {
       author: "Prof. Kwame Mensah",
       authorRole: "Education Analyst",
       readTime: "5 min read",
-      imageUrl: placeholderImages.columnist,
+      imageUrl: getGradientColor(5),
       date: "March 5, 2024",
       content: "",
       category: "COLUMNS & OPINION",
@@ -227,7 +231,7 @@ const Community = () => {
     },
   ];
 
-  // Load content from localStorage (saved by AdminUpload)
+  // Load content from localStorage
   useEffect(() => {
     const loadContent = () => {
       try {
@@ -242,10 +246,22 @@ const Community = () => {
         
         // Use admin content if available, otherwise use defaults
         setCommunityContent({
-          featured: savedContent.featured && savedContent.featured.length > 0 ? savedContent.featured : getDefaultFeaturedStories(),
-          updates: savedContent.updates && savedContent.updates.length > 0 ? savedContent.updates : getDefaultUpdates(),
-          events: savedContent.events && savedContent.events.length > 0 ? savedContent.events : getDefaultEvents(),
-          columns: savedContent.columns && savedContent.columns.length > 0 ? savedContent.columns : getDefaultColumns(),
+          featured: savedContent.featured && savedContent.featured.length > 0 ? savedContent.featured.map((item, index) => ({
+            ...item,
+            imageUrl: item.imageUrl || getGradientColor(index)
+          })) : getDefaultFeaturedStories(),
+          updates: savedContent.updates && savedContent.updates.length > 0 ? savedContent.updates.map((item, index) => ({
+            ...item,
+            imageUrl: item.imageUrl || getGradientColor(index)
+          })) : getDefaultUpdates(),
+          events: savedContent.events && savedContent.events.length > 0 ? savedContent.events.map((item, index) => ({
+            ...item,
+            imageUrl: item.imageUrl || getGradientColor(index)
+          })) : getDefaultEvents(),
+          columns: savedContent.columns && savedContent.columns.length > 0 ? savedContent.columns.map((item, index) => ({
+            ...item,
+            imageUrl: item.imageUrl || getGradientColor(index)
+          })) : getDefaultColumns(),
           isLoading: false
         });
       } catch (error) {
@@ -362,6 +378,19 @@ const Community = () => {
     }
   };
 
+  // Image placeholder component
+  const ImagePlaceholder = ({ gradient, children, className = '' }) => (
+    <div 
+      className={`relative overflow-hidden ${className}`}
+      style={{ background: gradient }}
+    >
+      <div className="absolute inset-0 bg-black/10"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        {children}
+      </div>
+    </div>
+  );
+
   // Show loading state
   if (communityContent.isLoading) {
     return (
@@ -459,39 +488,23 @@ const Community = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="relative aspect-[4/5] rounded-xl overflow-hidden shadow-2xl">
-                <img 
-                  src={communityContent.featured[0]?.imageUrl || placeholderImages.communityHero}
-                  alt={communityContent.featured[0]?.title || "African innovators collaborating on technology"}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                
-                {/* Cover Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <div className="mb-4">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
-                      {getCategoryIcon(communityContent.featured[0]?.category || "COVER STORY")}
-                      {communityContent.featured[0]?.category || "COVER STORY"}
-                    </span>
+              <ImagePlaceholder 
+                gradient={communityContent.featured[0]?.imageUrl || getGradientColor(0)}
+                className="aspect-[4/5] rounded-xl shadow-2xl"
+              >
+                <div className="p-8 text-center">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+                    <Newspaper className="h-5 w-5" />
+                    <span className="font-semibold">COVER STORY</span>
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
                     {communityContent.featured[0]?.title || "The Next Generation of African Innovators"}
                   </h2>
-                  <p className="text-gray-300 text-lg">
-                    {communityContent.featured[0]?.description || communityContent.featured[0]?.excerpt || "How technology and education are shaping Africa's future"}
+                  <p className="text-xl text-gray-200">
+                    {communityContent.featured[0]?.description || "How technology and education are shaping Africa's future"}
                   </p>
-                  <div className="mt-4 flex items-center gap-3">
-                    <span className="text-sm text-gray-400">
-                      By {communityContent.featured[0]?.author || "MA Editorial"}
-                    </span>
-                    <span className="text-sm text-gray-400">•</span>
-                    <span className="text-sm text-gray-400">
-                      {communityContent.featured[0]?.readTime || "5 min read"}
-                    </span>
-                  </div>
                 </div>
-              </div>
+              </ImagePlaceholder>
             </motion.div>
 
             {/* Featured Stories */}
@@ -507,10 +520,9 @@ const Community = () => {
                   <div className="flex items-start gap-4">
                     {/* Story Image */}
                     <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden">
-                      <img 
-                        src={story.imageUrl || placeholderImages.featureStory}
-                        alt={story.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      <div 
+                        className="w-full h-full"
+                        style={{ background: story.imageUrl }}
                       />
                     </div>
                     
@@ -567,13 +579,10 @@ const Community = () => {
               >
                 <div className="bg-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition-all duration-300 h-full flex flex-col">
                   {/* Update Image */}
-                  <div className="h-48 overflow-hidden">
-                    <img 
-                      src={update.imageUrl || placeholderImages.newsBrief}
-                      alt={update.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
+                  <div 
+                    className="h-48"
+                    style={{ background: update.imageUrl }}
+                  />
                   
                   {/* Update Content */}
                   <div className="p-6 flex-1 flex flex-col">
@@ -656,13 +665,10 @@ const Community = () => {
                   <div className="flex flex-col lg:flex-row">
                     {/* Image Column */}
                     <div className="lg:w-2/5">
-                      <div className="h-64 lg:h-full overflow-hidden">
-                        <img 
-                          src={story.imageUrl || placeholderImages.featureStory}
-                          alt={story.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
+                      <div 
+                        className="h-64 lg:h-full"
+                        style={{ background: story.imageUrl }}
+                      />
                     </div>
                     
                     {/* Content Column */}
@@ -756,13 +762,10 @@ const Community = () => {
                     <div className="flex items-start gap-6 p-6">
                       {/* Columnist Image */}
                       <div className="flex-shrink-0">
-                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20">
-                          <img 
-                            src={column.imageUrl || placeholderImages.columnist}
-                            alt={column.author}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
+                        <div 
+                          className="w-16 h-16 rounded-full border-2 border-white/20"
+                          style={{ background: column.imageUrl }}
+                        />
                       </div>
                       
                       {/* Column Content */}
@@ -829,12 +832,10 @@ const Community = () => {
                     className="group relative overflow-hidden rounded-xl"
                   >
                     {/* Event Image */}
-                    <div className="absolute inset-0">
-                      <img 
-                        src={event.imageUrl || placeholderImages.event}
-                        alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
+                    <div 
+                      className="h-64"
+                      style={{ background: event.imageUrl }}
+                    >
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
                     </div>
                     
@@ -969,7 +970,7 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Admin Content Notice (only visible in development) */}
+      {/* Admin Content Notice */}
       {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-4 right-4 bg-[#0A0F14]/90 backdrop-blur-sm border border-white/10 rounded-lg p-3 text-xs text-gray-400 z-40">
           <div className="flex items-center gap-2 mb-1">

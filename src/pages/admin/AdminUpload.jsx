@@ -7,7 +7,6 @@ import {
   Calendar, 
   Tag, 
   User, 
-  Globe, 
   Clock, 
   Eye, 
   Heart, 
@@ -36,13 +35,14 @@ import {
 const AdminUpload = () => {
   // State for active page type
   const [activePage, setActivePage] = useState('news'); // 'news' or 'community'
-  const [activeCommunityTab, setActiveCommunityTab] = useState('featured'); // 'featured', 'updates', 'events', 'columns'
+  const [activeCommunityTab, setActiveCommunityTab] = useState('updates'); // 'updates', 'featured', 'events', 'columns'
   
-  // Form states
-  const [newsForm, setNewsForm] = useState({
+  // Form states - simplified
+  const [formData, setFormData] = useState({
     id: '',
     title: '',
     excerpt: '',
+    description: '',
     category: 'research',
     date: new Date().toISOString().split('T')[0],
     type: 'article',
@@ -53,60 +53,27 @@ const AdminUpload = () => {
     likes: '',
     imageUrl: '',
     content: '',
-    // Upcoming Events specific fields
+    // Event specific fields
     eventDate: '',
     eventLocation: '',
     eventTime: '',
     registrationLink: '',
-    isEvent: false // Flag to indicate if this is an event
-  });
-
-  const [communityForm, setCommunityForm] = useState({
-    id: '',
-    title: '',
-    description: '',
-    category: 'LATEST UPDATES', // Default to latest updates
-    author: '',
-    authorRole: '',
-    readTime: '',
-    imageUrl: '',
-    content: '',
-    date: new Date().toISOString().split('T')[0],
-    // Event specific fields (for UPCOMING EVENTS tab)
-    eventDate: '',
-    eventLocation: '',
-    eventTime: '',
-    registrationLink: '',
-    eventStatus: 'Registration Open',
-    // Column specific fields
-    columnType: 'opinion', // 'opinion', 'analysis', 'interview'
-    tags: [] // For categorizing columns
-  });
-
-  // Upcoming Events specific form (for News section)
-  const [eventForm, setEventForm] = useState({
-    id: '',
-    title: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
-    time: '',
-    location: '',
-    type: 'Conference',
+    status: 'Upcoming',
     speaker: '',
-    registrationLink: '',
-    imageUrl: '',
-    status: 'Upcoming'
+    // Column specific fields
+    columnType: 'opinion',
+    tags: []
   });
 
   // Preview and lists
   const [previewNews, setPreviewNews] = useState([]);
   const [previewCommunity, setPreviewCommunity] = useState({
-    featured: [], // FEATURE STORIES
-    updates: [], // LATEST UPDATES
-    events: [], // UPCOMING EVENTS
-    columns: [] // COLUMNS & OPINION
+    featured: [],
+    updates: [],
+    events: [],
+    columns: []
   });
-  const [previewEvents, setPreviewEvents] = useState([]); // Upcoming Events for News page
+  const [previewEvents, setPreviewEvents] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -145,19 +112,55 @@ const AdminUpload = () => {
 
   // Load existing data from localStorage
   useEffect(() => {
-    const savedNews = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
-    const savedCommunity = JSON.parse(localStorage.getItem('blazingtek-community')) || {
-      featured: [],
-      updates: [],
-      events: [],
-      columns: []
-    };
-    const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
-    
-    setPreviewNews(savedNews);
-    setPreviewCommunity(savedCommunity);
-    setPreviewEvents(savedEvents);
+    try {
+      const savedNews = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
+      const savedCommunity = JSON.parse(localStorage.getItem('blazingtek-community')) || {
+        featured: [],
+        updates: [],
+        events: [],
+        columns: []
+      };
+      const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
+      
+      setPreviewNews(savedNews);
+      setPreviewCommunity(savedCommunity);
+      setPreviewEvents(savedEvents);
+    } catch (error) {
+      console.error('Error loading data from localStorage:', error);
+      // Initialize with empty arrays if there's an error
+      setPreviewNews([]);
+      setPreviewCommunity({ featured: [], updates: [], events: [], columns: [] });
+      setPreviewEvents([]);
+    }
   }, []);
+
+  // Reset form when switching tabs
+  useEffect(() => {
+    setFormData({
+      id: '',
+      title: '',
+      excerpt: '',
+      description: '',
+      category: activePage === 'news' ? 'research' : 'LATEST UPDATES',
+      date: new Date().toISOString().split('T')[0],
+      type: 'article',
+      readTime: '',
+      author: '',
+      authorRole: '',
+      views: '',
+      likes: '',
+      imageUrl: '',
+      content: '',
+      eventDate: '',
+      eventLocation: '',
+      eventTime: '',
+      registrationLink: '',
+      status: 'Upcoming',
+      speaker: '',
+      columnType: 'opinion',
+      tags: []
+    });
+  }, [activePage, activeCommunityTab]);
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -178,27 +181,14 @@ const AdminUpload = () => {
       
       // Auto-fill image URL for active form
       if (newImages.length > 0) {
-        if (activePage === 'news') {
-          setNewsForm(prev => ({ ...prev, imageUrl: newImages[0].url }));
-          setEventForm(prev => ({ ...prev, imageUrl: newImages[0].url }));
-        } else {
-          setCommunityForm(prev => ({ ...prev, imageUrl: newImages[0].url }));
-        }
+        setFormData(prev => ({ ...prev, imageUrl: newImages[0].url }));
       }
     }, 1000);
   };
 
   // Handle form changes
-  const handleNewsChange = (field, value) => {
-    setNewsForm(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleCommunityChange = (field, value) => {
-    setCommunityForm(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleEventChange = (field, value) => {
-    setEventForm(prev => ({ ...prev, [field]: value }));
+  const handleFormChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   // Generate ID for new content
@@ -208,56 +198,27 @@ const AdminUpload = () => {
 
   // Save news content
   const saveNewsContent = () => {
-    if (newsForm.isEvent) {
-      // Save as event
-      saveEventContent();
-      return;
-    }
-
-    if (!newsForm.title || !newsForm.excerpt || !newsForm.author) {
+    if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
     const newNews = {
-      ...newsForm,
-      id: newsForm.id || generateId(),
-      date: newsForm.date || new Date().toLocaleDateString('en-US', { 
+      ...formData,
+      id: formData.id || generateId(),
+      date: formData.date || new Date().toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
       }),
-      views: newsForm.views || Math.floor(Math.random() * 5000) + 1000,
-      likes: newsForm.likes || Math.floor(Math.random() * 300) + 50,
-      isEvent: false
+      views: formData.views || Math.floor(Math.random() * 5000) + 1000,
+      likes: formData.likes || Math.floor(Math.random() * 300) + 50
     };
 
     const updatedNews = [newNews, ...previewNews];
     setPreviewNews(updatedNews);
     localStorage.setItem('blazingtek-news', JSON.stringify(updatedNews));
-
-    // Reset form
-    setNewsForm({
-      id: '',
-      title: '',
-      excerpt: '',
-      category: 'research',
-      date: new Date().toISOString().split('T')[0],
-      type: 'article',
-      readTime: '',
-      author: '',
-      authorRole: '',
-      views: '',
-      likes: '',
-      imageUrl: '',
-      content: '',
-      eventDate: '',
-      eventLocation: '',
-      eventTime: '',
-      registrationLink: '',
-      isEvent: false
-    });
 
     setSuccessMessage('News article saved successfully!');
     setTimeout(() => setSuccessMessage(''), 3000);
@@ -265,40 +226,29 @@ const AdminUpload = () => {
 
   // Save event content (for News section)
   const saveEventContent = () => {
-    if (!eventForm.title || !eventForm.description || !eventForm.date) {
+    if (!formData.title || !formData.description || !formData.date) {
       setErrorMessage('Please fill in all required fields for the event');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
     const newEvent = {
-      ...eventForm,
-      id: eventForm.id || generateId(),
-      date: eventForm.date || new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      })
+      id: formData.id || generateId(),
+      title: formData.title,
+      description: formData.description,
+      date: formData.date,
+      time: formData.eventTime,
+      location: formData.eventLocation,
+      type: formData.type,
+      speaker: formData.speaker,
+      registrationLink: formData.registrationLink,
+      imageUrl: formData.imageUrl,
+      status: formData.status || 'Upcoming'
     };
 
     const updatedEvents = [newEvent, ...previewEvents];
     setPreviewEvents(updatedEvents);
     localStorage.setItem('blazingtek-events', JSON.stringify(updatedEvents));
-
-    // Reset event form
-    setEventForm({
-      id: '',
-      title: '',
-      description: '',
-      date: new Date().toISOString().split('T')[0],
-      time: '',
-      location: '',
-      type: 'Conference',
-      speaker: '',
-      registrationLink: '',
-      imageUrl: '',
-      status: 'Upcoming'
-    });
 
     setSuccessMessage('Event saved successfully!');
     setTimeout(() => setSuccessMessage(''), 3000);
@@ -306,106 +256,84 @@ const AdminUpload = () => {
 
   // Save community content
   const saveCommunityContent = () => {
-    if (!communityForm.title || !communityForm.description || !communityForm.author) {
+    if (!formData.title || !formData.description || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
     const newCommunity = {
-      ...communityForm,
-      id: communityForm.id || generateId(),
-      readTime: communityForm.readTime || `${Math.floor(Math.random() * 5) + 1} min read`
+      ...formData,
+      id: formData.id || generateId(),
+      readTime: formData.readTime || `${Math.floor(Math.random() * 5) + 1} min read`
     };
 
-    // Determine which category to save to based on active tab
     let updatedCommunity = { ...previewCommunity };
-    switch(activeCommunityTab) {
-      case 'featured':
-        updatedCommunity.featured = [newCommunity, ...previewCommunity.featured];
-        break;
-      case 'updates':
-        updatedCommunity.updates = [newCommunity, ...previewCommunity.updates];
-        break;
-      case 'events':
-        updatedCommunity.events = [newCommunity, ...previewCommunity.events];
-        break;
-      case 'columns':
-        updatedCommunity.columns = [newCommunity, ...previewCommunity.columns];
-        break;
+    
+    // Determine which category to save to based on active tab
+    if (activeCommunityTab === 'featured') {
+      updatedCommunity.featured = [newCommunity, ...previewCommunity.featured];
+    } else if (activeCommunityTab === 'updates') {
+      updatedCommunity.updates = [newCommunity, ...previewCommunity.updates];
+    } else if (activeCommunityTab === 'events') {
+      updatedCommunity.events = [newCommunity, ...previewCommunity.events];
+    } else if (activeCommunityTab === 'columns') {
+      updatedCommunity.columns = [newCommunity, ...previewCommunity.columns];
     }
 
     setPreviewCommunity(updatedCommunity);
     localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
 
-    // Reset form
-    setCommunityForm({
-      id: '',
-      title: '',
-      description: '',
-      category: activeCommunityTab === 'events' ? 'UPCOMING EVENTS' : 
-                activeCommunityTab === 'columns' ? 'COLUMNS & OPINION' :
-                activeCommunityTab === 'featured' ? 'FEATURE STORIES' : 'LATEST UPDATES',
-      author: '',
-      authorRole: '',
-      readTime: '',
-      imageUrl: '',
-      content: '',
-      date: new Date().toISOString().split('T')[0],
-      eventDate: '',
-      eventLocation: '',
-      eventTime: '',
-      registrationLink: '',
-      eventStatus: 'Registration Open',
-      columnType: 'opinion',
-      tags: []
-    });
-
     setSuccessMessage('Community content saved successfully!');
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  // Edit existing content
-  const editContent = (content, type, subType = null) => {
-    if (type === 'news') {
-      setNewsForm(content);
-      setActivePage('news');
-    } else if (type === 'event') {
-      setEventForm(content);
-      setActivePage('news');
+  // Handle save based on current tab
+  const handleSave = () => {
+    if (activePage === 'news') {
+      if (activeCommunityTab === 'events') {
+        saveEventContent();
+      } else {
+        saveNewsContent();
+      }
     } else {
-      setCommunityForm(content);
-      setActivePage('community');
-      if (subType) setActiveCommunityTab(subType);
+      saveCommunityContent();
     }
   };
 
+  // Edit existing content
+  const editContent = (content) => {
+    setFormData({
+      ...formData,
+      ...content
+    });
+  };
+
   // Delete content
-  const deleteContent = (id, type, subType = null) => {
-    if (type === 'news') {
-      const updated = previewNews.filter(item => item.id !== id);
-      setPreviewNews(updated);
-      localStorage.setItem('blazingtek-news', JSON.stringify(updated));
-    } else if (type === 'event') {
-      const updated = previewEvents.filter(item => item.id !== id);
-      setPreviewEvents(updated);
-      localStorage.setItem('blazingtek-events', JSON.stringify(updated));
+  const deleteContent = (id) => {
+    if (activePage === 'news') {
+      if (activeCommunityTab === 'events') {
+        const updated = previewEvents.filter(item => item.id !== id);
+        setPreviewEvents(updated);
+        localStorage.setItem('blazingtek-events', JSON.stringify(updated));
+      } else {
+        const updated = previewNews.filter(item => item.id !== id);
+        setPreviewNews(updated);
+        localStorage.setItem('blazingtek-news', JSON.stringify(updated));
+      }
     } else {
       let updatedCommunity = { ...previewCommunity };
-      switch(subType) {
-        case 'featured':
-          updatedCommunity.featured = previewCommunity.featured.filter(item => item.id !== id);
-          break;
-        case 'updates':
-          updatedCommunity.updates = previewCommunity.updates.filter(item => item.id !== id);
-          break;
-        case 'events':
-          updatedCommunity.events = previewCommunity.events.filter(item => item.id !== id);
-          break;
-        case 'columns':
-          updatedCommunity.columns = previewCommunity.columns.filter(item => item.id !== id);
-          break;
+      
+      if (activeCommunityTab === 'featured') {
+        updatedCommunity.featured = previewCommunity.featured.filter(item => item.id !== id);
+      } else if (activeCommunityTab === 'updates') {
+        updatedCommunity.updates = previewCommunity.updates.filter(item => item.id !== id);
+      } else if (activeCommunityTab === 'events') {
+        updatedCommunity.events = previewCommunity.events.filter(item => item.id !== id);
+      } else if (activeCommunityTab === 'columns') {
+        updatedCommunity.columns = previewCommunity.columns.filter(item => item.id !== id);
       }
+      
       setPreviewCommunity(updatedCommunity);
       localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
     }
@@ -415,18 +343,17 @@ const AdminUpload = () => {
   const clearAllContent = () => {
     if (window.confirm('Are you sure you want to clear all content? This cannot be undone.')) {
       if (activePage === 'news') {
-        setPreviewNews([]);
-        setPreviewEvents([]);
-        localStorage.removeItem('blazingtek-news');
-        localStorage.removeItem('blazingtek-events');
+        if (activeCommunityTab === 'events') {
+          setPreviewEvents([]);
+          localStorage.removeItem('blazingtek-events');
+        } else {
+          setPreviewNews([]);
+          localStorage.removeItem('blazingtek-news');
+        }
       } else {
-        setPreviewCommunity({
-          featured: [],
-          updates: [],
-          events: [],
-          columns: []
-        });
-        localStorage.removeItem('blazingtek-community');
+        const updatedCommunity = { featured: [], updates: [], events: [], columns: [] };
+        setPreviewCommunity(updatedCommunity);
+        localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
       }
     }
   };
@@ -436,32 +363,18 @@ const AdminUpload = () => {
     if (activePage === 'news') {
       return activeCommunityTab === 'events' ? previewEvents : previewNews;
     } else {
-      switch(activeCommunityTab) {
-        case 'featured': return previewCommunity.featured;
-        case 'updates': return previewCommunity.updates;
-        case 'events': return previewCommunity.events;
-        case 'columns': return previewCommunity.columns;
-        default: return previewCommunity.updates;
-      }
+      if (activeCommunityTab === 'featured') return previewCommunity.featured;
+      if (activeCommunityTab === 'updates') return previewCommunity.updates;
+      if (activeCommunityTab === 'events') return previewCommunity.events;
+      if (activeCommunityTab === 'columns') return previewCommunity.columns;
+      return previewCommunity.updates;
     }
   };
 
   // Get content count
   const getContentCount = () => {
-    if (activePage === 'news') {
-      if (activeCommunityTab === 'events') {
-        return previewEvents.length;
-      }
-      return previewNews.length;
-    } else {
-      switch(activeCommunityTab) {
-        case 'featured': return previewCommunity.featured.length;
-        case 'updates': return previewCommunity.updates.length;
-        case 'events': return previewCommunity.events.length;
-        case 'columns': return previewCommunity.columns.length;
-        default: return 0;
-      }
-    }
+    const list = getCurrentContentList();
+    return Array.isArray(list) ? list.length : 0;
   };
 
   return (
@@ -478,10 +391,7 @@ const AdminUpload = () => {
             {/* Page Toggle */}
             <div className="flex gap-2 bg-white/10 rounded-lg p-1">
               <button
-                onClick={() => {
-                  setActivePage('news');
-                  setActiveCommunityTab('updates'); // Default to news articles
-                }}
+                onClick={() => setActivePage('news')}
                 className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
                   activePage === 'news' 
                     ? 'bg-white text-[#0A0F14]' 
@@ -492,10 +402,7 @@ const AdminUpload = () => {
                 News Page
               </button>
               <button
-                onClick={() => {
-                  setActivePage('community');
-                  setActiveCommunityTab('updates');
-                }}
+                onClick={() => setActivePage('community')}
                 className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
                   activePage === 'community' 
                     ? 'bg-white text-[#0A0F14]' 
@@ -626,12 +533,7 @@ const AdminUpload = () => {
           {/* Left Column - Form */}
           <div className="lg:col-span-2 space-y-8">
             {/* Form Section */}
-            <motion.div
-              key={`${activePage}-${activeCommunityTab}`}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-xl shadow-lg border border-gray-200"
-            >
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-[#0A0F14]/10">
@@ -708,17 +610,7 @@ const AdminUpload = () => {
                             className="w-full h-24 object-cover rounded-lg"
                           />
                           <button
-                            onClick={() => {
-                              if (activePage === 'news') {
-                                if (activeCommunityTab === 'events') {
-                                  setEventForm(prev => ({ ...prev, imageUrl: img.url }));
-                                } else {
-                                  setNewsForm(prev => ({ ...prev, imageUrl: img.url }));
-                                }
-                              } else {
-                                setCommunityForm(prev => ({ ...prev, imageUrl: img.url }));
-                              }
-                            }}
+                            onClick={() => handleFormChange('imageUrl', img.url)}
                             className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center"
                           >
                             <EyeIcon className="h-5 w-5 text-white" />
@@ -730,44 +622,91 @@ const AdminUpload = () => {
                 </div>
 
                 {/* Dynamic Form based on active page and tab */}
-                {activePage === 'news' ? (
-                  activeCommunityTab === 'events' ? (
-                    // Event Form for News Section
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Event Title *
-                        </label>
-                        <input
-                          type="text"
-                          value={eventForm.title}
-                          onChange={(e) => handleEventChange('title', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="Enter event title"
-                        />
-                      </div>
+                <div className="space-y-6">
+                  {/* Title Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => handleFormChange('title', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                      placeholder={
+                        activePage === 'news' && activeCommunityTab === 'events' 
+                          ? "Enter event title" 
+                          : "Enter content title"
+                      }
+                    />
+                  </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Event Description *
-                        </label>
-                        <textarea
-                          value={eventForm.description}
-                          onChange={(e) => handleEventChange('description', e.target.value)}
-                          rows="3"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="Describe the event"
-                        />
-                      </div>
+                  {/* Description/Excerpt Field */}
+                  {activePage === 'news' && activeCommunityTab !== 'events' ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Excerpt *
+                      </label>
+                      <textarea
+                        value={formData.excerpt}
+                        onChange={(e) => handleFormChange('excerpt', e.target.value)}
+                        rows="3"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="Brief summary of the article"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Description *
+                      </label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => handleFormChange('description', e.target.value)}
+                        rows="3"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="Enter description or excerpt"
+                      />
+                    </div>
+                  )}
 
+                  {/* Category/Type Selection */}
+                  {activePage === 'news' && activeCommunityTab !== 'events' ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category *
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {newsCategories.map(cat => (
+                          <button
+                            key={cat.value}
+                            type="button"
+                            onClick={() => handleFormChange('category', cat.value)}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                              formData.category === cat.value
+                                ? 'border-[#0A0F14] bg-[#0A0F14]/5'
+                                : 'border-gray-300 hover:border-gray-400'
+                            }`}
+                          >
+                            {cat.icon}
+                            <span className="text-sm">{cat.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {/* Event specific fields */}
+                  {activeCommunityTab === 'events' && (
+                    <>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Event Type
                           </label>
                           <select
-                            value={eventForm.type}
-                            onChange={(e) => handleEventChange('type', e.target.value)}
+                            value={formData.type}
+                            onChange={(e) => handleFormChange('type', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           >
                             {eventTypes.map(type => (
@@ -783,8 +722,8 @@ const AdminUpload = () => {
                             Status
                           </label>
                           <select
-                            value={eventForm.status}
-                            onChange={(e) => handleEventChange('status', e.target.value)}
+                            value={formData.status}
+                            onChange={(e) => handleFormChange('status', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           >
                             <option>Upcoming</option>
@@ -803,8 +742,8 @@ const AdminUpload = () => {
                           </label>
                           <input
                             type="date"
-                            value={eventForm.date}
-                            onChange={(e) => handleEventChange('date', e.target.value)}
+                            value={formData.date}
+                            onChange={(e) => handleFormChange('date', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           />
                         </div>
@@ -815,8 +754,8 @@ const AdminUpload = () => {
                           </label>
                           <input
                             type="time"
-                            value={eventForm.time}
-                            onChange={(e) => handleEventChange('time', e.target.value)}
+                            value={formData.eventTime}
+                            onChange={(e) => handleFormChange('eventTime', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           />
                         </div>
@@ -827,8 +766,8 @@ const AdminUpload = () => {
                           </label>
                           <input
                             type="text"
-                            value={eventForm.location}
-                            onChange={(e) => handleEventChange('location', e.target.value)}
+                            value={formData.eventLocation}
+                            onChange={(e) => handleFormChange('eventLocation', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="e.g., Accra, Ghana"
                           />
@@ -842,8 +781,8 @@ const AdminUpload = () => {
                           </label>
                           <input
                             type="text"
-                            value={eventForm.speaker}
-                            onChange={(e) => handleEventChange('speaker', e.target.value)}
+                            value={formData.speaker}
+                            onChange={(e) => handleFormChange('speaker', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="Event speaker or host"
                           />
@@ -855,354 +794,99 @@ const AdminUpload = () => {
                           </label>
                           <input
                             type="url"
-                            value={eventForm.registrationLink}
-                            onChange={(e) => handleEventChange('registrationLink', e.target.value)}
+                            value={formData.registrationLink}
+                            onChange={(e) => handleFormChange('registrationLink', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="https://example.com/register"
                           />
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    // News Article Form
-                    <div className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Title *
-                          </label>
-                          <input
-                            type="text"
-                            value={newsForm.title}
-                            onChange={(e) => handleNewsChange('title', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="Enter article title"
-                          />
-                        </div>
+                    </>
+                  )}
 
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Category *
-                          </label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {newsCategories.map(cat => (
-                              <button
-                                key={cat.value}
-                                type="button"
-                                onClick={() => handleNewsChange('category', cat.value)}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                                  newsForm.category === cat.value
-                                    ? 'border-[#0A0F14] bg-[#0A0F14]/5'
-                                    : 'border-gray-300 hover:border-gray-400'
-                                }`}
-                              >
-                                {cat.icon}
-                                <span className="text-sm">{cat.label}</span>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Excerpt *
-                        </label>
-                        <textarea
-                          value={newsForm.excerpt}
-                          onChange={(e) => handleNewsChange('excerpt', e.target.value)}
-                          rows="3"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="Brief summary of the article"
-                        />
-                      </div>
-
-                      <div className="grid md:grid-cols-3 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Read Time
-                          </label>
-                          <div className="flex items-center">
-                            <input
-                              type="text"
-                              value={newsForm.readTime}
-                              onChange={(e) => handleNewsChange('readTime', e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                              placeholder="e.g., 5 min read"
-                            />
-                            <Clock className="h-5 w-5 text-gray-400 ml-2" />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Date
-                          </label>
-                          <input
-                            type="date"
-                            value={newsForm.date}
-                            onChange={(e) => handleNewsChange('date', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Views (Optional)
-                          </label>
-                          <input
-                            type="number"
-                            value={newsForm.views}
-                            onChange={(e) => handleNewsChange('views', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="e.g., 1500"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Author *
-                          </label>
-                          <input
-                            type="text"
-                            value={newsForm.author}
-                            onChange={(e) => handleNewsChange('author', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="Author name"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Author Role
-                          </label>
-                          <input
-                            type="text"
-                            value={newsForm.authorRole}
-                            onChange={(e) => handleNewsChange('authorRole', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="e.g., Lead AI Researcher"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Full Content
-                        </label>
-                        <textarea
-                          value={newsForm.content}
-                          onChange={(e) => handleNewsChange('content', e.target.value)}
-                          rows="6"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
-                          placeholder="Write the full article content here..."
-                        />
-                      </div>
-                    </div>
-                  )
-                ) : (
-                  // Community Form
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Title *
-                      </label>
-                      <input
-                        type="text"
-                        value={communityForm.title}
-                        onChange={(e) => handleCommunityChange('title', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Enter content title"
-                      />
-                    </div>
-
-                    {activeCommunityTab === 'updates' && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Category
-                        </label>
-                        <div className="grid grid-cols-3 gap-2">
-                          {communityCategories.map(cat => (
-                            <button
-                              key={cat.value}
-                              type="button"
-                              onClick={() => handleCommunityChange('category', cat.value)}
-                              className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                                communityForm.category === cat.value
-                                  ? 'border-[#0A0F14] bg-[#0A0F14]/5'
-                                  : 'border-gray-300 hover:border-gray-400'
-                              }`}
-                            >
-                              <div className={`h-2 w-2 rounded-full ${cat.color}`}></div>
-                              <span className="text-sm">{cat.label}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {activeCommunityTab === 'events' && (
-                      <div className="grid md:grid-cols-3 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Event Date
-                          </label>
-                          <input
-                            type="date"
-                            value={communityForm.eventDate}
-                            onChange={(e) => handleCommunityChange('eventDate', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Event Time
-                          </label>
-                          <input
-                            type="time"
-                            value={communityForm.eventTime}
-                            onChange={(e) => handleCommunityChange('eventTime', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Location
-                          </label>
-                          <input
-                            type="text"
-                            value={communityForm.eventLocation}
-                            onChange={(e) => handleCommunityChange('eventLocation', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="e.g., Accra, Ghana"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {activeCommunityTab === 'columns' && (
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Column Type
-                          </label>
-                          <select
-                            value={communityForm.columnType}
-                            onChange={(e) => handleCommunityChange('columnType', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          >
-                            {columnTypes.map(type => (
-                              <option key={type.value} value={type.value}>
-                                {type.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tags (comma separated)
-                          </label>
-                          <input
-                            type="text"
-                            value={communityForm.tags.join(', ')}
-                            onChange={(e) => handleCommunityChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                            placeholder="e.g., AI, Robotics, Innovation"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Description *
-                      </label>
-                      <textarea
-                        value={communityForm.description}
-                        onChange={(e) => handleCommunityChange('description', e.target.value)}
-                        rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Enter description or excerpt"
-                      />
-                    </div>
-
+                  {/* Column specific fields */}
+                  {activeCommunityTab === 'columns' && (
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Author *
+                          Column Type
                         </label>
-                        <input
-                          type="text"
-                          value={communityForm.author}
-                          onChange={(e) => handleCommunityChange('author', e.target.value)}
+                        <select
+                          value={formData.columnType}
+                          onChange={(e) => handleFormChange('columnType', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="Author name"
-                        />
+                        >
+                          {columnTypes.map(type => (
+                            <option key={type.value} value={type.value}>
+                              {type.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Read Time
+                          Tags (comma separated)
                         </label>
                         <input
                           type="text"
-                          value={communityForm.readTime}
-                          onChange={(e) => handleCommunityChange('readTime', e.target.value)}
+                          value={formData.tags.join(', ')}
+                          onChange={(e) => handleFormChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="e.g., 5 min read"
+                          placeholder="e.g., AI, Robotics, Innovation"
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {/* Author and Read Time */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Author *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.author}
+                        onChange={(e) => handleFormChange('author', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="Author name"
+                      />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Content
+                        Read Time
                       </label>
-                      <textarea
-                        value={communityForm.content}
-                        onChange={(e) => handleCommunityChange('content', e.target.value)}
-                        rows="6"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
-                        placeholder="Write the full content here..."
+                      <input
+                        type="text"
+                        value={formData.readTime}
+                        onChange={(e) => handleFormChange('readTime', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="e.g., 5 min read"
                       />
                     </div>
-
-                    {activeCommunityTab === 'events' && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Registration Link
-                        </label>
-                        <input
-                          type="url"
-                          value={communityForm.registrationLink}
-                          onChange={(e) => handleCommunityChange('registrationLink', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                          placeholder="https://example.com/register"
-                        />
-                      </div>
-                    )}
                   </div>
-                )}
+
+                  {/* Full Content */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Content
+                    </label>
+                    <textarea
+                      value={formData.content}
+                      onChange={(e) => handleFormChange('content', e.target.value)}
+                      rows="6"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
+                      placeholder="Write the full content here..."
+                    />
+                  </div>
+                </div>
 
                 {/* Save Button */}
                 <div className="mt-8 flex gap-3">
                   <button
-                    onClick={() => {
-                      if (activePage === 'news') {
-                        if (activeCommunityTab === 'events') {
-                          saveEventContent();
-                        } else {
-                          saveNewsContent();
-                        }
-                      } else {
-                        saveCommunityContent();
-                      }
-                    }}
+                    onClick={handleSave}
                     className="flex-1 bg-[#0A0F14] text-white hover:bg-[#0A0F14]/90 py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                   >
                     <Save className="h-5 w-5" />
@@ -1218,7 +902,7 @@ const AdminUpload = () => {
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right Column - Preview & List */}
@@ -1244,95 +928,55 @@ const AdminUpload = () => {
                     }
                   </div>
                   <div className="text-gray-400 text-xs">
-                    {activePage === 'news' ? 
-                      activeCommunityTab === 'events' ? 
-                        eventForm.title || 'No event title yet' : 
-                        newsForm.title || 'No title yet'
-                      : communityForm.title || 'No title yet'
-                    }
+                    {formData.title || 'No title yet'}
                   </div>
                 </div>
 
                 {/* Image Preview */}
-                {(activePage === 'news' && activeCommunityTab === 'events' && eventForm.imageUrl) || 
-                 (activePage === 'news' && activeCommunityTab !== 'events' && newsForm.imageUrl) ||
-                 (activePage === 'community' && communityForm.imageUrl) ? (
+                {formData.imageUrl && (
                   <div className="mb-4">
                     <img 
-                      src={
-                        activePage === 'news' ? 
-                          activeCommunityTab === 'events' ? eventForm.imageUrl : newsForm.imageUrl
-                          : communityForm.imageUrl
-                      } 
+                      src={formData.imageUrl}
                       alt="Preview" 
                       className="w-full h-48 object-cover rounded-lg"
                     />
                   </div>
-                ) : null}
+                )}
 
                 <div className="space-y-3">
                   {/* Title Preview */}
-                  {((activePage === 'news' && activeCommunityTab !== 'events' && newsForm.title) ||
-                    (activePage === 'news' && activeCommunityTab === 'events' && eventForm.title) ||
-                    (activePage === 'community' && communityForm.title)) && (
+                  {formData.title && (
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Title</div>
                       <div className="text-sm font-medium">
-                        {activePage === 'news' ? 
-                          activeCommunityTab === 'events' ? eventForm.title : newsForm.title
-                          : communityForm.title
-                        }
+                        {formData.title}
                       </div>
                     </div>
                   )}
 
                   {/* Description/Excerpt Preview */}
-                  {((activePage === 'news' && activeCommunityTab !== 'events' && newsForm.excerpt) ||
-                    (activePage === 'news' && activeCommunityTab === 'events' && eventForm.description) ||
-                    (activePage === 'community' && communityForm.description)) && (
+                  {(formData.excerpt || formData.description) && (
                     <div>
                       <div className="text-xs text-gray-500 mb-1">
                         {activePage === 'news' && activeCommunityTab === 'events' ? 'Description' : 'Excerpt'}
                       </div>
                       <div className="text-sm text-gray-700 line-clamp-2">
-                        {activePage === 'news' ? 
-                          activeCommunityTab === 'events' ? eventForm.description : newsForm.excerpt
-                          : communityForm.description
-                        }
+                        {formData.excerpt || formData.description}
                       </div>
                     </div>
                   )}
 
                   {/* Category Preview */}
-                  {((activePage === 'news' && activeCommunityTab !== 'events' && newsForm.category) ||
-                    (activePage === 'community' && communityForm.category)) && (
+                  {formData.category && activeCommunityTab !== 'events' && (
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Category</div>
                       <div className="text-sm">
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100">
                           <Tag className="h-3 w-3" />
-                          {activePage === 'news' ? newsForm.category : communityForm.category}
+                          {formData.category}
                         </span>
                       </div>
                     </div>
-                  )}
-
-                  {/* Event Details Preview */}
-                  {activeCommunityTab === 'events' && (
-                    <>
-                      {eventForm.date && (
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Event Date</div>
-                          <div className="text-sm text-gray-700">{eventForm.date}</div>
-                        </div>
-                      )}
-                      {eventForm.location && (
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">Location</div>
-                          <div className="text-sm text-gray-700">{eventForm.location}</div>
-                        </div>
-                      )}
-                    </>
                   )}
                 </div>
               </div>
@@ -1346,14 +990,9 @@ const AdminUpload = () => {
                     <Layout className="h-5 w-5" />
                     Existing Content
                     <span className="text-sm font-normal text-gray-500 ml-2">
-                      ({activeCommunityTab === 'events' ? 'Events' : 
-                        activeCommunityTab === 'featured' ? 'Featured' : 
-                        activeCommunityTab === 'columns' ? 'Columns' : 'Updates'})
+                      ({getContentCount()} items)
                     </span>
                   </h3>
-                  <span className="text-sm text-gray-500">
-                    {getContentCount()} items
-                  </span>
                 </div>
               </div>
               
@@ -1385,26 +1024,20 @@ const AdminUpload = () => {
                               {item.title}
                             </h4>
                             <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                              {item.excerpt || item.description}
+                              {item.excerpt || item.description || 'No description'}
                             </p>
                           </div>
                           
                           <div className="flex gap-1 ml-2">
                             <button
-                              onClick={() => editContent(item, 
-                                activePage === 'news' && activeCommunityTab === 'events' ? 'event' : activePage,
-                                activeCommunityTab
-                              )}
+                              onClick={() => editContent(item)}
                               className="p-1 hover:bg-gray-100 rounded"
                               title="Edit"
                             >
                               <Edit3 className="h-4 w-4 text-gray-500" />
                             </button>
                             <button
-                              onClick={() => deleteContent(item.id, 
-                                activePage === 'news' && activeCommunityTab === 'events' ? 'event' : activePage,
-                                activeCommunityTab
-                              )}
+                              onClick={() => deleteContent(item.id)}
                               className="p-1 hover:bg-red-50 rounded"
                               title="Delete"
                             >
@@ -1430,7 +1063,7 @@ const AdminUpload = () => {
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;
-                      a.download = `blazingtek-${activePage}-${activeCommunityTab}-${new Date().toISOString().split('T')[0]}.json`;
+                      a.download = `blazingtek-${activePage}-${activeCommunityTab}.json`;
                       a.click();
                     }}
                     className="text-sm text-[#0A0F14] hover:text-[#0A0F14]/80 font-medium"

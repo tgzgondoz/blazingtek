@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Abouts from './pages/Abouts';  // Changed from About to Abouts
+import Abouts from './pages/Abouts';
 import Services from './pages/Services';
 import Community from './pages/Community';
 import Partnerships from './pages/Partnerships';
@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import Research from './pages/Research';
 import SustainableRobotics from './pages/SustainableRobotics';
 import LabProjects from './pages/LabProjects';
+import AdminUpload from './pages/admin/AdminUpload';
 
 function App() {
   return (
@@ -19,8 +20,9 @@ function App() {
         <Navbar />
         <main className="flex-grow">
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
-            <Route path="/about" element={<Abouts />} />  {/* Updated to Abouts */}
+            <Route path="/about" element={<Abouts />} />
             <Route path="/services" element={<Services />} />
             <Route path="/community" element={<Community />} />
             <Route path="/partnerships" element={<Partnerships />} />
@@ -29,6 +31,9 @@ function App() {
             <Route path="/research" element={<Research />} />
             <Route path="/research/sustainability" element={<SustainableRobotics />} />
             <Route path="/research/lab" element={<LabProjects />} />
+            
+            {/* Admin Route - Simple version without layout */}
+            <Route path="/admin/upload" element={<AdminUpload />} />
           </Routes>
         </main>
         <Footer />

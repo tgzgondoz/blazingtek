@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Lock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,6 +11,31 @@ const Navbar = () => {
   const [researchOpen, setResearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  // In production, this would come from authentication context
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // For development: Allow easy access to admin
+  useEffect(() => {
+    // Check if admin flag exists in localStorage (for demo purposes)
+    const adminFlag = localStorage.getItem('blazingtek-admin');
+    if (adminFlag === 'true') {
+      setIsAdmin(true);
+    }
+    
+    // Quick access: typing "admin" on any page sets admin mode
+    const handleKeyPress = (e) => {
+      if (e.key === 'a' && e.ctrlKey) {
+        const newAdminState = !isAdmin;
+        setIsAdmin(newAdminState);
+        localStorage.setItem('blazingtek-admin', newAdminState.toString());
+        alert(`Admin mode ${newAdminState ? 'enabled' : 'disabled'}`);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isAdmin]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +62,13 @@ const Navbar = () => {
       ]
     },
   ];
+
+  const toggleAdminMode = () => {
+    const newAdminState = !isAdmin;
+    setIsAdmin(newAdminState);
+    localStorage.setItem('blazingtek-admin', newAdminState.toString());
+    alert(`Admin mode ${newAdminState ? 'enabled' : 'disabled'}`);
+  };
 
   return (
     <nav 
@@ -133,6 +165,17 @@ const Navbar = () => {
               )
             ))}
             
+            {/* Admin Link (only visible to admins) */}
+            {isAdmin && (
+              <Link
+                to="/admin/upload"
+                className="px-3 py-2 text-sm text-amber-400 hover:text-amber-300 transition-colors duration-200 flex items-center gap-1"
+              >
+                <Lock className="h-3 w-3" />
+                Admin
+              </Link>
+            )}
+            
             {/* CTA Button */}
             <div className="flex items-center ml-2">
               <div className="h-5 w-px bg-white/10 mx-2" />
@@ -142,6 +185,15 @@ const Navbar = () => {
               >
                 Join Research
               </Link>
+              
+              {/* Admin Toggle Button (hidden by default, for development) */}
+              <button
+                onClick={toggleAdminMode}
+                className="ml-2 px-2 py-1 text-xs bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors rounded"
+                title={isAdmin ? "Disable admin mode" : "Enable admin mode (Ctrl+A)"}
+              >
+                {isAdmin ? "🔓" : "🔒"}
+              </button>
             </div>
           </div>
 
@@ -208,7 +260,19 @@ const Navbar = () => {
                     </div>
                   ))}
                   
-                  <div className="pt-3 border-t border-white/10 mt-2">
+                  {/* Admin Link in Mobile (only visible to admins) */}
+                  {isAdmin && (
+                    <Link
+                      to="/admin/upload"
+                      className="block px-2 py-2 text-sm text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Lock className="h-3 w-3" />
+                      Admin Portal
+                    </Link>
+                  )}
+                  
+                  <div className="pt-3 border-t border-white/10 mt-2 space-y-2">
                     <Link
                       to="/contact"
                       className="block w-full px-3 py-2 bg-white text-[#0A0F14] font-medium text-sm text-center hover:bg-gray-100 transition-colors"
@@ -216,6 +280,17 @@ const Navbar = () => {
                     >
                       Join Research Program
                     </Link>
+                    
+                    {/* Admin Toggle in Mobile */}
+                    <button
+                      onClick={() => {
+                        toggleAdminMode();
+                        setIsOpen(false);
+                      }}
+                      className="w-full px-3 py-2 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-sm font-medium transition-colors text-center"
+                    >
+                      {isAdmin ? "🔓 Disable Admin Mode" : "🔒 Enable Admin Mode"}
+                    </button>
                   </div>
                 </div>
               </div>

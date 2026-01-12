@@ -43,7 +43,7 @@ import "firebase/compat/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyDZCgcI4IpitZSAz116DtSaWp31vz3bGC4",
   authDomain: "blazingtek-c56e7.firebaseapp.com",
-  databaseURL: "https://blazingtek-c56e7-default-rtdb.firebaseio.com", // Make sure to add your correct URL
+  databaseURL: "https://blazingtek-c56e7-default-rtdb.firebaseio.com",
   projectId: "blazingtek-c56e7",
   storageBucket: "blazingtek-c56e7.firebasestorage.app",
   messagingSenderId: "176023582058",
@@ -61,10 +61,10 @@ const storage = firebase.storage();
 
 const AdminUpload = () => {
   // State for active page type
-  const [activePage, setActivePage] = useState('community'); // Default to 'community'
-  const [activeCommunityTab, setActiveCommunityTab] = useState('featured'); // 'featured', 'updates', 'events', 'columns'
+  const [activePage, setActivePage] = useState('community');
+  const [activeCommunityTab, setActiveCommunityTab] = useState('featured');
   
-  // Form states - simplified
+  // Form states
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -79,7 +79,7 @@ const AdminUpload = () => {
     authorRole: '',
     views: '',
     likes: '',
-    imageUrl: '',
+    imageUrl: '', // This will store the Firebase Storage URL
     content: '',
     // Event specific fields
     eventDate: '',
@@ -102,12 +102,12 @@ const AdminUpload = () => {
     columns: []
   });
   const [previewEvents, setPreviewEvents] = useState([]);
-  const [uploadedImages, setUploadedImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [imageUploadProgress, setImageUploadProgress] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Gradient colors for image placeholders - MUST match Community component
+  // Gradient colors for image placeholders
   const getGradientColor = (index = 0) => {
     const gradients = [
       'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -120,7 +120,7 @@ const AdminUpload = () => {
     return gradients[index % gradients.length];
   };
 
-  // Categories that match the Community component
+  // Categories
   const communityCategories = [
     { value: 'FEATURE STORIES', label: 'Feature Stories', icon: <Star className="h-4 w-4" /> },
     { value: 'COMMUNITY', label: 'Community', icon: <Users className="h-4 w-4" /> },
@@ -149,7 +149,7 @@ const AdminUpload = () => {
     { value: 'Forum', label: 'Forum' }
   ];
 
-  // Get category icon for Community component
+  // Get category icon
   const getCategoryIcon = (category) => {
     switch(category) {
       case 'FEATURE STORIES': return <Star className="h-4 w-4" />;
@@ -163,7 +163,7 @@ const AdminUpload = () => {
     }
   };
 
-  // Load existing data from Firebase Realtime Database
+  // Load existing data from Firebase
   useEffect(() => {
     try {
       // Load news
@@ -224,7 +224,6 @@ const AdminUpload = () => {
         }
       });
 
-      // Cleanup function to remove listeners
       return () => {
         newsRef.off();
         communityRef.off();
@@ -251,7 +250,7 @@ const AdminUpload = () => {
       authorRole: '',
       views: '',
       likes: '',
-      imageUrl: '',
+      imageUrl: '', // Reset image URL
       content: '',
       eventDate: '',
       eventLocation: '',
@@ -262,6 +261,7 @@ const AdminUpload = () => {
       columnType: 'opinion',
       tags: []
     });
+    setImageUploadProgress(0);
   }, [activePage, activeCommunityTab]);
 
   // Helper functions
@@ -282,54 +282,82 @@ const AdminUpload = () => {
     return `${Math.floor(Math.random() * 5) + 1} min read`;
   };
 
-  // Upload image to Firebase Storage and get URL
+  // CORRECTED: Upload image to Firebase Storage and get URL
   const uploadImageToFirebase = async (file) => {
     try {
       // Create a unique filename
       const timestamp = Date.now();
       const filename = `${timestamp}_${file.name}`;
-      const imageRef = storage.ref(`images/${filename}`);
       
-      // Upload the file
-      await imageRef.put(file);
+      // Create a reference to the file location
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child(`images/${filename}`);
       
-      // Get the download URL
-      const downloadURL = await imageRef.getDownloadURL();
-      return downloadURL;
+      // Upload the file with progress tracking
+      const uploadTask = imageRef.put(file);
+      
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            // Track upload progress
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setImageUploadProgress(progress);
+          },
+          (error) => {
+            console.error('Upload error:', error);
+            reject(error);
+          },
+          async () => {
+            // Upload complete, get download URL
+            try {
+              const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+              setImageUploadProgress(0); // Reset progress
+              resolve(downloadURL);
+            } catch (error) {
+              reject(error);
+            }
+          }
+        );
+      });
     } catch (error) {
       console.error('Error uploading image:', error);
       throw error;
     }
   };
 
-  // Handle image upload - UPDATED for Firebase Storage
+  // CORRECTED: Handle image upload for Firebase Storage
   const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setErrorMessage('Please upload an image file (JPEG, PNG, etc.)');
+      setTimeout(() => setErrorMessage(''), 3000);
+      return;
+    }
+
+    // Validate file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage('Image size should be less than 5MB');
+      setTimeout(() => setErrorMessage(''), 3000);
+      return;
+    }
 
     setIsUploading(true);
     
     try {
-      for (const file of files) {
-        // Upload to Firebase Storage
-        const imageUrl = await uploadImageToFirebase(file);
-        
-        const newImage = {
-          id: Date.now() + Math.random(),
-          name: file.name,
-          url: imageUrl,
-          size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-          type: file.type
-        };
-        
-        setUploadedImages(prev => [...prev, newImage]);
-        
-        // Auto-fill image URL for active form
-        if (files.length === 1) {
-          setFormData(prev => ({ ...prev, imageUrl }));
-        }
-      }
+      // Upload to Firebase Storage
+      const imageUrl = await uploadImageToFirebase(file);
+      
+      // Update form with the Firebase Storage URL
+      setFormData(prev => ({ ...prev, imageUrl }));
+      
+      setSuccessMessage('Image uploaded successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
+      console.error('Image upload failed:', error);
       setErrorMessage('Error uploading image. Please try again.');
       setTimeout(() => setErrorMessage(''), 3000);
     } finally {
@@ -342,7 +370,7 @@ const AdminUpload = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Format date for Community component
+  // Format date for display
   const formatDateForCommunity = (dateString) => {
     try {
       const date = new Date(dateString);
@@ -360,7 +388,7 @@ const AdminUpload = () => {
     }
   };
 
-  // Save community content to Firebase
+  // CORRECTED: Save community content with Firebase Storage URL
   const saveCommunityContent = async () => {
     if (!formData.title || !formData.description || !formData.author) {
       setErrorMessage('Please fill in all required fields');
@@ -371,7 +399,7 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      // Prepare data in the format Community component expects
+      // Prepare data with proper Firebase Storage URL
       const newCommunityItem = {
         title: formData.title,
         description: formData.description,
@@ -381,6 +409,7 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
+        // Use Firebase Storage URL if provided, otherwise use gradient
         imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
@@ -400,7 +429,7 @@ const AdminUpload = () => {
         updatedAt: new Date().toISOString()
       };
 
-      // Determine the Firebase path based on active tab
+      // Determine the Firebase path
       let firebasePath;
       if (activeCommunityTab === 'featured') {
         firebasePath = 'community/featured';
@@ -412,7 +441,7 @@ const AdminUpload = () => {
         firebasePath = 'community/columns';
       }
 
-      // Generate a new unique key and save to Firebase
+      // Save to Firebase
       const newItemRef = database.ref(firebasePath).push();
       await newItemRef.set(newCommunityItem);
 
@@ -434,7 +463,7 @@ const AdminUpload = () => {
         authorRole: '',
         views: '',
         likes: '',
-        imageUrl: '',
+        imageUrl: '', // Clear image URL
         content: '',
         eventDate: '',
         eventLocation: '',
@@ -455,7 +484,7 @@ const AdminUpload = () => {
     }
   };
 
-  // Save news content to Firebase
+  // CORRECTED: Save news content with Firebase Storage URL
   const saveNewsContent = async () => {
     if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
@@ -474,6 +503,7 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
+        // Use Firebase Storage URL if provided, otherwise use gradient
         imageUrl: formData.imageUrl || getGradientColor(previewNews.length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
@@ -504,7 +534,7 @@ const AdminUpload = () => {
         authorRole: '',
         views: '',
         likes: '',
-        imageUrl: '',
+        imageUrl: '', // Clear image URL
         content: '',
         eventDate: '',
         eventLocation: '',
@@ -525,7 +555,7 @@ const AdminUpload = () => {
     }
   };
 
-  // Save event content to Firebase
+  // CORRECTED: Save event content with Firebase Storage URL
   const saveEventContent = async () => {
     if (!formData.title || !formData.description || !formData.date) {
       setErrorMessage('Please fill in all required fields for the event');
@@ -546,6 +576,7 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
+        // Use Firebase Storage URL if provided, otherwise use gradient
         imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
         status: formData.status || 'Upcoming',
         createdAt: new Date().toISOString(),
@@ -573,7 +604,7 @@ const AdminUpload = () => {
         authorRole: '',
         views: '',
         likes: '',
-        imageUrl: '',
+        imageUrl: '', // Clear image URL
         content: '',
         eventDate: '',
         eventLocation: '',
@@ -609,7 +640,6 @@ const AdminUpload = () => {
 
   // Edit existing content
   const editContent = (content) => {
-    // Convert date back to input format if needed
     const editData = { ...content };
     
     // Try to parse the date if it's in the Community format
@@ -625,9 +655,11 @@ const AdminUpload = () => {
     setFormData({
       ...formData,
       ...editData,
-      id: content.id, // Keep the Firebase ID
+      id: content.id,
       summary: content.summary || content.description,
-      excerpt: content.excerpt || content.description
+      excerpt: content.excerpt || content.description,
+      // Keep the existing Firebase Storage URL
+      imageUrl: content.imageUrl || ''
     });
   };
 
@@ -707,7 +739,7 @@ const AdminUpload = () => {
     }
   };
 
-  // Get current content list based on active tab
+  // Get current content list
   const getCurrentContentList = () => {
     if (activePage === 'news') {
       return activeCommunityTab === 'events' ? previewEvents : previewNews;
@@ -737,6 +769,11 @@ const AdminUpload = () => {
       { value: 'partnerships', label: 'Partnerships', icon: <Users className="h-4 w-4" /> },
       { value: 'awards', label: 'Awards', icon: <Award className="h-4 w-4" /> }
     ];
+  };
+
+  // Handle direct URL input for image (alternative to upload)
+  const handleDirectImageUrl = (url) => {
+    setFormData(prev => ({ ...prev, imageUrl: url }));
   };
 
   return (
@@ -927,72 +964,126 @@ const AdminUpload = () => {
               </div>
 
               <div className="p-6">
-                {/* Image Upload */}
+                {/* Image Section - CORRECTED */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     <div className="flex items-center gap-2">
                       <Image className="h-4 w-4" />
-                      Upload Image (Optional)
+                      Image URL or Upload (Optional)
                     </div>
                   </label>
                   
+                  {/* Option 1: Direct URL Input */}
+                  <div className="mb-4">
+                    <input
+                      type="url"
+                      value={formData.imageUrl}
+                      onChange={(e) => handleDirectImageUrl(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent mb-2"
+                      placeholder="Enter image URL (e.g., https://firebasestorage.googleapis.com/...) or upload below"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Enter a direct image URL or upload to Firebase Storage
+                    </p>
+                  </div>
+
+                  {/* Option 2: Upload to Firebase Storage */}
                   <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#0A0F14] transition-colors">
                     <div className="max-w-xs mx-auto">
                       <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-sm text-gray-600 mb-2">
-                        Drag & drop or click to upload
+                        Upload to Firebase Storage
                       </p>
                       <p className="text-xs text-gray-500 mb-4">
-                        Leave empty for automatic gradient background
+                        Supports JPG, PNG, GIF (max 5MB)
                       </p>
+                      
+                      {/* Upload Progress */}
+                      {isUploading && imageUploadProgress > 0 && (
+                        <div className="mb-4">
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-[#0A0F14] h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${imageUploadProgress}%` }}
+                            ></div>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1">
+                            Uploading: {imageUploadProgress.toFixed(1)}%
+                          </p>
+                        </div>
+                      )}
+                      
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
                         className="hidden"
                         id="image-upload"
+                        disabled={isUploading}
                       />
                       <label
                         htmlFor="image-upload"
-                        className="inline-block bg-[#0A0F14] text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-[#0A0F14]/90 transition-colors"
+                        className={`inline-block ${
+                          isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0A0F14] hover:bg-[#0A0F14]/90'
+                        } text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors`}
                       >
-                        Choose Image
+                        {isUploading ? 'Uploading...' : 'Upload Image'}
                       </label>
                     </div>
                   </div>
 
-                  {/* Uploaded Images */}
-                  {uploadedImages.length > 0 && (
+                  {/* Image Preview */}
+                  {formData.imageUrl && (
                     <div className="mt-4">
-                      <div className="text-sm font-medium text-gray-700 mb-2">Uploaded Images:</div>
-                      <div className="grid grid-cols-3 gap-3">
-                        {uploadedImages.map(img => (
-                          <div key={img.id} className="relative group">
-                            <img 
-                              src={img.url} 
-                              alt={img.name}
-                              className="w-full h-24 object-cover rounded-lg"
-                            />
-                            <button
-                              onClick={() => handleFormChange('imageUrl', img.url)}
-                              className={`absolute inset-0 bg-black/60 transition-opacity rounded-lg flex items-center justify-center ${
-                                formData.imageUrl === img.url ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                              }`}
-                            >
-                              {formData.imageUrl === img.url ? (
-                                <Check className="h-5 w-5 text-white" />
-                              ) : (
-                                <EyeIcon className="h-5 w-5 text-white" />
-                              )}
-                            </button>
+                      <div className="text-sm font-medium text-gray-700 mb-2">Current Image:</div>
+                      <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
+                        <img 
+                          src={formData.imageUrl}
+                          alt="Preview" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = `
+                              <div class="w-full h-48 flex items-center justify-center bg-red-50">
+                                <div class="text-red-500 text-sm text-center">
+                                  <p>Failed to load image</p>
+                                  <p class="text-xs mt-1">Check URL or upload again</p>
+                                </div>
+                              </div>
+                            `;
+                          }}
+                        />
+                        <button
+                          onClick={() => handleDirectImageUrl('')}
+                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                          title="Remove image"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* No Image Option */}
+                  {!formData.imageUrl && (
+                    <div className="mt-4">
+                      <div className="text-sm font-medium text-gray-700 mb-2">No image selected:</div>
+                      <div className="w-full h-48 rounded-lg overflow-hidden">
+                        <div 
+                          className="w-full h-full flex items-center justify-center"
+                          style={{ background: getGradientColor(0) }}
+                        >
+                          <div className="text-white/80 text-sm text-center">
+                            <p>Automatic gradient background</p>
+                            <p className="text-xs mt-1">Will be used if no image is provided</p>
                           </div>
-                        ))}
+                        </div>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Dynamic Form based on active page and tab */}
+                {/* Rest of the form remains the same */}
                 <div className="space-y-6">
                   {/* Title Field */}
                   <div>
@@ -1303,10 +1394,10 @@ const AdminUpload = () => {
                   <div className="flex items-start gap-3">
                     <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-blue-800">Real-time Firebase Integration</p>
+                      <p className="text-sm font-medium text-blue-800">Firebase Storage Integration</p>
                       <p className="text-xs text-blue-600 mt-1">
-                        Content is saved to Firebase Realtime Database and will appear instantly on your live website.
-                        {activePage === 'community' && ' The Community page automatically updates when new content is added.'}
+                        Images are uploaded to Firebase Storage and served via secure URLs.
+                        You can also use external image URLs or leave empty for gradient backgrounds.
                       </p>
                     </div>
                   </div>
@@ -1342,7 +1433,7 @@ const AdminUpload = () => {
                   </div>
                 </div>
 
-                {/* Image Preview or Gradient */}
+                {/* Image Preview */}
                 <div className="mb-4 rounded-lg overflow-hidden">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">

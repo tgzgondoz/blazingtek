@@ -60,69 +60,67 @@ const News = () => {
     return () => clearInterval(interval);
   }, [slideshowImages.length]);
   
-  // Load news content from localStorage
+  // Load news content from Firebase Realtime Database
   useEffect(() => {
-    const loadNewsContent = () => {
-      // Load news articles from AdminUpload
-      const savedNews = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
-      
-      // Load events from AdminUpload
-      const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
-      
-      // Determine featured article (first article is featured, or find one with featured flag)
-      let featured = savedNews.length > 0 ? savedNews[0] : null;
-      const articles = savedNews.length > 0 ? savedNews : [];
-      
-      // Transform events data from AdminUpload format to News page format
-      const events = savedEvents.length > 0 
-        ? savedEvents.map(event => ({
-            id: event.id,
-            title: event.title,
-            date: event.date,
-            time: event.time,
-            location: event.location,
-            type: event.type,
-            speaker: event.speaker,
-            registrationLink: event.registrationLink,
-            status: event.status,
-            imageUrl: event.imageUrl,
-            description: event.description
-          }))
-        : [];
-      
-      setNewsContent({
-        articles,
-        featuredArticle: featured,
-        upcomingEvents: events,
-        isLoading: false
-      });
-      
-      // Load saved articles from localStorage
-      const saved = JSON.parse(localStorage.getItem('blazingtek-saved-articles')) || [];
-      setSavedArticles(saved);
+    const loadNewsContent = async () => {
+      try {
+        // Your Firebase database URL (replace with your actual URL)
+        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
+        
+        // Fetch news articles from Firebase
+        const newsResponse = await fetch(`${databaseURL}/news.json`);
+        const newsData = await newsResponse.json();
+        
+        // Fetch events from Firebase
+        const eventsResponse = await fetch(`${databaseURL}/events.json`);
+        const eventsData = await eventsResponse.json();
+        
+        console.log('Loaded from Firebase:', { newsData, eventsData });
+        
+        // Process news data from Firebase
+        const articles = newsData ? Object.keys(newsData).map(key => ({
+          id: key,
+          ...newsData[key]
+        })) : [];
+        
+        // Determine featured article (first article is featured, or find one with featured flag)
+        let featured = articles.length > 0 ? articles[0] : null;
+        
+        // Process events data from Firebase
+        const events = eventsData ? Object.keys(eventsData).map(key => ({
+          id: key,
+          ...eventsData[key]
+        })) : [];
+        
+        setNewsContent({
+          articles,
+          featuredArticle: featured,
+          upcomingEvents: events,
+          isLoading: false
+        });
+        
+        // Load saved articles from localStorage (this can stay in localStorage since it's user-specific)
+        const saved = JSON.parse(localStorage.getItem('blazingtek-saved-articles')) || [];
+        setSavedArticles(saved);
+        
+      } catch (error) {
+        console.error('Error loading news content from Firebase:', error);
+        setNewsContent({
+          articles: [],
+          featuredArticle: null,
+          upcomingEvents: [],
+          isLoading: false
+        });
+      }
     };
 
     loadNewsContent();
     
-    // Listen for content updates
-    const handleStorageChange = (e) => {
-      if (e.key === 'blazingtek-news' || e.key === 'blazingtek-events') {
-        loadNewsContent();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for changes within the same tab
-    const handleCustomStorage = () => {
-      loadNewsContent();
-    };
-    
-    window.addEventListener('blazingtek-content-updated', handleCustomStorage);
+    // Poll for updates every 30 seconds
+    const intervalId = setInterval(loadNewsContent, 30000);
     
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('blazingtek-content-updated', handleCustomStorage);
+      clearInterval(intervalId);
     };
   }, []);
   
@@ -173,22 +171,34 @@ const News = () => {
     localStorage.setItem('blazingtek-saved-articles', JSON.stringify(newSavedArticles));
   };
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     if (newsletterEmail) {
-      // Save to localStorage (in production, send to backend)
-      const subscriptions = JSON.parse(localStorage.getItem('blazingtek-newsletter-subscriptions')) || [];
-      subscriptions.push({
-        email: newsletterEmail,
-        date: new Date().toISOString(),
-        source: 'news-page'
-      });
-      localStorage.setItem('blazingtek-newsletter-subscriptions', JSON.stringify(subscriptions));
-      
-      // Show success message
-      setSuccessMessage('Thank you for subscribing to our newsletter!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-      setNewsletterEmail('');
+      try {
+        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
+        
+        // Save to Firebase using POST request
+        await fetch(`${databaseURL}/newsletter-subscriptions.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: newsletterEmail,
+            date: new Date().toISOString(),
+            source: 'news-page'
+          })
+        });
+        
+        // Show success message
+        setSuccessMessage('Thank you for subscribing to our newsletter!');
+        setTimeout(() => setSuccessMessage(''), 3000);
+        setNewsletterEmail('');
+      } catch (error) {
+        console.error('Error saving subscription:', error);
+        setSuccessMessage('Error subscribing. Please try again.');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
     }
   };
 
@@ -210,7 +220,17 @@ const News = () => {
   const formatDate = (dateString) => {
     if (!dateString) return 'Date TBD';
     try {
+      // If date is already formatted (contains comma), return as is
+      if (dateString.includes(',')) {
+        return dateString;
+      }
+      
+      // Try to parse ISO string or other formats
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString;
+      }
+      
       return date.toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
@@ -235,6 +255,19 @@ const News = () => {
     }
   };
 
+  // Get gradient color for placeholder images
+  const getGradientColor = (index = 0) => {
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    ];
+    return gradients[index % gradients.length];
+  };
+
   // Show loading screen if still loading
   if (newsContent.isLoading) {
     return (
@@ -242,7 +275,7 @@ const News = () => {
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white/20 border-t-white mb-6"></div>
           <h1 className="text-3xl font-bold text-white mb-4">Loading News Content...</h1>
-          <p className="text-gray-400">Fetching the latest updates from AdminUpload</p>
+          <p className="text-gray-400">Fetching the latest updates from Firebase</p>
         </div>
       </div>
     );
@@ -376,10 +409,24 @@ const News = () => {
                         src={newsContent.featuredArticle.imageUrl} 
                         alt={newsContent.featuredArticle.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `
+                            <div class="w-full h-full flex items-center justify-center" style="background: ${getGradientColor(0)}">
+                              <div class="text-white/80 text-sm text-center">
+                                <Newspaper class="h-12 w-12 mx-auto mb-2" />
+                                <p>Featured Story</p>
+                              </div>
+                            </div>
+                          `;
+                        }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 flex items-center justify-center">
-                        <Newspaper className="h-12 w-12 text-white/40" />
+                      <div className="w-full h-full flex items-center justify-center" style={{ background: getGradientColor(0) }}>
+                        <div className="text-white/80 text-sm text-center">
+                          <Newspaper className="h-12 w-12 mx-auto mb-2" />
+                          <p>Featured Story</p>
+                        </div>
                       </div>
                     )}
                     <div className="absolute top-3 left-3 bg-white/10 px-2 py-1 rounded text-white text-sm font-medium">
@@ -500,13 +547,31 @@ const News = () => {
                         className="group"
                       >
                         <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
-                          {article.imageUrl && (
+                          {article.imageUrl ? (
                             <div className="h-48 w-full overflow-hidden rounded-t-xl">
                               <img 
                                 src={article.imageUrl} 
                                 alt={article.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.parentElement.innerHTML = `
+                                    <div class="w-full h-full flex items-center justify-center" style="background: ${getGradientColor(index)}">
+                                      <div class="text-white/80 text-sm text-center">
+                                        <FileText class="h-12 w-12 mx-auto mb-2" />
+                                        <p>${article.category || 'Article'}</p>
+                                      </div>
+                                    </div>
+                                  `;
+                                }}
                               />
+                            </div>
+                          ) : (
+                            <div className="h-48 w-full overflow-hidden rounded-t-xl flex items-center justify-center" style={{ background: getGradientColor(index) }}>
+                              <div className="text-white/80 text-sm text-center">
+                                <FileText className="h-12 w-12 mx-auto mb-2" />
+                                <p>{article.category || 'Article'}</p>
+                              </div>
                             </div>
                           )}
                           <div className="p-6">

@@ -209,10 +209,17 @@ const Community = () => {
     <div className="relative border-b border-gray-800 pb-8 mb-12">
       <div className="flex items-start justify-between mb-6">
         <div>
+          <br/>
+          <br/>
+          <br/>
+
           <div className="text-xs uppercase tracking-widest text-gray-600 mb-2">Issue No. 48</div>
           <div className="text-sm text-gray-500">December 2024 Edition</div>
         </div>
         <div className="text-right">
+          <br/>
+          <br/>
+          <br/>
           <div className="text-xs uppercase tracking-widest text-white mb-1">The Innovation Chronicle</div>
           <div className="text-sm text-gray-500">African Tech Magazine</div>
         </div>

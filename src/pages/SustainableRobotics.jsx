@@ -1,31 +1,26 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Leaf, Zap, Cpu, BarChart3, Target, Globe, ArrowRight } from 'lucide-react';
 
 const SustainableRobotics = () => {
   const projects = [
     {
       title: 'Solar-Powered Agricultural Bots',
       description: 'Autonomous robots for precision farming powered entirely by solar energy',
-      icon: Leaf,
       status: 'In Development'
     },
     {
       title: 'Ocean Cleanup Drones',
       description: 'AI-guided drones for collecting marine plastic waste',
-      icon: Globe,
       status: 'Field Testing'
     },
     {
       title: 'Energy-Efficient Actuators',
       description: 'Next-generation servo systems with 40% less power consumption',
-      icon: Zap,
       status: 'Research Phase'
     },
     {
       title: 'Biodegradable Components',
       description: 'Developing robot parts from sustainable, biodegradable materials',
-      icon: Leaf,
       status: 'Prototype Stage'
     }
   ];
@@ -50,7 +45,7 @@ const SustainableRobotics = () => {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-6">
-            <Leaf className="h-8 w-8 text-gray-300" />
+            <div className="text-2xl font-bold text-gray-300">S</div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Sustainable Robotics
@@ -74,17 +69,17 @@ const SustainableRobotics = () => {
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
-                <Target className="h-6 w-6 text-gray-300 mb-3" />
+                <div className="text-lg font-semibold text-gray-300 mb-3">Target</div>
                 <h3 className="text-lg font-semibold text-white mb-2">Reduced Carbon Footprint</h3>
                 <p className="text-gray-400 text-sm">Developing robots that consume 60% less energy than conventional models</p>
               </div>
               <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
-                <Cpu className="h-6 w-6 text-gray-300 mb-3" />
+                <div className="text-lg font-semibold text-gray-300 mb-3">CPU</div>
                 <h3 className="text-lg font-semibold text-white mb-2">Smart Energy Management</h3>
                 <p className="text-gray-400 text-sm">AI-powered systems for optimal energy distribution and consumption</p>
               </div>
               <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
-                <BarChart3 className="h-6 w-6 text-gray-300 mb-3" />
+                <div className="text-lg font-semibold text-gray-300 mb-3">Analytics</div>
                 <h3 className="text-lg font-semibold text-white mb-2">Lifecycle Optimization</h3>
                 <p className="text-gray-400 text-sm">Designing for easy repair, upgrade, and end-of-life recycling</p>
               </div>
@@ -107,7 +102,9 @@ const SustainableRobotics = () => {
                 className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <project.icon className="h-8 w-8 text-gray-300" />
+                  <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                    <div className="text-gray-300">P</div>
+                  </div>
                   <span className="px-3 py-1 bg-white/10 text-gray-300 text-xs font-medium rounded-full border border-white/10">
                     {project.status}
                   </span>
@@ -154,7 +151,7 @@ const SustainableRobotics = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#0A0F14] font-medium rounded-lg hover:bg-gray-100 transition-colors">
                 <span>Apply for Research Position</span>
-                <ArrowRight className="h-4 w-4" />
+                <span>→</span>
               </button>
               <button className="px-6 py-3 bg-white/5 text-white font-medium rounded-lg hover:bg-white/10 transition-colors border border-white/10">
                 Request Partnership Info

@@ -5,7 +5,7 @@ const Abouts = () => {
     <div className="min-h-screen bg-[#0A0F14]">
       {/* Combined Hero & About Section */}
       <section className="relative text-white py-24 overflow-hidden">
-        {/* Subtle background pattern */}
+        {/* Subtle background pattern - matches Home */}
         <div className="absolute inset-0 opacity-5">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -31,23 +31,20 @@ const Abouts = () => {
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
+          {/* Header - Matched to Home's scale */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight">
               <span className="text-white">
                 About
               </span>
-              <br />
-              <span className="text-white">
-                BlazingTek
-              </span>
             </h1>
             
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            {/* Changed from text-xl to text-lg */}
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               Pioneering African innovation through cutting-edge technology
             </p>
           </motion.div>
@@ -61,7 +58,8 @@ const Abouts = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-2xl font-bold text-white mb-6">Our Mission</h2>
-              <p className="text-gray-300 leading-relaxed">
+              {/* Changed from leading-relaxed to default for consistency */}
+              <p className="text-gray-300">
                 BlazingTek is at the forefront of technological innovation in Africa, specializing in 
                 advanced robotics solutions, AI integration, and custom technological systems. Based in 
                 Harare, Zimbabwe, we empower educational institutions, research facilities, and industries 
@@ -76,7 +74,7 @@ const Abouts = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-2xl font-bold text-white mb-6">Our Vision</h2>
-              <p className="text-gray-300 leading-relaxed">
+              <p className="text-gray-300">
                 To bridge the technology gap while fostering local expertise and driving sustainable 
                 technological advancement across the African continent. We aim to become the leading 
                 technology partner for innovation and development in emerging markets.
@@ -92,16 +90,18 @@ const Abouts = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              {/* Option 1: Match Home's h1 scale */}
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Get In <span className="text-white">Touch</span>
               </h2>
               
-              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              {/* Changed from text-xl to text-lg */}
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
                 We're here to help you with innovative technology solutions
               </p>
             </motion.div>
 
-            {/* Contact Cards */}
+            {/* Contact Cards - text sizes already match (text-lg) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
               {/* Phone */}
               <motion.a
@@ -128,7 +128,7 @@ const Abouts = () => {
                 </div>
               </motion.a>
 
-              {/* Email */}
+              {/* Email - same structure */}
               <motion.a
                 href="mailto:info@blazingtek.co"
                 className="group relative"
@@ -153,7 +153,7 @@ const Abouts = () => {
                 </div>
               </motion.a>
 
-              {/* Location */}
+              {/* Location - same structure */}
               <motion.div
                 className="group relative"
                 whileHover={{ y: -8 }}

@@ -530,13 +530,7 @@ const News = () => {
                   <p className="text-gray-400">
                     No news articles have been added yet.
                   </p>
-                  <Link 
-                    to="/admin/upload"
-                    className="inline-flex items-center gap-2 mt-4 text-amber-400 hover:text-amber-300"
-                  >
-                    <span>Add articles in Admin Panel</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
+                
                 </div>
               ) : (
                 <>
@@ -678,13 +672,7 @@ const News = () => {
                       <div className="text-center py-4">
                         <Calendar className="h-8 w-8 text-white/20 mx-auto mb-2" />
                         <p className="text-gray-400 text-sm">No upcoming events scheduled</p>
-                        <Link 
-                          to="/admin/upload"
-                          className="inline-flex items-center gap-1 mt-2 text-xs text-amber-400 hover:text-amber-300"
-                        >
-                          <span>Add events in Admin Panel</span>
-                          <ArrowRight className="h-3 w-3" />
-                        </Link>
+                       
                       </div>
                     ) : (
                       newsContent.upcomingEvents.map((event, index) => (
@@ -816,12 +804,7 @@ const News = () => {
                   <div className="text-xs text-gray-500">
                     Last updated: {new Date().toLocaleDateString()}
                   </div>
-                  <Link 
-                    to="/admin/upload"
-                    className="inline-block mt-2 text-xs text-amber-400 hover:text-amber-300"
-                  >
-                    Manage content in Admin Panel
-                  </Link>
+          
                 </div>
               </div>
             </div>

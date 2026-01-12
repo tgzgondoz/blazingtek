@@ -857,13 +857,7 @@ const Community = () => {
           <p className="text-gray-500 mb-6">
             There's no community content to display. Please add content through the Admin Panel.
           </p>
-          <Link 
-            to="/admin/upload" 
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 rounded-lg font-medium transition-colors border border-gray-800"
-          >
-            <span>Go to Admin Panel</span>
-            <ExternalLink className="h-4 w-4" />
-          </Link>
+         
         </div>
       </div>
     );

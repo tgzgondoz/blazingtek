@@ -302,26 +302,41 @@ const AdminUpload = () => {
     }
   };
 
-  // Convert Google Drive URL to direct image URL
+  // CORRECTED: Convert Google Drive URL to direct image URL
   const convertGoogleDriveUrl = (url) => {
     if (!url) return url;
     
-    // If it's already a direct image URL, return as is
-    if (url.includes('https://drive.google.com/file/d/')) {
-      // Convert Google Drive file URL to direct image URL
+    console.log('Original URL:', url);
+    
+    // Handle various Google Drive URL formats
+    
+    // Format 1: https://drive.google.com/file/d/FILE_ID/view
+    if (url.includes('drive.google.com/file/d/')) {
       const fileIdMatch = url.match(/\/d\/([^/]+)/);
-      if (fileIdMatch) {
+      if (fileIdMatch && fileIdMatch[1]) {
         const fileId = fileIdMatch[1];
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+        const convertedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+        console.log('Converted URL (format 1):', convertedUrl);
+        return convertedUrl;
       }
     }
     
-    // If it's a Google Drive view URL
-    if (url.includes('https://drive.google.com/uc?id=')) {
+    // Format 2: https://drive.google.com/uc?id=FILE_ID
+    if (url.includes('drive.google.com/uc?id=')) {
+      console.log('Already direct URL:', url);
       return url;
     }
     
-    // Return original URL for other image hosts
+    // Format 3: https://drive.google.com/open?id=FILE_ID
+    if (url.includes('drive.google.com/open?id=')) {
+      const fileId = url.split('id=')[1];
+      const convertedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      console.log('Converted URL (format 3):', convertedUrl);
+      return convertedUrl;
+    }
+    
+    // For non-Google Drive URLs or direct image URLs, return as is
+    console.log('Returning original URL (not Google Drive):', url);
     return url;
   };
 
@@ -336,6 +351,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
+      // Convert Google Drive URL if needed
+      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
+
       // Prepare data with external image URL
       const newCommunityItem = {
         title: formData.title,
@@ -346,8 +364,8 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use external URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(getCurrentContentList().length),
+        // Use converted URL if provided, otherwise use gradient
+        imageUrl: imageUrl || getGradientColor(getCurrentContentList().length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         // Event specific
@@ -432,6 +450,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
+      // Convert Google Drive URL if needed
+      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
+
       const newNews = {
         title: formData.title,
         excerpt: formData.excerpt,
@@ -440,8 +461,8 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use external URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(previewNews.length),
+        // Use converted URL if provided, otherwise use gradient
+        imageUrl: imageUrl || getGradientColor(previewNews.length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         views: formData.views || Math.floor(Math.random() * 5000) + 1000,
@@ -503,6 +524,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
+      // Convert Google Drive URL if needed
+      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
+
       const newEvent = {
         title: formData.title,
         description: formData.description,
@@ -513,8 +537,8 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
-        // Use external URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(previewEvents.length),
+        // Use converted URL if provided, otherwise use gradient
+        imageUrl: imageUrl || getGradientColor(previewEvents.length),
         status: formData.status || 'Upcoming',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -711,6 +735,18 @@ const AdminUpload = () => {
   // Handle direct URL input for image
   const handleDirectImageUrl = (url) => {
     setFormData(prev => ({ ...prev, imageUrl: url }));
+  };
+
+  // Function to test Google Drive URL
+  const testGoogleDriveUrl = () => {
+    const testUrl = "https://drive.google.com/file/d/1o2LasBRns5Y592zmEyWnB49hdck6nHkl/view?usp=drive_link";
+    const converted = convertGoogleDriveUrl(testUrl);
+    console.log('Test conversion:', testUrl, '→', converted);
+    
+    // Also test with the current URL
+    if (formData.imageUrl) {
+      console.log('Current URL conversion:', formData.imageUrl, '→', convertGoogleDriveUrl(formData.imageUrl));
+    }
   };
 
   return (
@@ -918,55 +954,80 @@ const AdminUpload = () => {
                         value={formData.imageUrl}
                         onChange={(e) => handleDirectImageUrl(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Enter image URL from Google Drive or other image hosting service"
+                        placeholder="Paste Google Drive URL or direct image URL"
                       />
                       <p className="text-xs text-gray-500 mt-2">
-                        Supports: Google Drive (will be converted), direct image URLs (JPG, PNG, GIF), video URLs (MP4, WebM)
+                        Supports: Google Drive URLs, direct image URLs (JPG, PNG, GIF), video URLs
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
                         Leave empty for automatic gradient background
                       </p>
                     </div>
 
-                    {/* Google Drive URL Example */}
+                    {/* Google Drive URL Helper */}
                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-xs font-medium text-blue-800 mb-1">Google Drive URL Example:</p>
-                      <p className="text-xs text-blue-600 font-mono">
+                      <p className="text-xs font-medium text-blue-800 mb-1">Google Drive URL Format:</p>
+                      <p className="text-xs text-blue-600 font-mono break-all">
                         https://drive.google.com/file/d/YOUR_FILE_ID/view
                       </p>
+                      <p className="text-xs text-blue-600 mt-2">
+                        Example: https://drive.google.com/file/d/1o2LasBRns5Y592zmEyWnB49hdck6nHkl/view
+                      </p>
                     </div>
+
+                    {/* Test button for debugging */}
+                    <button
+                      onClick={testGoogleDriveUrl}
+                      className="text-xs text-gray-500 underline hover:text-gray-700"
+                    >
+                      Test Google Drive URL conversion
+                    </button>
 
                     {/* Image Preview */}
                     {formData.imageUrl && (
                       <div className="mt-4">
                         <div className="text-sm font-medium text-gray-700 mb-2">Preview:</div>
                         <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
-                          {/* Check if it's a video URL */}
-                          {formData.imageUrl.match(/\.(mp4|webm|avi|mov)$/i) ? (
-                            <video
-                              src={formData.imageUrl}
-                              className="w-full h-full object-cover"
-                              controls
-                              muted
-                            />
-                          ) : (
-                            <img 
-                              src={convertGoogleDriveUrl(formData.imageUrl)}
-                              alt="Preview" 
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentElement.innerHTML = `
-                                  <div class="w-full h-48 flex items-center justify-center bg-red-50">
-                                    <div class="text-red-500 text-sm text-center">
-                                      <p>Failed to load image/video</p>
-                                      <p class="text-xs mt-1">Check URL format or try a direct image link</p>
-                                    </div>
-                                  </div>
-                                `;
-                              }}
-                            />
-                          )}
+                          {/* Get the converted URL for preview */}
+                          {(() => {
+                            const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
+                            console.log('Preview URL:', formData.imageUrl, '→', convertedUrl);
+                            
+                            // Check if it's a video URL
+                            if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
+                              return (
+                                <video
+                                  src={convertedUrl}
+                                  className="w-full h-full object-cover"
+                                  controls
+                                  muted
+                                />
+                              );
+                            } else {
+                              return (
+                                <img 
+                                  src={convertedUrl}
+                                  alt="Preview" 
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    console.error('Image failed to load:', convertedUrl);
+                                    e.target.style.display = 'none';
+                                    e.target.parentElement.innerHTML = `
+                                      <div class="w-full h-48 flex flex-col items-center justify-center bg-red-50">
+                                        <div class="text-red-500 text-sm text-center">
+                                          <p>Failed to load image/video</p>
+                                          <p class="text-xs mt-1">URL: ${formData.imageUrl.substring(0, 50)}...</p>
+                                          <p class="text-xs mt-1">Converted to: ${convertedUrl.substring(0, 50)}...</p>
+                                          <p class="text-xs mt-1">Make sure file is publicly accessible</p>
+                                        </div>
+                                      </div>
+                                    `;
+                                  }}
+                                  onLoad={() => console.log('Image loaded successfully:', convertedUrl)}
+                                />
+                              );
+                            }
+                          })()}
                           <button
                             onClick={() => handleDirectImageUrl('')}
                             className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
@@ -1309,11 +1370,10 @@ const AdminUpload = () => {
                   <div className="flex items-start gap-3">
                     <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-blue-800">External Image URLs</p>
+                      <p className="text-sm font-medium text-blue-800">Google Drive Images</p>
                       <p className="text-xs text-blue-600 mt-1">
-                        Paste image URLs from Google Drive or other image hosting services.
-                        Google Drive URLs are automatically converted for proper display.
-                        Leave empty for automatic gradient backgrounds.
+                        Paste your Google Drive URL. Make sure the file is set to "Anyone with the link can view" in Google Drive sharing settings.
+                        The URL will be automatically converted for proper display.
                       </p>
                     </div>
                   </div>
@@ -1353,31 +1413,40 @@ const AdminUpload = () => {
                 <div className="mb-4 rounded-lg overflow-hidden">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">
-                      {formData.imageUrl.match(/\.(mp4|webm|avi|mov)$/i) ? (
-                        <video
-                          src={formData.imageUrl}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          controls
-                          muted
-                        />
-                      ) : (
-                        <img 
-                          src={convertGoogleDriveUrl(formData.imageUrl)}
-                          alt="Preview" 
-                          className="absolute inset-0 w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentElement.innerHTML = `
-                              <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
-                                <div class="text-white/80 text-sm text-center">
-                                  <p>Image failed to load</p>
-                                  <p class="text-xs mt-1">Using gradient instead</p>
-                                </div>
-                              </div>
-                            `;
-                          }}
-                        />
-                      )}
+                      {(() => {
+                        const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
+                        
+                        // Check if it's a video URL
+                        if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
+                          return (
+                            <video
+                              src={convertedUrl}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              controls
+                              muted
+                            />
+                          );
+                        } else {
+                          return (
+                            <img 
+                              src={convertedUrl}
+                              alt="Preview" 
+                              className="absolute inset-0 w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = `
+                                  <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
+                                    <div class="text-white/80 text-sm text-center">
+                                      <p>Image failed to load</p>
+                                      <p class="text-xs mt-1">Using gradient instead</p>
+                                    </div>
+                                  </div>
+                                `;
+                              }}
+                            />
+                          );
+                        }
+                      })()}
                     </div>
                   ) : (
                     <div 

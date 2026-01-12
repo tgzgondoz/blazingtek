@@ -1,18 +1,5 @@
-import { 
-  Microscope,
-  BookOpen,
-  Calendar,
-  Award,
-  ExternalLink,
-  Sparkles,
-  Target,
-  Users,
-  FileText,
-  ArrowRight,
-  GitBranch
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Research = () => {
   const projects = [
@@ -57,11 +44,6 @@ const Research = () => {
         >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-black/50 border border-gray-800 backdrop-blur-sm">
-                <Microscope className="h-4 w-4 text-gray-300" />
-                <span className="text-sm font-medium text-gray-300">Research & Innovation</span>
-              </div>
-              
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
                 <span className="bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
                   Pushing
@@ -103,7 +85,6 @@ const Research = () => {
                     className="group bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-black/70 flex items-center gap-3"
                   >
                     <span>Partner on Research</span>
-                    <ExternalLink className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
                 
@@ -113,10 +94,9 @@ const Research = () => {
                 >
                   <Link 
                     to="#projects" 
-                    className="group bg-transparent border-2 border-gray-800 hover:border-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-gray-900/20 flex items-center gap-3"
+                    className="group bg-transparent border-2 border-gray-800 hover:border-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-gray-900/20"
                   >
-                    <Target className="h-5 w-5" />
-                    <span>View Projects</span>
+                    View Projects
                   </Link>
                 </motion.div>
               </div>
@@ -129,11 +109,6 @@ const Research = () => {
               className="relative"
             >
               <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800 shadow-2xl">
-                <div className="flex items-center gap-2 mb-6">
-                  <Sparkles className="h-5 w-5 text-gray-400" />
-                  <span className="text-gray-300 font-semibold">Research Spotlight</span>
-                </div>
-                
                 <h3 className="text-2xl font-bold mb-4 text-white">Breakthrough Achievement</h3>
                 
                 <p className="text-gray-300 leading-relaxed mb-6">
@@ -142,12 +117,10 @@ const Research = () => {
                 </p>
                 
                 <div className="flex items-center justify-between text-sm text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
+                  <div>
                     <span>Latest breakthrough: March 2024</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Award className="h-4 w-4 text-gray-400" />
+                  <div>
                     <span>Industry Award Winner</span>
                   </div>
                 </div>
@@ -166,14 +139,6 @@ const Research = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-3 mb-6">
-              <div className="w-12 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent" />
-              <Target className="h-6 w-6 text-gray-400" />
-              <span className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Featured Projects</span>
-              <Target className="h-6 w-6 text-gray-400" />
-              <div className="w-12 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent" />
-            </div>
-            
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Active <span className="bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 bg-clip-text text-transparent">Research Projects</span>
             </h2>
@@ -240,10 +205,7 @@ const Research = () => {
                   
                   {/* Technologies */}
                   <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-3">
-                      <GitBranch className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm font-semibold text-gray-400">Technologies</span>
-                    </div>
+                    <div className="text-sm font-semibold text-gray-400 mb-3">Technologies</div>
                     
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech, idx) => (
@@ -260,34 +222,22 @@ const Research = () => {
                   {/* Details Grid */}
                   <div className="grid grid-cols-2 gap-6 border-t border-gray-800 pt-6">
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-500">Timeline</span>
-                      </div>
+                      <div className="text-sm text-gray-500 mb-2">Timeline</div>
                       <div className="text-gray-300 font-medium">{project.timeline}</div>
                     </div>
                     
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Users className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-500">Team</span>
-                      </div>
+                      <div className="text-sm text-gray-500 mb-2">Team</div>
                       <div className="text-gray-300 font-medium">{project.team} researchers</div>
                     </div>
                     
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileText className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-500">Publications</span>
-                      </div>
+                      <div className="text-sm text-gray-500 mb-2">Publications</div>
                       <div className="text-gray-300 font-medium">{project.publications} papers</div>
                     </div>
                     
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Award className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-500">Lead</span>
-                      </div>
+                      <div className="text-sm text-gray-500 mb-2">Lead</div>
                       <div className="text-gray-300 font-medium">{project.lead}</div>
                     </div>
                   </div>
@@ -299,7 +249,6 @@ const Research = () => {
                       className="group/link inline-flex items-center text-gray-400 hover:text-white font-semibold text-sm"
                     >
                       <span>View Project Details</span>
-                      <ArrowRight className="h-4 w-4 ml-2 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
@@ -319,7 +268,6 @@ const Research = () => {
               className="group inline-flex items-center gap-3 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300"
             >
               <span>View All Research Projects</span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>

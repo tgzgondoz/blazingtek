@@ -1,41 +1,36 @@
-import { Mail, Phone, MapPin } from 'lucide-react';
-
 const Abouts = () => {
-  const backgroundImage = 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80';
-
   return (
     <div className="min-h-screen bg-black">
       {/* Combined Hero & About Section */}
-      <section className="relative text-white py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={backgroundImage}
-            alt="Robotics Technology Background"
-            className="absolute inset-0 w-full h-full object-cover opacity-10"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-black/95"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black"></div>
+      <section className="relative text-white py-24 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-800 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-800 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4">
-          {/* Header - Adjusted spacing */}
-          <div className="text-center mb-8"> {/* Changed from mb-16 to mb-8 (2rem less) */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              About BlazingTek
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-20">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+                About
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 bg-clip-text text-transparent">
+                BlazingTek
+              </span>
             </h1>
+            
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Pioneering African innovation through cutting-edge technology
             </p>
           </div>
 
           {/* Mission & Values Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
             {/* Mission Statement */}
             <div>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-white">Our Mission</h2>
-              </div>
+              <h2 className="text-2xl font-bold text-white mb-6">Our Mission</h2>
               <p className="text-gray-300 leading-relaxed">
                 BlazingTek is at the forefront of technological innovation in Africa, specializing in 
                 advanced robotics solutions, AI integration, and custom technological systems. Based in 
@@ -46,9 +41,7 @@ const Abouts = () => {
 
             {/* Vision */}
             <div>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-white">Our Vision</h2>
-              </div>
+              <h2 className="text-2xl font-bold text-white mb-6">Our Vision</h2>
               <p className="text-gray-300 leading-relaxed">
                 To bridge the technology gap while fostering local expertise and driving sustainable 
                 technological advancement across the African continent. We aim to become the leading 
@@ -58,95 +51,123 @@ const Abouts = () => {
           </div>
 
           {/* Contact Section */}
-          <div>
-            <div className="text-center mb-12">
-              <div className="mb-4">
-                <h2 className="text-3xl font-bold text-white">Contact Our Team</h2>
-              </div>
-              <p className="text-gray-400">We're here to help you with innovative technology solutions</p>
+          <div className="relative">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                Get In <span className="bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 bg-clip-text text-transparent">Touch</span>
+              </h2>
+              
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                We're here to help you with innovative technology solutions
+              </p>
             </div>
 
             {/* Contact Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
               {/* Phone */}
               <a
                 href="tel:+263788605607"
-                className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10"
+                className="group relative"
               >
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
-                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
-                    <Phone className="h-8 w-8 text-white" />
+                <div className="relative text-center p-8 hover:scale-[1.02] transition-transform duration-300">
+                  <div className="relative mb-6">
+                    <div className="relative w-16 h-16 mx-auto bg-gray-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <svg className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Call Us</h3>
+                  <p className="text-gray-300 text-lg font-medium">+263 788 605 607</p>
+                  <div className="mt-4">
+                    <span className="text-sm text-gray-500">
+                      Tap to call
+                    </span>
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Call Us</h3>
-                <p className="text-white text-lg font-medium">+263 788 605 607</p>
               </a>
 
               {/* Email */}
               <a
                 href="mailto:info@blazingtek.co"
-                className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10"
+                className="group relative"
               >
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
-                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
-                    <Mail className="h-8 w-8 text-white" />
+                <div className="relative text-center p-8 hover:scale-[1.02] transition-transform duration-300">
+                  <div className="relative mb-6">
+                    <div className="relative w-16 h-16 mx-auto bg-gray-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <svg className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Email Us</h3>
+                  <p className="text-gray-300 text-lg font-medium">info@blazingtek.co</p>
+                  <div className="mt-4">
+                    <span className="text-sm text-gray-500">
+                      Tap to email
+                    </span>
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Email Us</h3>
-                <p className="text-white text-lg font-medium">info@blazingtek.co</p>
               </a>
 
               {/* Location */}
-              <div className="group bg-white/5 rounded-xl p-8 border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] text-center hover:bg-white/10">
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 bg-white/10 blur-sm rounded-full"></div>
-                  <div className="relative w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/20">
-                    <MapPin className="h-8 w-8 text-white" />
+              <div className="group relative">
+                <div className="relative text-center p-8 hover:scale-[1.02] transition-transform duration-300">
+                  <div className="relative mb-6">
+                    <div className="relative w-16 h-16 mx-auto bg-gray-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <svg className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Visit Us</h3>
+                  <p className="text-gray-300 text-lg font-medium">Harare, Zimbabwe</p>
+                  <div className="mt-4">
+                    <span className="text-sm text-gray-500">
+                      Central Africa
+                    </span>
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Visit Us</h3>
-                <p className="text-white text-lg font-medium">Harare, Zimbabwe</p>
               </div>
             </div>
 
-            {/* Business Info - Removed backgrounds and borders */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+            {/* Business Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Hours */}
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white">Business Hours</h3>
-                </div>
-                <ul className="space-y-3">
-                  <li className="flex justify-between text-gray-300">
-                    <span>Mon - Fri</span>
-                    <span className="text-white font-medium">8:00 AM - 5:00 PM</span>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-6">Business Hours</h3>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-center">
+                    <span className="text-gray-400">Mon - Fri</span>
+                    <span className="text-white font-semibold bg-gray-800 px-3 py-1.5 rounded-lg">8:00 AM - 5:00 PM</span>
                   </li>
-                  <li className="flex justify-between text-gray-300">
-                    <span>Saturday</span>
-                    <span className="text-white font-medium">9:00 AM - 1:00 PM</span>
+                  <li className="flex justify-between items-center">
+                    <span className="text-gray-400">Saturday</span>
+                    <span className="text-white font-semibold bg-gray-800 px-3 py-1.5 rounded-lg">9:00 AM - 1:00 PM</span>
                   </li>
-                  <li className="flex justify-between text-gray-300">
-                    <span>Sunday</span>
-                    <span className="text-white font-medium">Closed</span>
+                  <li className="flex justify-between items-center">
+                    <span className="text-gray-400">Sunday</span>
+                    <span className="text-gray-500 font-semibold bg-gray-900 px-3 py-1.5 rounded-lg">Closed</span>
                   </li>
                 </ul>
               </div>
 
               {/* Timezone */}
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-white">Timezone</h3>
-                </div>
-                <div className="space-y-3">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-6">Timezone</h3>
+                <div className="space-y-6">
                   <div>
-                    <p className="text-gray-300 text-sm">Local Time</p>
-                    <p className="text-white text-lg font-medium">Central Africa Time (CAT)</p>
+                    <p className="text-gray-400 text-sm mb-2">Local Time</p>
+                    <div className="bg-gray-800 rounded-lg px-4 py-3">
+                      <p className="text-white text-lg font-semibold">Central Africa Time (CAT)</p>
+                    </div>
                   </div>
                   <div>
-                    <p className="text-gray-300 text-sm">UTC Offset</p>
-                    <p className="text-white text-lg font-medium">UTC +2</p>
+                    <p className="text-gray-400 text-sm mb-2">UTC Offset</p>
+                    <div className="bg-gray-800 rounded-lg px-4 py-3">
+                      <p className="text-white text-lg font-semibold">UTC +2</p>
+                    </div>
                   </div>
                 </div>
               </div>

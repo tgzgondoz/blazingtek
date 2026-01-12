@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FlaskRound, 
-  Cpu, 
-  Code, 
-  Users, 
-  Calendar, 
-  Award,
-  ExternalLink,
-  Filter,
-  Search,
-  Clock,
-  TrendingUp
-} from 'lucide-react';
 
 const LabProjects = () => {
   const [filter, setFilter] = useState('all');
@@ -99,7 +86,7 @@ const LabProjects = () => {
     : projects.filter(project => project.status === filter);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0A0F14] to-[#1a2634] pt-16">
+    <div className="min-h-screen bg-[#0A0F14] pt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <motion.div
@@ -108,8 +95,8 @@ const LabProjects = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-900/20 rounded-full mb-6">
-            <FlaskRound className="h-8 w-8 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-6">
+            <div className="text-2xl font-bold text-gray-300">L</div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Lab Projects
@@ -128,37 +115,37 @@ const LabProjects = () => {
         >
           <div className="bg-white/5 border border-white/10 rounded-xl p-6">
             <div className="flex items-center justify-between">
-              <FlaskRound className="h-6 w-6 text-blue-400" />
+              <div className="text-lg font-medium text-gray-400">Projects</div>
               <span className="text-2xl font-bold text-white">{projects.length}</span>
             </div>
             <p className="text-sm text-gray-400 mt-2">Active Projects</p>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-xl p-6">
             <div className="flex items-center justify-between">
-              <Users className="h-6 w-6 text-green-400" />
+              <div className="text-lg font-medium text-gray-400">Researchers</div>
               <span className="text-2xl font-bold text-white">
                 {projects.reduce((sum, p) => sum + p.teamSize, 0)}
               </span>
             </div>
-            <p className="text-sm text-gray-400 mt-2">Researchers</p>
+            <p className="text-sm text-gray-400 mt-2">Team Members</p>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-xl p-6">
             <div className="flex items-center justify-between">
-              <Award className="h-6 w-6 text-yellow-400" />
+              <div className="text-lg font-medium text-gray-400">Completed</div>
               <span className="text-2xl font-bold text-white">
                 {projects.filter(p => p.status === 'completed').length}
               </span>
             </div>
-            <p className="text-sm text-gray-400 mt-2">Completed</p>
+            <p className="text-sm text-gray-400 mt-2">Finished Projects</p>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-xl p-6">
             <div className="flex items-center justify-between">
-              <TrendingUp className="h-6 w-6 text-purple-400" />
+              <div className="text-lg font-medium text-gray-400">Progress</div>
               <span className="text-2xl font-bold text-white">
                 {Math.round(projects.reduce((sum, p) => sum + p.progress, 0) / projects.length)}%
               </span>
             </div>
-            <p className="text-sm text-gray-400 mt-2">Avg Progress</p>
+            <p className="text-sm text-gray-400 mt-2">Average Progress</p>
           </div>
         </motion.div>
 
@@ -171,7 +158,6 @@ const LabProjects = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <div className="flex items-center gap-3">
-              <Filter className="h-5 w-5 text-gray-400" />
               <h2 className="text-2xl font-bold text-white">Our Projects</h2>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -179,10 +165,10 @@ const LabProjects = () => {
                 <button
                   key={category.id}
                   onClick={() => setFilter(category.id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
                     filter === category.id
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                      ? 'bg-white text-[#0A0F14] border-white'
+                      : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   {category.label} ({category.count})
@@ -207,16 +193,16 @@ const LabProjects = () => {
               {/* Project Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-2 ${
-                    project.status === 'active' ? 'bg-green-900/30 text-green-400' :
-                    project.status === 'completed' ? 'bg-blue-900/30 text-blue-400' :
-                    'bg-gray-900/30 text-gray-400'
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-2 border ${
+                    project.status === 'active' ? 'bg-white/10 text-gray-300 border-white/10' :
+                    project.status === 'completed' ? 'bg-white/10 text-gray-300 border-white/10' :
+                    'bg-white/10 text-gray-300 border-white/10'
                   }`}>
                     {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                   </span>
                   <h3 className="text-xl font-semibold text-white">{project.title}</h3>
                 </div>
-                <ExternalLink className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer" />
+                <div className="text-gray-400 hover:text-white cursor-pointer text-lg font-medium">→</div>
               </div>
 
               {/* Description */}
@@ -230,7 +216,7 @@ const LabProjects = () => {
                 </div>
                 <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                    className="h-full bg-white/60 rounded-full transition-all duration-500"
                     style={{ width: `${project.progress}%` }}
                   />
                 </div>
@@ -242,7 +228,7 @@ const LabProjects = () => {
                   {project.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-white/5 text-gray-400 text-xs rounded"
+                      className="px-2 py-1 bg-white/5 text-gray-400 text-xs rounded border border-white/10"
                     >
                       {tag}
                     </span>
@@ -252,17 +238,14 @@ const LabProjects = () => {
                 <div className="flex items-center justify-between text-sm text-gray-400">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <Users className="h-4 w-4" />
-                      <span>{project.teamSize}</span>
+                      <span>Team: {project.teamSize}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{project.startDate}</span>
+                      <span>Started: {project.startDate}</span>
                     </div>
                   </div>
                   {project.endDate && (
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
                       <span>Completed: {project.endDate}</span>
                     </div>
                   )}
@@ -279,19 +262,20 @@ const LabProjects = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/20 rounded-2xl p-8">
+          <div className="bg-white/5 border border-white/10 rounded-xl p-8">
             <h2 className="text-2xl font-bold text-white mb-4">Interested in Our Research?</h2>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               We're always looking for talented researchers, students, and industry partners to collaborate on groundbreaking projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                Join Research Team
+              <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#0A0F14] font-medium rounded-lg hover:bg-gray-100 transition-colors">
+                <span>Join Research Team</span>
+                <span>→</span>
               </button>
-              <button className="px-6 py-3 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/10">
+              <button className="px-6 py-3 bg-white/5 text-white font-medium rounded-lg hover:bg-white/10 transition-colors border border-white/10">
                 Propose Collaboration
               </button>
-              <button className="px-6 py-3 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/10">
+              <button className="px-6 py-3 bg-white/5 text-white font-medium rounded-lg hover:bg-white/10 transition-colors border border-white/10">
                 View Publications
               </button>
             </div>

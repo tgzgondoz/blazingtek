@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from "lucide-react";
 
 const Research = () => {
   const projects = [
@@ -28,12 +29,34 @@ const Research = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0A0F14]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black text-white py-24">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-800 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-800 rounded-full blur-3xl"></div>
+      <section className="relative overflow-hidden bg-[#0A0F14] text-white py-24">
+        <div className="absolute inset-0">
+          {/* Subtle background pattern matching Home page */}
+          <div className="absolute inset-0 opacity-5">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern 
+                  id="dots-pattern" 
+                  x="0" 
+                  y="0" 
+                  width="150" 
+                  height="150" 
+                  patternUnits="userSpaceOnUse"
+                >
+                  <circle 
+                    cx="75" 
+                    cy="75" 
+                    r="0.8" 
+                    fill="#FFFFFF"
+                    fillOpacity="0.1"
+                  />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#dots-pattern)" />
+            </svg>
+          </div>
         </div>
         
         <motion.div 
@@ -45,21 +68,20 @@ const Research = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-                <span className="bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent">
+                <span className="text-white">
                   Pushing
                 </span>
                 <br />
                 <motion.span 
-                  className="bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 bg-clip-text text-transparent"
+                  className="text-white"
                   animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    opacity: [1, 0.8, 1]
                   }}
                   transition={{
-                    duration: 5,
+                    duration: 2,
                     repeat: Infinity,
                     ease: "linear"
                   }}
-                  style={{ backgroundSize: '200% 200%' }}
                 >
                   Boundaries
                 </motion.span>
@@ -82,9 +104,10 @@ const Research = () => {
                 >
                   <Link 
                     to="/contact" 
-                    className="group bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-black/70 flex items-center gap-3"
+                    className="group bg-white text-[#0A0F14] hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-all duration-300 flex items-center gap-3"
                   >
                     <span>Partner on Research</span>
+                    <ArrowRight className="h-5 w-5" />
                   </Link>
                 </motion.div>
                 
@@ -94,7 +117,7 @@ const Research = () => {
                 >
                   <Link 
                     to="#projects" 
-                    className="group bg-transparent border-2 border-gray-800 hover:border-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-gray-900/20"
+                    className="group bg-transparent border-2 border-white/20 hover:border-white/40 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:bg-white/5"
                   >
                     View Projects
                   </Link>
@@ -108,7 +131,7 @@ const Research = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="relative"
             >
-              <div className="relative bg-black/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800 shadow-2xl">
+              <div className="relative bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
                 <h3 className="text-2xl font-bold mb-4 text-white">Breakthrough Achievement</h3>
                 
                 <p className="text-gray-300 leading-relaxed mb-6">
@@ -131,7 +154,7 @@ const Research = () => {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-24 bg-black">
+      <section id="projects" className="py-24 bg-[#0A0F14]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -140,7 +163,7 @@ const Research = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Active <span className="bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 bg-clip-text text-transparent">Research Projects</span>
+              Active <span className="text-white">Research Projects</span>
             </h2>
             
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -159,16 +182,16 @@ const Research = () => {
                 whileHover={{ y: -8 }}
                 className="group relative"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-800 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                <div className="absolute -inset-0.5 bg-white/5 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                 
-                <div className="relative bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-800 hover:border-gray-700 transition-all duration-300 overflow-hidden">
+                <div className="relative bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden">
                   {/* Status Badge */}
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         project.status === 'Active' 
-                          ? 'bg-gray-800 text-gray-300 border border-gray-700' 
-                          : 'bg-gray-800 text-amber-300 border border-gray-700'
+                          ? 'bg-white/10 text-gray-300 border border-white/10' 
+                          : 'bg-white/10 text-gray-300 border border-white/10'
                       }`}>
                         {project.status}
                       </span>
@@ -192,9 +215,9 @@ const Research = () => {
                   
                   {/* Progress Bar */}
                   <div className="mb-8">
-                    <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                       <motion.div 
-                        className="h-full rounded-full bg-gradient-to-r from-gray-600 to-gray-500"
+                        className="h-full rounded-full bg-gradient-to-r from-white/40 to-white/60"
                         initial={{ width: 0 }}
                         whileInView={{ width: `${project.progress}%` }}
                         viewport={{ once: true }}
@@ -211,7 +234,7 @@ const Research = () => {
                       {project.technologies.map((tech, idx) => (
                         <span 
                           key={idx}
-                          className="px-3 py-1.5 bg-gray-800/50 text-gray-300 rounded-lg text-sm border border-gray-700"
+                          className="px-3 py-1.5 bg-white/5 text-gray-300 rounded-lg text-sm border border-white/10"
                         >
                           {tech}
                         </span>
@@ -220,7 +243,7 @@ const Research = () => {
                   </div>
                   
                   {/* Details Grid */}
-                  <div className="grid grid-cols-2 gap-6 border-t border-gray-800 pt-6">
+                  <div className="grid grid-cols-2 gap-6 border-t border-white/10 pt-6">
                     <div>
                       <div className="text-sm text-gray-500 mb-2">Timeline</div>
                       <div className="text-gray-300 font-medium">{project.timeline}</div>
@@ -265,9 +288,10 @@ const Research = () => {
           >
             <Link 
               to="/projects"
-              className="group inline-flex items-center gap-3 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300"
+              className="group inline-flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300"
             >
               <span>View All Research Projects</span>
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </motion.div>
         </div>

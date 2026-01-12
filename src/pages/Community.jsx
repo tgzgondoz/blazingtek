@@ -22,6 +22,10 @@ import {
   Eye
 } from 'lucide-react';
 
+// Import Firebase from your existing configuration
+// First, check if you have a separate firebase config file
+// If not, we'll create a simple fetch approach
+
 const Community = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [communityContent, setCommunityContent] = useState({
@@ -45,41 +49,56 @@ const Community = () => {
     return gradients[index % gradients.length];
   };
 
-  // Load content from localStorage
+  // Load content from Firebase Realtime Database using fetch API
   useEffect(() => {
-    const loadContent = () => {
+    const loadContentFromFirebase = async () => {
       try {
-        const savedContent = JSON.parse(localStorage.getItem('blazingtek-community')) || {
-          featured: [],
-          updates: [],
-          events: [],
-          columns: []
-        };
+        // Your Firebase database URL (replace with your actual URL)
+        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
         
-        console.log('Loaded from localStorage:', savedContent);
+        // Fetch community data
+        const communityResponse = await fetch(`${databaseURL}/community.json`);
+        const communityData = await communityResponse.json();
         
-        // Use admin content if available, otherwise show empty
-        setCommunityContent({
-          featured: savedContent.featured && savedContent.featured.length > 0 ? savedContent.featured.map((item, index) => ({
-            ...item,
-            imageUrl: item.imageUrl || getGradientColor(index)
-          })) : [],
-          updates: savedContent.updates && savedContent.updates.length > 0 ? savedContent.updates.map((item, index) => ({
-            ...item,
-            imageUrl: item.imageUrl || getGradientColor(index)
-          })) : [],
-          events: savedContent.events && savedContent.events.length > 0 ? savedContent.events.map((item, index) => ({
-            ...item,
-            imageUrl: item.imageUrl || getGradientColor(index)
-          })) : [],
-          columns: savedContent.columns && savedContent.columns.length > 0 ? savedContent.columns.map((item, index) => ({
-            ...item,
-            imageUrl: item.imageUrl || getGradientColor(index)
-          })) : [],
-          isLoading: false
-        });
+        console.log('Loaded from Firebase:', communityData);
+        
+        if (communityData) {
+          // Process data from Firebase
+          setCommunityContent({
+            featured: communityData.featured ? Object.keys(communityData.featured).map(key => ({
+              id: key,
+              ...communityData.featured[key],
+              imageUrl: communityData.featured[key].imageUrl || getGradientColor(0)
+            })) : [],
+            updates: communityData.updates ? Object.keys(communityData.updates).map(key => ({
+              id: key,
+              ...communityData.updates[key],
+              imageUrl: communityData.updates[key].imageUrl || getGradientColor(1)
+            })) : [],
+            events: communityData.events ? Object.keys(communityData.events).map(key => ({
+              id: key,
+              ...communityData.events[key],
+              imageUrl: communityData.events[key].imageUrl || getGradientColor(2)
+            })) : [],
+            columns: communityData.columns ? Object.keys(communityData.columns).map(key => ({
+              id: key,
+              ...communityData.columns[key],
+              imageUrl: communityData.columns[key].imageUrl || getGradientColor(3)
+            })) : [],
+            isLoading: false
+          });
+        } else {
+          // No data in Firebase yet
+          setCommunityContent({
+            featured: [],
+            updates: [],
+            events: [],
+            columns: [],
+            isLoading: false
+          });
+        }
       } catch (error) {
-        console.error('Error loading community content:', error);
+        console.error('Error loading community content from Firebase:', error);
         // Show empty if there's an error
         setCommunityContent({
           featured: [],
@@ -91,27 +110,13 @@ const Community = () => {
       }
     };
 
-    loadContent();
+    loadContentFromFirebase();
     
-    // Listen for content updates
-    const handleStorageChange = (e) => {
-      if (e.key === 'blazingtek-community') {
-        loadContent();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom event from AdminUpload
-    const handleCustomStorage = () => {
-      loadContent();
-    };
-    
-    window.addEventListener('blazingtek-content-updated', handleCustomStorage);
+    // Poll for updates every 30 seconds
+    const intervalId = setInterval(loadContentFromFirebase, 30000);
     
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('blazingtek-content-updated', handleCustomStorage);
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -123,20 +128,32 @@ const Community = () => {
       );
 
   // Handle newsletter subscription
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     if (email) {
-      const subscriptions = JSON.parse(localStorage.getItem('blazingtek-newsletter-subscriptions')) || [];
-      subscriptions.push({
-        email: email,
-        date: new Date().toISOString(),
-        source: 'community-page'
-      });
-      localStorage.setItem('blazingtek-newsletter-subscriptions', JSON.stringify(subscriptions));
-      
-      alert('Thank you for subscribing to MA Community! You\'ll receive our weekly digest.');
-      e.target.reset();
+      try {
+        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
+        
+        // Save to Firebase using POST request
+        await fetch(`${databaseURL}/newsletter-subscriptions.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            date: new Date().toISOString(),
+            source: 'community-page'
+          })
+        });
+        
+        alert('Thank you for subscribing to MA Community! You\'ll receive our weekly digest.');
+        e.target.reset();
+      } catch (error) {
+        console.error('Error saving subscription:', error);
+        alert('Subscription failed. Please try again.');
+      }
     }
   };
 
@@ -153,7 +170,17 @@ const Community = () => {
   const formatDate = (dateString) => {
     if (!dateString) return 'Date TBD';
     try {
+      // If date is already formatted (contains comma), return as is
+      if (dateString.includes(',')) {
+        return dateString;
+      }
+      
+      // Try to parse ISO string or other formats
       const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString;
+      }
+      
       return date.toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'short', 
@@ -755,7 +782,7 @@ const Community = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               <MapPin className="h-4 w-4" />
-                              <span>{event.location || "Virtual / Lagos"}</span>
+                              <span>{event.location || event.eventLocation || "Virtual / Lagos"}</span>
                             </div>
                           </div>
                           
@@ -809,7 +836,7 @@ const Community = () => {
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-800 border-t-white mb-6"></div>
           <h1 className="text-3xl font-bold text-white mb-4">Loading Community Content...</h1>
-          <p className="text-gray-500">Fetching the latest stories and updates from AdminUpload</p>
+          <p className="text-gray-500">Fetching the latest stories and updates from Firebase</p>
         </div>
       </div>
     );
@@ -869,7 +896,8 @@ const Community = () => {
       {/* Columns & Events */}
       <ColumnsEventsSection />
 
-    
+      {/* Magazine Footer */}
+      <MagazineFooter />
     </div>
   );
 };

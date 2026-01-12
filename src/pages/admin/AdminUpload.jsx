@@ -34,6 +34,31 @@ import {
   BookOpen
 } from 'lucide-react';
 
+// Import Firebase compatibility version
+import firebase from "firebase/compat/app";
+import "firebase/compat/database";
+import "firebase/compat/storage";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDZCgcI4IpitZSAz116DtSaWp31vz3bGC4",
+  authDomain: "blazingtek-c56e7.firebaseapp.com",
+  databaseURL: "https://blazingtek-c56e7-default-rtdb.firebaseio.com", // Make sure to add your correct URL
+  projectId: "blazingtek-c56e7",
+  storageBucket: "blazingtek-c56e7.firebasestorage.app",
+  messagingSenderId: "176023582058",
+  appId: "1:176023582058:web:c12f2be2a6195fa5cca113",
+  measurementId: "G-S8YYNS28WR"
+};
+
+// Initialize Firebase (only if no app exists)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const database = firebase.database();
+const storage = firebase.storage();
+
 const AdminUpload = () => {
   // State for active page type
   const [activePage, setActivePage] = useState('community'); // Default to 'community'
@@ -138,27 +163,75 @@ const AdminUpload = () => {
     }
   };
 
-  // Load existing data from localStorage
+  // Load existing data from Firebase Realtime Database
   useEffect(() => {
     try {
-      const savedNews = JSON.parse(localStorage.getItem('blazingtek-news')) || [];
-      const savedCommunity = JSON.parse(localStorage.getItem('blazingtek-community')) || {
-        featured: [],
-        updates: [],
-        events: [],
-        columns: []
+      // Load news
+      const newsRef = database.ref('news');
+      newsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const newsArray = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+          setPreviewNews(newsArray);
+        } else {
+          setPreviewNews([]);
+        }
+      });
+
+      // Load community data
+      const communityRef = database.ref('community');
+      communityRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setPreviewCommunity({
+            featured: data.featured ? Object.keys(data.featured).map(key => ({
+              id: key,
+              ...data.featured[key]
+            })) : [],
+            updates: data.updates ? Object.keys(data.updates).map(key => ({
+              id: key,
+              ...data.updates[key]
+            })) : [],
+            events: data.events ? Object.keys(data.events).map(key => ({
+              id: key,
+              ...data.events[key]
+            })) : [],
+            columns: data.columns ? Object.keys(data.columns).map(key => ({
+              id: key,
+              ...data.columns[key]
+            })) : []
+          });
+        } else {
+          setPreviewCommunity({ featured: [], updates: [], events: [], columns: [] });
+        }
+      });
+
+      // Load events
+      const eventsRef = database.ref('events');
+      eventsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const eventsArray = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+          setPreviewEvents(eventsArray);
+        } else {
+          setPreviewEvents([]);
+        }
+      });
+
+      // Cleanup function to remove listeners
+      return () => {
+        newsRef.off();
+        communityRef.off();
+        eventsRef.off();
       };
-      const savedEvents = JSON.parse(localStorage.getItem('blazingtek-events')) || [];
-      
-      setPreviewNews(savedNews);
-      setPreviewCommunity(savedCommunity);
-      setPreviewEvents(savedEvents);
     } catch (error) {
-      console.error('Error loading data from localStorage:', error);
-      // Initialize with empty arrays if there's an error
-      setPreviewNews([]);
-      setPreviewCommunity({ featured: [], updates: [], events: [], columns: [] });
-      setPreviewEvents([]);
+      console.error('Error loading data from Firebase:', error);
     }
   }, []);
 
@@ -209,48 +282,64 @@ const AdminUpload = () => {
     return `${Math.floor(Math.random() * 5) + 1} min read`;
   };
 
-  // Handle image upload - FIXED VERSION
-  const handleImageUpload = (e) => {
+  // Upload image to Firebase Storage and get URL
+  const uploadImageToFirebase = async (file) => {
+    try {
+      // Create a unique filename
+      const timestamp = Date.now();
+      const filename = `${timestamp}_${file.name}`;
+      const imageRef = storage.ref(`images/${filename}`);
+      
+      // Upload the file
+      await imageRef.put(file);
+      
+      // Get the download URL
+      const downloadURL = await imageRef.getDownloadURL();
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  };
+
+  // Handle image upload - UPDATED for Firebase Storage
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
     setIsUploading(true);
     
-    setTimeout(() => {
-      const newImages = files.map(file => {
-        const reader = new FileReader();
-        return new Promise((resolve) => {
-          reader.onloadend = () => {
-            resolve({
-              id: Date.now() + Math.random(),
-              name: file.name,
-              url: reader.result, // Use FileReader result as data URL
-              size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-              type: file.type
-            });
-          };
-          reader.readAsDataURL(file); // Read as data URL
-        });
-      });
-
-      Promise.all(newImages).then(images => {
-        setUploadedImages(prev => [...prev, ...images]);
-        setIsUploading(false);
+    try {
+      for (const file of files) {
+        // Upload to Firebase Storage
+        const imageUrl = await uploadImageToFirebase(file);
+        
+        const newImage = {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          url: imageUrl,
+          size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
+          type: file.type
+        };
+        
+        setUploadedImages(prev => [...prev, newImage]);
         
         // Auto-fill image URL for active form
-        if (images.length > 0) {
-          setFormData(prev => ({ ...prev, imageUrl: images[0].url }));
+        if (files.length === 1) {
+          setFormData(prev => ({ ...prev, imageUrl }));
         }
-      });
-    }, 1000);
+      }
+    } catch (error) {
+      setErrorMessage('Error uploading image. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // Handle form changes
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  // Generate ID for new content
-  const generateId = () => {
-    return Date.now() + Math.floor(Math.random() * 1000);
   };
 
   // Format date for Community component
@@ -271,121 +360,238 @@ const AdminUpload = () => {
     }
   };
 
-  // Save community content - UPDATED to match Community component structure
-  const saveCommunityContent = () => {
+  // Save community content to Firebase
+  const saveCommunityContent = async () => {
     if (!formData.title || !formData.description || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
-    // Prepare data in the format Community component expects
-    const newCommunityItem = {
-      id: formData.id || generateId(),
-      title: formData.title,
-      description: formData.description,
-      excerpt: formData.excerpt || formData.description.substring(0, 150) + '...',
-      summary: formData.summary || formData.description,
-      category: formData.category,
-      author: formData.author,
-      authorRole: formData.authorRole || 'Contributor',
-      readTime: formData.readTime || getDefaultReadTime(),
-      imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
-      date: formatDateForCommunity(formData.date),
-      content: formData.content,
-      // Event specific
-      eventDate: formData.eventDate || formData.date,
-      eventTime: formData.eventTime,
-      eventLocation: formData.eventLocation,
-      location: formData.eventLocation,
-      status: formData.status,
-      type: formData.type,
-      speaker: formData.speaker,
-      registrationLink: formData.registrationLink,
-      // Column specific
-      columnType: formData.columnType
-    };
+    try {
+      setIsUploading(true);
 
-    let updatedCommunity = { ...previewCommunity };
-    
-    // Determine which category to save to based on active tab
-    if (activeCommunityTab === 'featured') {
-      updatedCommunity.featured = [newCommunityItem, ...previewCommunity.featured];
-    } else if (activeCommunityTab === 'updates') {
-      updatedCommunity.updates = [newCommunityItem, ...previewCommunity.updates];
-    } else if (activeCommunityTab === 'events') {
-      updatedCommunity.events = [newCommunityItem, ...previewCommunity.events];
-    } else if (activeCommunityTab === 'columns') {
-      updatedCommunity.columns = [newCommunityItem, ...previewCommunity.columns];
+      // Prepare data in the format Community component expects
+      const newCommunityItem = {
+        title: formData.title,
+        description: formData.description,
+        excerpt: formData.excerpt || formData.description.substring(0, 150) + '...',
+        summary: formData.summary || formData.description,
+        category: formData.category,
+        author: formData.author,
+        authorRole: formData.authorRole || 'Contributor',
+        readTime: formData.readTime || getDefaultReadTime(),
+        imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
+        date: formatDateForCommunity(formData.date),
+        content: formData.content,
+        // Event specific
+        eventDate: formData.eventDate || formData.date,
+        eventTime: formData.eventTime,
+        eventLocation: formData.eventLocation,
+        location: formData.eventLocation,
+        status: formData.status,
+        type: formData.type,
+        speaker: formData.speaker,
+        registrationLink: formData.registrationLink,
+        // Column specific
+        columnType: formData.columnType,
+        tags: formData.tags,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Determine the Firebase path based on active tab
+      let firebasePath;
+      if (activeCommunityTab === 'featured') {
+        firebasePath = 'community/featured';
+      } else if (activeCommunityTab === 'updates') {
+        firebasePath = 'community/updates';
+      } else if (activeCommunityTab === 'events') {
+        firebasePath = 'community/events';
+      } else if (activeCommunityTab === 'columns') {
+        firebasePath = 'community/columns';
+      }
+
+      // Generate a new unique key and save to Firebase
+      const newItemRef = database.ref(firebasePath).push();
+      await newItemRef.set(newCommunityItem);
+
+      setSuccessMessage('Community content saved to Firebase successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      // Clear form after successful save
+      setFormData({
+        id: '',
+        title: '',
+        excerpt: '',
+        description: '',
+        summary: '',
+        category: getDefaultCategory(),
+        date: new Date().toISOString().split('T')[0],
+        type: 'article',
+        readTime: getDefaultReadTime(),
+        author: '',
+        authorRole: '',
+        views: '',
+        likes: '',
+        imageUrl: '',
+        content: '',
+        eventDate: '',
+        eventLocation: '',
+        eventTime: '',
+        registrationLink: '',
+        status: 'Upcoming',
+        speaker: '',
+        columnType: 'opinion',
+        tags: []
+      });
+
+    } catch (error) {
+      console.error('Error saving to Firebase:', error);
+      setErrorMessage('Error saving content. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsUploading(false);
     }
-
-    setPreviewCommunity(updatedCommunity);
-    
-    // Save to localStorage - THIS IS CRITICAL for Community component
-    localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
-    
-    // Dispatch event to notify Community component - THIS IS CRITICAL
-    window.dispatchEvent(new Event('blazingtek-content-updated'));
-    window.dispatchEvent(new CustomEvent('blazingtek-community-updated', { 
-      detail: updatedCommunity 
-    }));
-
-    setSuccessMessage('Community content saved successfully! Page will update automatically.');
-    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  // Save news content (for News section)
-  const saveNewsContent = () => {
+  // Save news content to Firebase
+  const saveNewsContent = async () => {
     if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
-    const newNews = {
-      ...formData,
-      id: formData.id || generateId(),
-      date: formatDateForCommunity(formData.date),
-      views: formData.views || Math.floor(Math.random() * 5000) + 1000,
-      likes: formData.likes || Math.floor(Math.random() * 300) + 50
-    };
+    try {
+      setIsUploading(true);
 
-    const updatedNews = [newNews, ...previewNews];
-    setPreviewNews(updatedNews);
-    localStorage.setItem('blazingtek-news', JSON.stringify(updatedNews));
+      const newNews = {
+        title: formData.title,
+        excerpt: formData.excerpt,
+        description: formData.description || formData.excerpt,
+        category: formData.category,
+        author: formData.author,
+        authorRole: formData.authorRole || 'Contributor',
+        readTime: formData.readTime || getDefaultReadTime(),
+        imageUrl: formData.imageUrl || getGradientColor(previewNews.length),
+        date: formatDateForCommunity(formData.date),
+        content: formData.content,
+        views: formData.views || Math.floor(Math.random() * 5000) + 1000,
+        likes: formData.likes || Math.floor(Math.random() * 300) + 50,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
 
-    setSuccessMessage('News article saved successfully!');
-    setTimeout(() => setSuccessMessage(''), 3000);
+      const newNewsRef = database.ref('news').push();
+      await newNewsRef.set(newNews);
+
+      setSuccessMessage('News article saved to Firebase successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      // Clear form
+      setFormData({
+        id: '',
+        title: '',
+        excerpt: '',
+        description: '',
+        summary: '',
+        category: getDefaultCategory(),
+        date: new Date().toISOString().split('T')[0],
+        type: 'article',
+        readTime: getDefaultReadTime(),
+        author: '',
+        authorRole: '',
+        views: '',
+        likes: '',
+        imageUrl: '',
+        content: '',
+        eventDate: '',
+        eventLocation: '',
+        eventTime: '',
+        registrationLink: '',
+        status: 'Upcoming',
+        speaker: '',
+        columnType: 'opinion',
+        tags: []
+      });
+
+    } catch (error) {
+      console.error('Error saving news to Firebase:', error);
+      setErrorMessage('Error saving news article. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  // Save event content (for News section)
-  const saveEventContent = () => {
+  // Save event content to Firebase
+  const saveEventContent = async () => {
     if (!formData.title || !formData.description || !formData.date) {
       setErrorMessage('Please fill in all required fields for the event');
       setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
-    const newEvent = {
-      id: formData.id || generateId(),
-      title: formData.title,
-      description: formData.description,
-      date: formatDateForCommunity(formData.date),
-      time: formData.eventTime,
-      location: formData.eventLocation,
-      type: formData.type,
-      speaker: formData.speaker,
-      registrationLink: formData.registrationLink,
-      imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
-      status: formData.status || 'Upcoming'
-    };
+    try {
+      setIsUploading(true);
 
-    const updatedEvents = [newEvent, ...previewEvents];
-    setPreviewEvents(updatedEvents);
-    localStorage.setItem('blazingtek-events', JSON.stringify(updatedEvents));
+      const newEvent = {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        date: formatDateForCommunity(formData.date),
+        time: formData.eventTime,
+        location: formData.eventLocation,
+        type: formData.type,
+        speaker: formData.speaker,
+        registrationLink: formData.registrationLink,
+        imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
+        status: formData.status || 'Upcoming',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
 
-    setSuccessMessage('Event saved successfully!');
-    setTimeout(() => setSuccessMessage(''), 3000);
+      const newEventRef = database.ref('events').push();
+      await newEventRef.set(newEvent);
+
+      setSuccessMessage('Event saved to Firebase successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+      // Clear form
+      setFormData({
+        id: '',
+        title: '',
+        excerpt: '',
+        description: '',
+        summary: '',
+        category: getDefaultCategory(),
+        date: new Date().toISOString().split('T')[0],
+        type: 'article',
+        readTime: getDefaultReadTime(),
+        author: '',
+        authorRole: '',
+        views: '',
+        likes: '',
+        imageUrl: '',
+        content: '',
+        eventDate: '',
+        eventLocation: '',
+        eventTime: '',
+        registrationLink: '',
+        status: 'Upcoming',
+        speaker: '',
+        columnType: 'opinion',
+        tags: []
+      });
+
+    } catch (error) {
+      console.error('Error saving event to Firebase:', error);
+      setErrorMessage('Error saving event. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // Handle save based on current tab
@@ -419,65 +625,85 @@ const AdminUpload = () => {
     setFormData({
       ...formData,
       ...editData,
+      id: content.id, // Keep the Firebase ID
       summary: content.summary || content.description,
       excerpt: content.excerpt || content.description
     });
   };
 
-  // Delete content
-  const deleteContent = (id) => {
+  // Delete content from Firebase
+  const deleteContent = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
 
-    if (activePage === 'news') {
-      if (activeCommunityTab === 'events') {
-        const updated = previewEvents.filter(item => item.id !== id);
-        setPreviewEvents(updated);
-        localStorage.setItem('blazingtek-events', JSON.stringify(updated));
+    try {
+      let firebasePath;
+      
+      if (activePage === 'news') {
+        if (activeCommunityTab === 'events') {
+          firebasePath = `events/${id}`;
+        } else {
+          firebasePath = `news/${id}`;
+        }
       } else {
-        const updated = previewNews.filter(item => item.id !== id);
-        setPreviewNews(updated);
-        localStorage.setItem('blazingtek-news', JSON.stringify(updated));
+        if (activeCommunityTab === 'featured') {
+          firebasePath = `community/featured/${id}`;
+        } else if (activeCommunityTab === 'updates') {
+          firebasePath = `community/updates/${id}`;
+        } else if (activeCommunityTab === 'events') {
+          firebasePath = `community/events/${id}`;
+        } else if (activeCommunityTab === 'columns') {
+          firebasePath = `community/columns/${id}`;
+        }
       }
-    } else {
-      let updatedCommunity = { ...previewCommunity };
-      
-      if (activeCommunityTab === 'featured') {
-        updatedCommunity.featured = previewCommunity.featured.filter(item => item.id !== id);
-      } else if (activeCommunityTab === 'updates') {
-        updatedCommunity.updates = previewCommunity.updates.filter(item => item.id !== id);
-      } else if (activeCommunityTab === 'events') {
-        updatedCommunity.events = previewCommunity.events.filter(item => item.id !== id);
-      } else if (activeCommunityTab === 'columns') {
-        updatedCommunity.columns = previewCommunity.columns.filter(item => item.id !== id);
+
+      if (firebasePath) {
+        await database.ref(firebasePath).remove();
+        setSuccessMessage('Content deleted successfully!');
+        setTimeout(() => setSuccessMessage(''), 3000);
       }
-      
-      setPreviewCommunity(updatedCommunity);
-      localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
-      
-      // Notify Community component of deletion
-      window.dispatchEvent(new Event('blazingtek-content-updated'));
+    } catch (error) {
+      console.error('Error deleting from Firebase:', error);
+      setErrorMessage('Error deleting content. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
-  // Clear all content
-  const clearAllContent = () => {
-    if (window.confirm('Are you sure you want to clear all content? This cannot be undone.')) {
+  // Clear all content from Firebase
+  const clearAllContent = async () => {
+    if (!window.confirm('Are you sure you want to clear all content? This cannot be undone.')) {
+      return;
+    }
+
+    try {
+      let firebasePath;
+      
       if (activePage === 'news') {
         if (activeCommunityTab === 'events') {
-          setPreviewEvents([]);
-          localStorage.removeItem('blazingtek-events');
+          firebasePath = 'events';
         } else {
-          setPreviewNews([]);
-          localStorage.removeItem('blazingtek-news');
+          firebasePath = 'news';
         }
       } else {
-        const updatedCommunity = { featured: [], updates: [], events: [], columns: [] };
-        setPreviewCommunity(updatedCommunity);
-        localStorage.setItem('blazingtek-community', JSON.stringify(updatedCommunity));
-        
-        // Notify Community component
-        window.dispatchEvent(new Event('blazingtek-content-updated'));
+        if (activeCommunityTab === 'featured') {
+          firebasePath = 'community/featured';
+        } else if (activeCommunityTab === 'updates') {
+          firebasePath = 'community/updates';
+        } else if (activeCommunityTab === 'events') {
+          firebasePath = 'community/events';
+        } else if (activeCommunityTab === 'columns') {
+          firebasePath = 'community/columns';
+        }
       }
+
+      if (firebasePath) {
+        await database.ref(firebasePath).remove();
+        setSuccessMessage('All content cleared successfully!');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error clearing from Firebase:', error);
+      setErrorMessage('Error clearing content. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
@@ -735,7 +961,7 @@ const AdminUpload = () => {
                     </div>
                   </div>
 
-                  {/* Uploaded Images - FIXED VERSION */}
+                  {/* Uploaded Images */}
                   {uploadedImages.length > 0 && (
                     <div className="mt-4">
                       <div className="text-sm font-medium text-gray-700 mb-2">Uploaded Images:</div>
@@ -1047,10 +1273,20 @@ const AdminUpload = () => {
                 <div className="mt-8 flex gap-3">
                   <button
                     onClick={handleSave}
-                    className="flex-1 bg-[#0A0F14] text-white hover:bg-[#0A0F14]/90 py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    disabled={isUploading}
+                    className={`flex-1 ${isUploading ? 'bg-gray-400' : 'bg-[#0A0F14] hover:bg-[#0A0F14]/90'} text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2`}
                   >
-                    <Save className="h-5 w-5" />
-                    Save {activeCommunityTab === 'events' ? 'Event' : 'Content'}
+                    {isUploading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5" />
+                        Save {activeCommunityTab === 'events' ? 'Event' : 'Content'}
+                      </>
+                    )}
                   </button>
                   
                   <button
@@ -1063,20 +1299,18 @@ const AdminUpload = () => {
                 </div>
 
                 {/* Integration Note */}
-                {activePage === 'community' && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium text-blue-800">Integration Note</p>
-                        <p className="text-xs text-blue-600 mt-1">
-                          Content saved here will automatically appear on the Community page. 
-                          The Community component listens for updates in real-time.
-                        </p>
-                      </div>
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-800">Real-time Firebase Integration</p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Content is saved to Firebase Realtime Database and will appear instantly on your live website.
+                        {activePage === 'community' && ' The Community page automatically updates when new content is added.'}
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
@@ -1108,7 +1342,7 @@ const AdminUpload = () => {
                   </div>
                 </div>
 
-                {/* Image Preview or Gradient - FIXED VERSION */}
+                {/* Image Preview or Gradient */}
                 <div className="mb-4 rounded-lg overflow-hidden">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">
@@ -1128,14 +1362,6 @@ const AdminUpload = () => {
                           `;
                         }}
                       />
-                      <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
-                        {formData.imageUrl.startsWith('blob:') && (
-                          <div className="text-white text-sm text-center p-4 bg-black/50 rounded-lg">
-                            <p>Local image uploaded</p>
-                            <p className="text-xs mt-1">Will save when published</p>
-                          </div>
-                        )}
-                      </div>
                     </div>
                   ) : (
                     <div 
@@ -1265,22 +1491,11 @@ const AdminUpload = () => {
               <div className="p-4 border-t border-gray-200">
                 <div className="text-center">
                   <div className="text-xs text-gray-500 mb-2">
-                    Content is saved to localStorage
+                    Content is saved to Firebase Realtime Database
                   </div>
-                  <button
-                    onClick={() => {
-                      const data = getCurrentContentList();
-                      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `blazingtek-${activePage}-${activeCommunityTab}.json`;
-                      a.click();
-                    }}
-                    className="text-sm text-[#0A0F14] hover:text-[#0A0F14]/80 font-medium"
-                  >
-                    Export as JSON
-                  </button>
+                  <div className="text-xs text-green-600 mb-2">
+                    ✓ Real-time updates enabled
+                  </div>
                 </div>
               </div>
             </div>

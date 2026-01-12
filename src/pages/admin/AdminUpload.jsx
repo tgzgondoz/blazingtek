@@ -57,7 +57,6 @@ if (!firebase.apps.length) {
 }
 
 const database = firebase.database();
-const storage = firebase.storage();
 
 const AdminUpload = () => {
   // State for active page type
@@ -79,7 +78,7 @@ const AdminUpload = () => {
     authorRole: '',
     views: '',
     likes: '',
-    imageUrl: '', // This will store the Firebase Storage URL
+    imageUrl: '', // This will store the external URL (Google Drive, etc.)
     content: '',
     // Event specific fields
     eventDate: '',
@@ -103,7 +102,6 @@ const AdminUpload = () => {
   });
   const [previewEvents, setPreviewEvents] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [imageUploadProgress, setImageUploadProgress] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -261,7 +259,6 @@ const AdminUpload = () => {
       columnType: 'opinion',
       tags: []
     });
-    setImageUploadProgress(0);
   }, [activePage, activeCommunityTab]);
 
   // Helper functions
@@ -280,89 +277,6 @@ const AdminUpload = () => {
 
   const getDefaultReadTime = () => {
     return `${Math.floor(Math.random() * 5) + 1} min read`;
-  };
-
-  // CORRECTED: Upload image to Firebase Storage and get URL
-  const uploadImageToFirebase = async (file) => {
-    try {
-      // Create a unique filename
-      const timestamp = Date.now();
-      const filename = `${timestamp}_${file.name}`;
-      
-      // Create a reference to the file location
-      const storageRef = storage.ref();
-      const imageRef = storageRef.child(`images/${filename}`);
-      
-      // Upload the file with progress tracking
-      const uploadTask = imageRef.put(file);
-      
-      return new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            // Track upload progress
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setImageUploadProgress(progress);
-          },
-          (error) => {
-            console.error('Upload error:', error);
-            reject(error);
-          },
-          async () => {
-            // Upload complete, get download URL
-            try {
-              const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-              setImageUploadProgress(0); // Reset progress
-              resolve(downloadURL);
-            } catch (error) {
-              reject(error);
-            }
-          }
-        );
-      });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  };
-
-  // CORRECTED: Handle image upload for Firebase Storage
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setErrorMessage('Please upload an image file (JPEG, PNG, etc.)');
-      setTimeout(() => setErrorMessage(''), 3000);
-      return;
-    }
-
-    // Validate file size (limit to 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setErrorMessage('Image size should be less than 5MB');
-      setTimeout(() => setErrorMessage(''), 3000);
-      return;
-    }
-
-    setIsUploading(true);
-    
-    try {
-      // Upload to Firebase Storage
-      const imageUrl = await uploadImageToFirebase(file);
-      
-      // Update form with the Firebase Storage URL
-      setFormData(prev => ({ ...prev, imageUrl }));
-      
-      setSuccessMessage('Image uploaded successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
-      console.error('Image upload failed:', error);
-      setErrorMessage('Error uploading image. Please try again.');
-      setTimeout(() => setErrorMessage(''), 3000);
-    } finally {
-      setIsUploading(false);
-    }
   };
 
   // Handle form changes
@@ -388,7 +302,30 @@ const AdminUpload = () => {
     }
   };
 
-  // CORRECTED: Save community content with Firebase Storage URL
+  // Convert Google Drive URL to direct image URL
+  const convertGoogleDriveUrl = (url) => {
+    if (!url) return url;
+    
+    // If it's already a direct image URL, return as is
+    if (url.includes('https://drive.google.com/file/d/')) {
+      // Convert Google Drive file URL to direct image URL
+      const fileIdMatch = url.match(/\/d\/([^/]+)/);
+      if (fileIdMatch) {
+        const fileId = fileIdMatch[1];
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+    }
+    
+    // If it's a Google Drive view URL
+    if (url.includes('https://drive.google.com/uc?id=')) {
+      return url;
+    }
+    
+    // Return original URL for other image hosts
+    return url;
+  };
+
+  // Save community content with external image URL
   const saveCommunityContent = async () => {
     if (!formData.title || !formData.description || !formData.author) {
       setErrorMessage('Please fill in all required fields');
@@ -399,7 +336,7 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      // Prepare data with proper Firebase Storage URL
+      // Prepare data with external image URL
       const newCommunityItem = {
         title: formData.title,
         description: formData.description,
@@ -409,8 +346,8 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use Firebase Storage URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
+        // Use external URL if provided, otherwise use gradient
+        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(getCurrentContentList().length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         // Event specific
@@ -484,7 +421,7 @@ const AdminUpload = () => {
     }
   };
 
-  // CORRECTED: Save news content with Firebase Storage URL
+  // Save news content with external image URL
   const saveNewsContent = async () => {
     if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
@@ -503,8 +440,8 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use Firebase Storage URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl || getGradientColor(previewNews.length),
+        // Use external URL if provided, otherwise use gradient
+        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(previewNews.length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         views: formData.views || Math.floor(Math.random() * 5000) + 1000,
@@ -555,7 +492,7 @@ const AdminUpload = () => {
     }
   };
 
-  // CORRECTED: Save event content with Firebase Storage URL
+  // Save event content with external image URL
   const saveEventContent = async () => {
     if (!formData.title || !formData.description || !formData.date) {
       setErrorMessage('Please fill in all required fields for the event');
@@ -576,8 +513,8 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
-        // Use Firebase Storage URL if provided, otherwise use gradient
-        imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
+        // Use external URL if provided, otherwise use gradient
+        imageUrl: formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : getGradientColor(previewEvents.length),
         status: formData.status || 'Upcoming',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -658,7 +595,7 @@ const AdminUpload = () => {
       id: content.id,
       summary: content.summary || content.description,
       excerpt: content.excerpt || content.description,
-      // Keep the existing Firebase Storage URL
+      // Keep the existing image URL
       imageUrl: content.imageUrl || ''
     });
   };
@@ -771,7 +708,7 @@ const AdminUpload = () => {
     ];
   };
 
-  // Handle direct URL input for image (alternative to upload)
+  // Handle direct URL input for image
   const handleDirectImageUrl = (url) => {
     setFormData(prev => ({ ...prev, imageUrl: url }));
   };
@@ -964,123 +901,101 @@ const AdminUpload = () => {
               </div>
 
               <div className="p-6">
-                {/* Image Section - CORRECTED */}
+                {/* Image URL Input Section - SIMPLIFIED */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     <div className="flex items-center gap-2">
                       <Image className="h-4 w-4" />
-                      Image URL or Upload (Optional)
+                      Image URL (Optional)
                     </div>
                   </label>
                   
-                  {/* Option 1: Direct URL Input */}
-                  <div className="mb-4">
-                    <input
-                      type="url"
-                      value={formData.imageUrl}
-                      onChange={(e) => handleDirectImageUrl(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent mb-2"
-                      placeholder="Enter image URL (e.g., https://firebasestorage.googleapis.com/...) or upload below"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Enter a direct image URL or upload to Firebase Storage
-                    </p>
-                  </div>
-
-                  {/* Option 2: Upload to Firebase Storage */}
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#0A0F14] transition-colors">
-                    <div className="max-w-xs mx-auto">
-                      <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-sm text-gray-600 mb-2">
-                        Upload to Firebase Storage
-                      </p>
-                      <p className="text-xs text-gray-500 mb-4">
-                        Supports JPG, PNG, GIF (max 5MB)
-                      </p>
-                      
-                      {/* Upload Progress */}
-                      {isUploading && imageUploadProgress > 0 && (
-                        <div className="mb-4">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-[#0A0F14] h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${imageUploadProgress}%` }}
-                            ></div>
-                          </div>
-                          <p className="text-xs text-gray-600 mt-1">
-                            Uploading: {imageUploadProgress.toFixed(1)}%
-                          </p>
-                        </div>
-                      )}
-                      
+                  <div className="space-y-4">
+                    {/* Direct URL Input */}
+                    <div>
                       <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="image-upload"
-                        disabled={isUploading}
+                        type="url"
+                        value={formData.imageUrl}
+                        onChange={(e) => handleDirectImageUrl(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        placeholder="Enter image URL from Google Drive or other image hosting service"
                       />
-                      <label
-                        htmlFor="image-upload"
-                        className={`inline-block ${
-                          isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0A0F14] hover:bg-[#0A0F14]/90'
-                        } text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors`}
-                      >
-                        {isUploading ? 'Uploading...' : 'Upload Image'}
-                      </label>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Supports: Google Drive (will be converted), direct image URLs (JPG, PNG, GIF), video URLs (MP4, WebM)
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty for automatic gradient background
+                      </p>
                     </div>
-                  </div>
 
-                  {/* Image Preview */}
-                  {formData.imageUrl && (
-                    <div className="mt-4">
-                      <div className="text-sm font-medium text-gray-700 mb-2">Current Image:</div>
-                      <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
-                        <img 
-                          src={formData.imageUrl}
-                          alt="Preview" 
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentElement.innerHTML = `
-                              <div class="w-full h-48 flex items-center justify-center bg-red-50">
-                                <div class="text-red-500 text-sm text-center">
-                                  <p>Failed to load image</p>
-                                  <p class="text-xs mt-1">Check URL or upload again</p>
-                                </div>
-                              </div>
-                            `;
-                          }}
-                        />
-                        <button
-                          onClick={() => handleDirectImageUrl('')}
-                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                          title="Remove image"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
+                    {/* Google Drive URL Example */}
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-xs font-medium text-blue-800 mb-1">Google Drive URL Example:</p>
+                      <p className="text-xs text-blue-600 font-mono">
+                        https://drive.google.com/file/d/YOUR_FILE_ID/view
+                      </p>
+                    </div>
+
+                    {/* Image Preview */}
+                    {formData.imageUrl && (
+                      <div className="mt-4">
+                        <div className="text-sm font-medium text-gray-700 mb-2">Preview:</div>
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
+                          {/* Check if it's a video URL */}
+                          {formData.imageUrl.match(/\.(mp4|webm|avi|mov)$/i) ? (
+                            <video
+                              src={formData.imageUrl}
+                              className="w-full h-full object-cover"
+                              controls
+                              muted
+                            />
+                          ) : (
+                            <img 
+                              src={convertGoogleDriveUrl(formData.imageUrl)}
+                              alt="Preview" 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = `
+                                  <div class="w-full h-48 flex items-center justify-center bg-red-50">
+                                    <div class="text-red-500 text-sm text-center">
+                                      <p>Failed to load image/video</p>
+                                      <p class="text-xs mt-1">Check URL format or try a direct image link</p>
+                                    </div>
+                                  </div>
+                                `;
+                              }}
+                            />
+                          )}
+                          <button
+                            onClick={() => handleDirectImageUrl('')}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                            title="Remove image"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* No Image Option */}
-                  {!formData.imageUrl && (
-                    <div className="mt-4">
-                      <div className="text-sm font-medium text-gray-700 mb-2">No image selected:</div>
-                      <div className="w-full h-48 rounded-lg overflow-hidden">
-                        <div 
-                          className="w-full h-full flex items-center justify-center"
-                          style={{ background: getGradientColor(0) }}
-                        >
-                          <div className="text-white/80 text-sm text-center">
-                            <p>Automatic gradient background</p>
-                            <p className="text-xs mt-1">Will be used if no image is provided</p>
+                    {/* No Image Option */}
+                    {!formData.imageUrl && (
+                      <div className="mt-4">
+                        <div className="text-sm font-medium text-gray-700 mb-2">No image selected:</div>
+                        <div className="w-full h-48 rounded-lg overflow-hidden">
+                          <div 
+                            className="w-full h-full flex items-center justify-center"
+                            style={{ background: getGradientColor(0) }}
+                          >
+                            <div className="text-white/80 text-sm text-center">
+                              <p>Automatic gradient background</p>
+                              <p className="text-xs mt-1">Will be used if no image URL is provided</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 {/* Rest of the form remains the same */}
@@ -1394,10 +1309,11 @@ const AdminUpload = () => {
                   <div className="flex items-start gap-3">
                     <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-blue-800">Firebase Storage Integration</p>
+                      <p className="text-sm font-medium text-blue-800">External Image URLs</p>
                       <p className="text-xs text-blue-600 mt-1">
-                        Images are uploaded to Firebase Storage and served via secure URLs.
-                        You can also use external image URLs or leave empty for gradient backgrounds.
+                        Paste image URLs from Google Drive or other image hosting services.
+                        Google Drive URLs are automatically converted for proper display.
+                        Leave empty for automatic gradient backgrounds.
                       </p>
                     </div>
                   </div>
@@ -1437,22 +1353,31 @@ const AdminUpload = () => {
                 <div className="mb-4 rounded-lg overflow-hidden">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">
-                      <img 
-                        src={formData.imageUrl}
-                        alt="Preview" 
-                        className="absolute inset-0 w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = `
-                            <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
-                              <div class="text-white/80 text-sm text-center">
-                                <p>Image failed to load</p>
-                                <p class="text-xs mt-1">Using gradient instead</p>
+                      {formData.imageUrl.match(/\.(mp4|webm|avi|mov)$/i) ? (
+                        <video
+                          src={formData.imageUrl}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          controls
+                          muted
+                        />
+                      ) : (
+                        <img 
+                          src={convertGoogleDriveUrl(formData.imageUrl)}
+                          alt="Preview" 
+                          className="absolute inset-0 w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = `
+                              <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
+                                <div class="text-white/80 text-sm text-center">
+                                  <p>Image failed to load</p>
+                                  <p class="text-xs mt-1">Using gradient instead</p>
+                                </div>
                               </div>
-                            </div>
-                          `;
-                        }}
-                      />
+                            `;
+                          }}
+                        />
+                      )}
                     </div>
                   ) : (
                     <div 

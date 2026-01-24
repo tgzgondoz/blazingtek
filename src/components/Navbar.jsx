@@ -42,7 +42,6 @@ const Navbar = () => {
       name: 'Research', 
       path: '/research',
       dropdown: [
-        { name: 'Sustainable Robotics', path: '/research/sustainability' },
         { name: 'Lab Projects', path: '/research/lab' }
       ]
     },

@@ -13,7 +13,7 @@ const Services = () => {
       title: "Robotics Kits",
       description: "Educational and development kits for universities and research institutions.",
       image: RoboticsImage,
-      link: "/services/robotics-kits"
+      link: "/services/robotics-kits"  // Changed to kebab-case
     },
     {
       title: "Workshops & Training",
@@ -71,7 +71,7 @@ const Services = () => {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="text-xl text-gray-300 max-w-2xl mx-auto mb-8"
           >
-            Professional robotics solutions tailored for your needs
+            Professional engineering solutions tailored for your needs
           </motion.p>
         </motion.div>
       </section>
@@ -86,7 +86,7 @@ const Services = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Professional Robotics Solutions
+              Professional Engineering Solutions
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               Comprehensive robotics solutions for education, industry, and research

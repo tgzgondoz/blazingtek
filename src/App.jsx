@@ -12,6 +12,10 @@ import Research from './pages/Research';
 import SustainableRobotics from './pages/SustainableRobotics';
 import LabProjects from './pages/LabProjects';
 import AdminUpload from './pages/admin/AdminUpload';
+// Import service detail pages
+import RoboticsKits from './pages/services/RoboticsKits';
+import Workshops from './pages/services/Workshops';
+import CustomSolutions from './pages/services/CustomSolutions';
 
 function App() {
   return (
@@ -24,6 +28,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<Abouts />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/services/robotics-kits" element={<RoboticsKits />} />
+            <Route path="/services/workshops" element={<Workshops />} />
+            <Route path="/services/custom-solutions" element={<CustomSolutions />} />
             <Route path="/community" element={<Community />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/news" element={<News />} />
@@ -32,7 +39,7 @@ function App() {
             <Route path="/research/sustainability" element={<SustainableRobotics />} />
             <Route path="/research/lab" element={<LabProjects />} />
             
-            {/* Admin Route - Simple version without layout */}
+            {/* Admin Route */}
             <Route path="/admin/upload" element={<AdminUpload />} />
           </Routes>
         </main>

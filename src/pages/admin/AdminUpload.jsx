@@ -140,7 +140,7 @@ const AdminUpload = () => {
   const eventTypes = [
     { value: 'Summit', label: 'Summit' },
     { value: 'Conference', label: 'Conference' },
-    { value: 'Webinar', label: 'Webinar' },
+    { value: 'Robotics Competition', label: 'Robotics Competition' },
     { value: 'Workshop', label: 'Workshop' },
     { value: 'Meetup', label: 'Meetup' },
     { value: 'Hackathon', label: 'Hackathon' },

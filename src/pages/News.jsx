@@ -17,23 +17,30 @@ import {
   ChevronRight as ChevronRightIcon,
   AlertCircle,
   MapPin,
-  Megaphone
+  Megaphone,
+  Play,
+  Pause
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Import images from src/assets/
+// Import video files from src/assets/videos/
+import vid1 from '../assets/videos/vid1.mp4';
+import vid2 from '../assets/videos/vid2.mp4';
+import vid3 from '../assets/videos/vid3.mp4';
+
+// Fallback images in case videos don't load
 import s1 from '../assets/s1.jpg';
 import s from '../assets/s.jpg';
 import slide1 from '../assets/slide1.jpg';
-import slide2 from '../assets/slide2.jpg';
-import slide3 from '../assets/slide3.jpg';
-import slide4 from '../assets/slide4.jpg';
 
 const News = () => {
   const [savedArticles, setSavedArticles] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const videoRefs = useRef([]);
+  const [videoLoaded, setVideoLoaded] = useState([]);
   const [newsContent, setNewsContent] = useState({
     articles: [],
     featuredArticle: null,
@@ -44,21 +51,64 @@ const News = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-  const slideshowImages = [
-    s1,
-    s,
-    slide1,
-    slide2,
-    slide3,
-    slide4
+  // Video slideshow with professional content
+  const slideshowVideos = [
+    {
+      video: vid1,
+      fallback: s1,
+      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    },
+    {
+      video: vid2,
+      fallback: s,
+      color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+    },
+    {
+      video: vid3,
+      fallback: slide1,
+      color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+    }
   ];
   
+  // Initialize video loaded state
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [slideshowImages.length]);
+    setVideoLoaded(new Array(slideshowVideos.length).fill(false));
+  }, []);
+  
+  // Handle video playback - AUTO-PLAY ENABLED
+  useEffect(() => {
+    const currentVideo = videoRefs.current[currentSlide];
+    if (currentVideo) {
+      // Always try to play
+      const playVideo = async () => {
+        try {
+          await currentVideo.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.log("Autoplay prevented, trying with user interaction requirement:", error);
+          // If autoplay fails, we'll rely on user interaction
+        }
+      };
+      playVideo();
+    }
+  }, [currentSlide]);
+  
+  // Auto-play and slideshow interval
+  useEffect(() => {
+    let interval;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % slideshowVideos.length);
+      }, 8000); // Longer interval for videos
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+      // Pause all videos on cleanup
+      videoRefs.current.forEach(video => {
+        if (video) video.pause();
+      });
+    };
+  }, [isPlaying, slideshowVideos.length]);
   
   // Load news content from Firebase Realtime Database
   useEffect(() => {
@@ -124,12 +174,32 @@ const News = () => {
     };
   }, []);
   
+  const handleVideoLoad = (index) => {
+    const newLoaded = [...videoLoaded];
+    newLoaded[index] = true;
+    setVideoLoaded(newLoaded);
+  };
+  
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
+    const currentVideo = videoRefs.current[currentSlide];
+    if (currentVideo) {
+      if (isPlaying) {
+        currentVideo.pause();
+      } else {
+        currentVideo.play();
+      }
+    }
+  };
+  
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
+    setCurrentSlide((prev) => (prev + 1) % slideshowVideos.length);
+    setIsPlaying(true);
   };
   
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
+    setCurrentSlide((prev) => (prev - 1 + slideshowVideos.length) % slideshowVideos.length);
+    setIsPlaying(true);
   };
 
   const newsCategories = [
@@ -300,9 +370,9 @@ const News = () => {
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
+      {/* Hero Section with Video Slideshow */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
-        {/* Slideshow Background */}
+        {/* Video Slideshow Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 overflow-hidden">
             <AnimatePresence mode="wait">
@@ -311,55 +381,122 @@ const News = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
+                transition={{ duration: 1.2 }}
                 className="absolute inset-0"
-                style={{
-                  backgroundImage: `url(${slideshowImages[currentSlide]})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              />
+              >
+                {/* Video Element - AUTO-PLAY ENABLED */}
+                <video
+                  ref={el => videoRefs.current[currentSlide] = el}
+                  src={slideshowVideos[currentSlide].video}
+                  className="w-full h-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  onLoadedData={() => handleVideoLoad(currentSlide)}
+                  onError={(e) => {
+                    console.error("Video failed to load:", e);
+                    // Fallback to image
+                    e.target.style.display = 'none';
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'absolute inset-0';
+                    fallbackDiv.style.backgroundImage = `url(${slideshowVideos[currentSlide].fallback})`;
+                    fallbackDiv.style.backgroundSize = 'cover';
+                    fallbackDiv.style.backgroundPosition = 'center';
+                    e.target.parentElement.appendChild(fallbackDiv);
+                  }}
+                />
+                
+                {/* Loading overlay */}
+                {!videoLoaded[currentSlide] && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white/20 border-t-white mb-4"></div>
+                      <p className="text-white/60">Loading video...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Video overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F14]/90 via-[#0A0F14]/70 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F14]/90 to-transparent"></div>
+              </motion.div>
             </AnimatePresence>
-            <div className="absolute inset-0 bg-[#0A0F14]/80"></div>
           </div>
+        </div>
+        
+        {/* Play/Pause Control */}
+        <div className="absolute top-8 right-8 z-30">
+          <button
+            onClick={togglePlayPause}
+            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
+          >
+            {isPlaying ? (
+              <Pause className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
+            ) : (
+              <Play className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
+            )}
+          </button>
         </div>
         
         {/* Slideshow Navigation */}
         <div className="absolute inset-0 flex items-center justify-between px-4 z-20">
           <button
             onClick={prevSlide}
-            className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
           >
-            <ChevronLeft className="h-6 w-6 text-white" />
+            <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
           </button>
           <button
             onClick={nextSlide}
-            className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
           >
-            <ChevronRightIcon className="h-6 w-6 text-white" />
+            <ChevronRightIcon className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
           </button>
         </div>
         
         {/* Slide Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
-          {slideshowImages.map((_, index) => (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex gap-2">
+          {slideshowVideos.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
+              onClick={() => {
+                setCurrentSlide(index);
+                setIsPlaying(true);
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
                 currentSlide === index 
-                  ? 'w-6 bg-white' 
-                  : 'w-1.5 bg-white/40 hover:bg-white/60'
+                  ? 'w-8 bg-white' 
+                  : 'w-2 bg-white/40 hover:bg-white/60'
               }`}
             />
           ))}
         </div>
         
+        {/* Progress Bar */}
+        <div className="absolute bottom-4 left-8 right-8 z-30">
+          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-white"
+              initial={{ width: "0%" }}
+              animate={{ width: "100%" }}
+              transition={{ 
+                duration: 8, 
+                ease: "linear",
+                repeat: Infinity,
+                repeatDelay: 0
+              }}
+              key={currentSlide}
+            />
+          </div>
+        </div>
+        
+        {/* Main Content */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
         >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -384,7 +521,7 @@ const News = () => {
               
               <button 
                 onClick={() => document.getElementById('newsletter-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-6 rounded-lg transition-colors duration-300 flex items-center gap-2"
+                className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
               >
                 <span>Subscribe to Newsletter</span>
               </button>
@@ -397,7 +534,7 @@ const News = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative">
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative backdrop-blur-sm">
                   {/* Featured badge */}
                   <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm z-10">
                     Featured Story
@@ -540,7 +677,7 @@ const News = () => {
                         key={article.id || index}
                         className="group"
                       >
-                        <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
+                        <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full hover:scale-[1.02]">
                           {article.imageUrl ? (
                             <div className="h-48 w-full overflow-hidden rounded-t-xl">
                               <img 
@@ -657,7 +794,7 @@ const News = () => {
             <div className="space-y-8">
               {/* Upcoming Events */}
               <div>
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 rounded bg-white/5 border border-white/10">
                       <Calendar className="h-5 w-5 text-white" />
@@ -678,7 +815,7 @@ const News = () => {
                       newsContent.upcomingEvents.map((event, index) => (
                         <div
                           key={event.id || index}
-                          className="p-4 rounded-lg border border-white/10 hover:border-white/20 transition-colors bg-white/5"
+                          className="p-4 rounded-lg border border-white/10 hover:border-white/20 transition-colors bg-white/5 hover:scale-[1.02]"
                         >
                           <div className="flex justify-between items-start mb-3">
                             <h4 className="font-medium text-white text-sm line-clamp-2">{event.title}</h4>
@@ -740,7 +877,7 @@ const News = () => {
 
               {/* Newsletter */}
               <div id="newsletter-form">
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 rounded bg-white/5 border border-white/10">
                       <TrendingUp className="h-5 w-5 text-white" />
@@ -759,12 +896,12 @@ const News = () => {
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-white text-sm placeholder-gray-500"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-white text-sm placeholder-gray-500 backdrop-blur-sm"
                       required
                     />
                     <button
                       type="submit"
-                      className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
                     >
                       <span>Subscribe Now</span>
                     </button>
@@ -776,7 +913,7 @@ const News = () => {
               </div>
 
               {/* Content Stats */}
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2 rounded bg-white/5 border border-white/10">
                     <Newspaper className="h-5 w-5 text-white" />
@@ -787,13 +924,13 @@ const News = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                  <div className="text-center p-3 bg-white/5 rounded-lg hover:scale-[1.02] transition-transform">
                     <div className="text-2xl font-bold text-white mb-1">
                       {newsContent.articles.length}
                     </div>
                     <div className="text-xs text-gray-400">Articles</div>
                   </div>
-                  <div className="text-center p-3 bg-white/5 rounded-lg">
+                  <div className="text-center p-3 bg-white/5 rounded-lg hover:scale-[1.02] transition-transform">
                     <div className="text-2xl font-bold text-white mb-1">
                       {newsContent.upcomingEvents.length}
                     </div>

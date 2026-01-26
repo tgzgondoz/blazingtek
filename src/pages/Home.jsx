@@ -1,955 +1,302 @@
-import { 
-  Newspaper, 
-  Calendar, 
-  User, 
-  ExternalLink, 
-  TrendingUp,
-  Video,
-  FileText,
-  Bookmark,
-  MessageCircle,
-  ChevronRight,
-  Clock,
-  ArrowRight,
-  Eye,
-  Heart,
-  ChevronLeft,
-  ChevronRight as ChevronRightIcon,
-  AlertCircle,
-  MapPin,
-  Megaphone,
-  Play,
-  Pause
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-// Import video files from src/assets/videos/
-import vid1 from '../assets/videos/vid1.mp4';
-import vid2 from '../assets/videos/vid2.mp4';
-import vid3 from '../assets/videos/vid3.mp4';
+// Import the slide images and logo
+import slide1 from "../assets/slide1.jpg";
+import slide2 from "../assets/slide2.jpg";
+import slide3 from "../assets/slide3.jpg";
+import slide4 from "../assets/slide4.jpg";
+import bgImage from "../assets/bg.jpg";
 
-// Fallback images in case videos don't load
-import s1 from '../assets/s1.jpg';
-import s from '../assets/s.jpg';
-import slide1 from '../assets/slide1.jpg';
+const Home = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentBreakthrough, setCurrentBreakthrough] = useState(0);
 
-const News = () => {
-  const [savedArticles, setSavedArticles] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const videoRefs = useRef([]);
-  const [videoLoaded, setVideoLoaded] = useState([]);
-  const [newsContent, setNewsContent] = useState({
-    articles: [],
-    featuredArticle: null,
-    upcomingEvents: [],
-    isLoading: true
-  });
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  
-  // Video slideshow with professional content
-  const slideshowVideos = [
-    {
-      video: vid1,
-      fallback: s1,
-      color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-    },
-    {
-      video: vid2,
-      fallback: s,
-      color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
-    },
-    {
-      video: vid3,
-      fallback: slide1,
-      color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
-    }
-  ];
-  
-  // Initialize video loaded state
   useEffect(() => {
-    setVideoLoaded(new Array(slideshowVideos.length).fill(false));
-  }, []);
-  
-  // Handle video playback - AUTO-PLAY ENABLED
-  useEffect(() => {
-    const currentVideo = videoRefs.current[currentSlide];
-    if (currentVideo) {
-      // Always try to play
-      const playVideo = async () => {
-        try {
-          await currentVideo.play();
-          setIsPlaying(true);
-        } catch (error) {
-          console.log("Autoplay prevented, trying with user interaction requirement:", error);
-          // If autoplay fails, we'll rely on user interaction
-        }
-      };
-      playVideo();
-    }
-  }, [currentSlide]);
-  
-  // Auto-play and slideshow interval
-  useEffect(() => {
-    let interval;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % slideshowVideos.length);
-      }, 8000); // Longer interval for videos
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-      // Pause all videos on cleanup
-      videoRefs.current.forEach(video => {
-        if (video) video.pause();
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: e.clientX / window.innerWidth - 0.5,
+        y: e.clientY / window.innerHeight - 0.5,
       });
     };
-  }, [isPlaying, slideshowVideos.length]);
-  
-  // Load news content from Firebase Realtime Database
-  useEffect(() => {
-    const loadNewsContent = async () => {
-      try {
-        // Your Firebase database URL (replace with your actual URL)
-        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
-        
-        // Fetch news articles from Firebase
-        const newsResponse = await fetch(`${databaseURL}/news.json`);
-        const newsData = await newsResponse.json();
-        
-        // Fetch events from Firebase
-        const eventsResponse = await fetch(`${databaseURL}/events.json`);
-        const eventsData = await eventsResponse.json();
-        
-        console.log('Loaded from Firebase:', { newsData, eventsData });
-        
-        // Process news data from Firebase
-        const articles = newsData ? Object.keys(newsData).map(key => ({
-          id: key,
-          ...newsData[key]
-        })) : [];
-        
-        // Determine featured article (first article is featured, or find one with featured flag)
-        let featured = articles.length > 0 ? articles[0] : null;
-        
-        // Process events data from Firebase
-        const events = eventsData ? Object.keys(eventsData).map(key => ({
-          id: key,
-          ...eventsData[key]
-        })) : [];
-        
-        setNewsContent({
-          articles,
-          featuredArticle: featured,
-          upcomingEvents: events,
-          isLoading: false
-        });
-        
-        // Load saved articles from localStorage (this can stay in localStorage since it's user-specific)
-        const saved = JSON.parse(localStorage.getItem('blazingtek-saved-articles')) || [];
-        setSavedArticles(saved);
-        
-      } catch (error) {
-        console.error('Error loading news content from Firebase:', error);
-        setNewsContent({
-          articles: [],
-          featuredArticle: null,
-          upcomingEvents: [],
-          isLoading: false
-        });
-      }
-    };
 
-    loadNewsContent();
-    
-    // Poll for updates every 30 seconds
-    const intervalId = setInterval(loadNewsContent, 30000);
-    
+    window.addEventListener("mousemove", handleMouseMove);
+
+    const interval = setInterval(() => {
+      setCurrentBreakthrough((prev) => (prev + 1) % breakthroughs.length);
+    }, 5000);
+
     return () => {
-      clearInterval(intervalId);
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearInterval(interval);
     };
   }, []);
-  
-  const handleVideoLoad = (index) => {
-    const newLoaded = [...videoLoaded];
-    newLoaded[index] = true;
-    setVideoLoaded(newLoaded);
-  };
-  
-  const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    const currentVideo = videoRefs.current[currentSlide];
-    if (currentVideo) {
-      if (isPlaying) {
-        currentVideo.pause();
-      } else {
-        currentVideo.play();
-      }
-    }
-  };
-  
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slideshowVideos.length);
-    setIsPlaying(true);
-  };
-  
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slideshowVideos.length) % slideshowVideos.length);
-    setIsPlaying(true);
-  };
 
-  const newsCategories = [
-    { id: 'all', name: 'All', count: 0 },
-    { id: 'research', name: 'Research', count: 0 },
-    { id: 'events', name: 'Events', count: 0 },
-    { id: 'partnerships', name: 'Partnerships', count: 0 },
-    { id: 'awards', name: 'Awards', count: 0 },
+  const breakthroughs = [
+    {
+      image: slide1,
+      title: "AI-Assisted Irrigation",
+      location: "Kenya",
+    },
+    {
+      image: slide2,
+      title: "Solar-Powered Drones",
+      location: "Agriculture",
+    },
+    {
+      image: slide3,
+      title: "3D Printed Prosthetics",
+      location: "Medical Tech",
+    },
+    {
+      image: slide4,
+      title: "Smart Water Systems",
+      location: "Purification",
+    },
   ];
-
-  // Calculate category counts
-  useEffect(() => {
-    if (newsContent.articles.length > 0) {
-      const categories = [...newsCategories];
-      categories[0].count = newsContent.articles.length;
-      categories[1].count = newsContent.articles.filter(a => a.category === 'research').length;
-      categories[2].count = newsContent.articles.filter(a => a.category === 'events').length;
-      categories[3].count = newsContent.articles.filter(a => a.category === 'partnerships').length;
-      categories[4].count = newsContent.articles.filter(a => a.category === 'awards').length;
-    }
-  }, [newsContent.articles]);
-
-  const getTypeIcon = (type) => {
-    switch(type) {
-      case 'video': return <Video className="h-4 w-4" />;
-      case 'event': return <Calendar className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
-    }
-  };
-
-  const toggleSaveArticle = (articleId) => {
-    let newSavedArticles;
-    if (savedArticles.includes(articleId)) {
-      newSavedArticles = savedArticles.filter(id => id !== articleId);
-    } else {
-      newSavedArticles = [...savedArticles, articleId];
-    }
-    setSavedArticles(newSavedArticles);
-    localStorage.setItem('blazingtek-saved-articles', JSON.stringify(newSavedArticles));
-  };
-
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
-    if (newsletterEmail) {
-      try {
-        const databaseURL = 'https://blazingtek-c56e7-default-rtdb.firebaseio.com';
-        
-        // Save to Firebase using POST request
-        await fetch(`${databaseURL}/newsletter-subscriptions.json`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: newsletterEmail,
-            date: new Date().toISOString(),
-            source: 'news-page'
-          })
-        });
-        
-        // Show success message
-        setSuccessMessage('Thank you for subscribing to our newsletter!');
-        setTimeout(() => setSuccessMessage(''), 3000);
-        setNewsletterEmail('');
-      } catch (error) {
-        console.error('Error saving subscription:', error);
-        setSuccessMessage('Error subscribing. Please try again.');
-        setTimeout(() => setSuccessMessage(''), 3000);
-      }
-    }
-  };
-
-  // Filter articles by selected category
-  const filteredArticles = selectedCategory === 'all' 
-    ? newsContent.articles
-    : newsContent.articles.filter(article => article.category === selectedCategory);
-
-  const handleRegisterEvent = (eventId) => {
-    const event = newsContent.upcomingEvents.find(e => e.id === eventId);
-    if (event && event.registrationLink) {
-      window.open(event.registrationLink, '_blank');
-    } else {
-      alert(`Registration details for "${event?.title}" coming soon!`);
-    }
-  };
-
-  // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Date TBD';
-    try {
-      // If date is already formatted (contains comma), return as is
-      if (dateString.includes(',')) {
-        return dateString;
-      }
-      
-      // Try to parse ISO string or other formats
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return dateString;
-      }
-      
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
-  // Format time for display
-  const formatTime = (timeString) => {
-    if (!timeString) return '';
-    try {
-      const [hours, minutes] = timeString.split(':');
-      const hour = parseInt(hours);
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour % 12 || 12;
-      return `${displayHour}:${minutes} ${ampm}`;
-    } catch {
-      return timeString;
-    }
-  };
-
-  // Get gradient color for placeholder images
-  const getGradientColor = (index = 0) => {
-    const gradients = [
-      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-    ];
-    return gradients[index % gradients.length];
-  };
-
-  // Show loading screen if still loading
-  if (newsContent.isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0A0F14] flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-white/20 border-t-white mb-6"></div>
-          <h1 className="text-3xl font-bold text-white mb-4">Loading News Content...</h1>
-          <p className="text-gray-400">Fetching the latest updates from Firebase</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-[#0A0F14]">
-      {/* Success Message */}
-      <AnimatePresence>
-        {successMessage && (
+    <div className="bg-[#0A0F14]">
+      {/* Optimized Subtle Animation Background - Further Simplified */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Minimal subtle particles */}
+        {[...Array(8)].map((_, i) => (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-4 right-4 z-50 bg-green-500/10 border border-green-500/20 rounded-lg p-4 backdrop-blur-sm"
-          >
-            <div className="flex items-center gap-3 text-green-500">
-              <AlertCircle className="h-5 w-5" />
-              <span className="font-medium">{successMessage}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Hero Section with Video Slideshow */}
-      <section className="relative text-white py-20 md:py-28 overflow-hidden">
-        {/* Video Slideshow Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.2 }}
-                className="absolute inset-0"
+            key={`particle-${i}`}
+            className="absolute top-0 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 0.8 + 0.3}px`,
+              height: `${Math.random() * 0.8 + 0.3}px`,
+              backgroundColor: "rgba(255, 255, 255, 0.05)",
+            }}
+            initial={{ y: -20 }}
+            animate={{
+              y: "100vh",
+              x: Math.random() * 5 - 2.5,
+            }}
+            transition={{
+              duration: Math.random() * 50 + 70,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 20,
+            }}
+          />
+        ))}
+        
+        {/* Static subtle dots - much simpler */}
+        <div className="absolute inset-0 opacity-5">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern 
+                id="dots-pattern" 
+                x="0" 
+                y="0" 
+                width="150" 
+                height="150" 
+                patternUnits="userSpaceOnUse"
               >
-                {/* Video Element - AUTO-PLAY ENABLED */}
-                <video
-                  ref={el => videoRefs.current[currentSlide] = el}
-                  src={slideshowVideos[currentSlide].video}
-                  className="w-full h-full object-cover"
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  onLoadedData={() => handleVideoLoad(currentSlide)}
-                  onError={(e) => {
-                    console.error("Video failed to load:", e);
-                    // Fallback to image
-                    e.target.style.display = 'none';
-                    const fallbackDiv = document.createElement('div');
-                    fallbackDiv.className = 'absolute inset-0';
-                    fallbackDiv.style.backgroundImage = `url(${slideshowVideos[currentSlide].fallback})`;
-                    fallbackDiv.style.backgroundSize = 'cover';
-                    fallbackDiv.style.backgroundPosition = 'center';
-                    e.target.parentElement.appendChild(fallbackDiv);
-                  }}
+                <circle 
+                  cx="75" 
+                  cy="75" 
+                  r="0.8" 
+                  fill="#FFFFFF"
+                  fillOpacity="0.1"
                 />
-                
-                {/* Loading overlay */}
-                {!videoLoaded[currentSlide] && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white/20 border-t-white mb-4"></div>
-                      <p className="text-white/60">Loading video...</p>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Video overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F14]/90 via-[#0A0F14]/70 to-transparent"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F14]/90 to-transparent"></div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#dots-pattern)" />
+          </svg>
         </div>
-        
-        {/* Play/Pause Control */}
-        <div className="absolute top-8 right-8 z-30">
-          <button
-            onClick={togglePlayPause}
-            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-          >
-            {isPlaying ? (
-              <Pause className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
-            ) : (
-              <Play className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
-            )}
-          </button>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center text-white overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0">
+          <img
+            src={bgImage}
+            alt="Technology Background"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              console.error("Error loading background image");
+              e.target.onerror = null;
+              e.target.style.display = 'none';
+            }}
+          />
+          
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-[#0A0F14]/80"></div>
         </div>
-        
-        {/* Slideshow Navigation */}
-        <div className="absolute inset-0 flex items-center justify-between px-4 z-20">
-          <button
-            onClick={prevSlide}
-            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-          >
-            <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-          >
-            <ChevronRightIcon className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-          </button>
-        </div>
-        
-        {/* Slide Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex gap-2">
-          {slideshowVideos.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentSlide(index);
-                setIsPlaying(true);
-              }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentSlide === index 
-                  ? 'w-8 bg-white' 
-                  : 'w-2 bg-white/40 hover:bg-white/60'
-              }`}
-            />
-          ))}
-        </div>
-        
-        {/* Progress Bar */}
-        <div className="absolute bottom-4 left-8 right-8 z-30">
-          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-white"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ 
-                duration: 8, 
-                ease: "linear",
-                repeat: Infinity,
-                repeatDelay: 0
-              }}
-              key={currentSlide}
-            />
-          </div>
-        </div>
-        
+
         {/* Main Content */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
-        >
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <motion.h1 
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full z-10">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            {/* Left Column - Text */}
+            <motion.div
+              className="relative z-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
               >
-                News & Insights
+                <span className="block text-white">Engineering</span>
+                <span className="block text-white mt-2">Intelligent</span>
+                <span className="block text-white">Systems</span>
               </motion.h1>
-              
-              <motion.p 
+
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-lg text-gray-300 mb-10 max-w-2xl leading-relaxed"
+                transition={{ delay: 0.4 }}
+                className="text-lg mb-8 text-gray-300 max-w-lg"
               >
-                Stay updated with our latest research breakthroughs, events, 
-                and thought leadership in emerging technologies.
+                Pioneering research-driven solutions for Africa's challenges through robotics and AI.
               </motion.p>
-              
-              <button 
-                onClick={() => document.getElementById('newsletter-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95"
-              >
-                <span>Subscribe to Newsletter</span>
-              </button>
-            </div>
-            
-            {/* Featured Article Card - Only show if we have one */}
-            {newsContent.featuredArticle && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-              >
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 relative backdrop-blur-sm">
-                  {/* Featured badge */}
-                  <div className="absolute top-4 right-4 bg-white text-[#0A0F14] px-3 py-1 rounded font-medium text-sm z-10">
-                    Featured Story
-                  </div>
-                  
-                  <div className="h-40 bg-white/5 rounded-lg mb-6 relative overflow-hidden">
-                    {newsContent.featuredArticle?.imageUrl ? (
-                      <img 
-                        src={newsContent.featuredArticle.imageUrl} 
-                        alt={newsContent.featuredArticle.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = `
-                            <div class="w-full h-full flex items-center justify-center" style="background: ${getGradientColor(0)}">
-                              <div class="text-white/80 text-sm text-center">
-                                <Newspaper class="h-12 w-12 mx-auto mb-2" />
-                                <p>Featured Story</p>
-                              </div>
-                            </div>
-                          `;
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center" style={{ background: getGradientColor(0) }}>
-                        <div className="text-white/80 text-sm text-center">
-                          <Newspaper className="h-12 w-12 mx-auto mb-2" />
-                          <p>Featured Story</p>
-                        </div>
-                      </div>
-                    )}
-                    <div className="absolute top-3 left-3 bg-white/10 px-2 py-1 rounded text-white text-sm font-medium">
-                      {newsContent.featuredArticle?.category ? 
-                        newsContent.featuredArticle.category.charAt(0).toUpperCase() + newsContent.featuredArticle.category.slice(1) 
-                        : "Article"
-                      }
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-sm text-gray-400">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        <span>{newsContent.featuredArticle?.readTime || "5 min read"}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1">
-                          <Eye className="h-4 w-4" />
-                          <span>{newsContent.featuredArticle?.views || "2.4K"}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Heart className="h-4 w-4" />
-                          <span>{newsContent.featuredArticle?.likes || "156"}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <h3 className="text-lg font-semibold text-white line-clamp-2">
-                      {newsContent.featuredArticle.title}
-                    </h3>
-                    
-                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                      {newsContent.featuredArticle.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                      <div className="flex items-center">
-                        <User className="h-5 w-5 text-gray-400 mr-2" />
-                        <div>
-                          <div className="text-sm text-white font-medium">
-                            {newsContent.featuredArticle.author || "Anonymous"}
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            {newsContent.featuredArticle.authorRole || "Author"}
-                          </div>
-                        </div>
-                      </div>
-                      <Link 
-                        to={`/news/${newsContent.featuredArticle.id}`}
-                        className="text-white hover:text-gray-200 text-sm font-medium flex items-center gap-1"
-                      >
-                        <span>Read</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-      </section>
 
-      {/* Categories - Only show if we have articles */}
-      {newsContent.articles.length > 0 && (
-        <section className="py-8 border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {newsCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 border ${
-                    selectedCategory === category.id
-                      ? 'bg-white text-[#0A0F14] border-white'
-                      : 'bg-white/5 text-gray-300 hover:text-white border-white/10'
-                  }`}
+              {/* CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Link
+                  to="/research"
+                  className="inline-flex items-center gap-3 bg-white text-[#0A0F14] hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors duration-300"
                 >
-                  {category.name}
-                  <span className="px-2 py-0.5 rounded text-xs bg-white/5 text-white">
-                    {category.count}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+                  <span>Explore Research</span>
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </motion.div>
+            </motion.div>
 
-      {/* News Grid */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main News Column */}
-            <div className="lg:col-span-2">
-              {newsContent.articles.length === 0 ? (
-                <div className="text-center py-12">
-                  <Newspaper className="h-12 w-12 text-white/20 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">No Articles Found</h3>
-                  <p className="text-gray-400">
-                    No news articles have been added yet.
-                  </p>
-                
+            {/* Right Column - Carousel */}
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {/* Carousel container */}
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                {/* Carousel indicator */}
+                <div className="absolute top-4 right-4 z-20">
+                  <div className="text-xs text-gray-400 font-mono bg-black/30 px-2 py-1 rounded">
+                    0{currentBreakthrough + 1}/0{breakthroughs.length}
+                  </div>
                 </div>
-              ) : (
-                <>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {filteredArticles.map((article, index) => (
-                      <article
-                        key={article.id || index}
-                        className="group"
+
+                {/* Carousel Container */}
+                <div className="relative">
+                  {/* Main Carousel Image */}
+                  <div className="relative h-80 rounded-lg overflow-hidden">
+                    {breakthroughs.map((breakthrough, index) => (
+                      <motion.div
+                        key={index}
+                        className="absolute inset-0"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                          opacity: currentBreakthrough === index ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.5 }}
                       >
-                        <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full hover:scale-[1.02]">
-                          {article.imageUrl ? (
-                            <div className="h-48 w-full overflow-hidden rounded-t-xl">
-                              <img 
-                                src={article.imageUrl} 
-                                alt={article.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.parentElement.innerHTML = `
-                                    <div class="w-full h-full flex items-center justify-center" style="background: ${getGradientColor(index)}">
-                                      <div class="text-white/80 text-sm text-center">
-                                        <FileText class="h-12 w-12 mx-auto mb-2" />
-                                        <p>${article.category || 'Article'}</p>
-                                      </div>
-                                    </div>
-                                  `;
-                                }}
-                              />
-                            </div>
-                          ) : (
-                            <div className="h-48 w-full overflow-hidden rounded-t-xl flex items-center justify-center" style={{ background: getGradientColor(index) }}>
-                              <div className="text-white/80 text-sm text-center">
-                                <FileText className="h-12 w-12 mx-auto mb-2" />
-                                <p>{article.category || 'Article'}</p>
-                              </div>
-                            </div>
-                          )}
-                          <div className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="flex items-center gap-2">
-                                {getTypeIcon(article.type || 'article')}
-                                <span className="text-sm text-gray-400 capitalize">
-                                  {article.type || 'article'}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 text-sm text-gray-400">
-                                <Clock className="h-3 w-3" />
-                                {article.readTime || "5 min read"}
-                              </div>
-                            </div>
-                            
-                            <span className="inline-block px-3 py-1 rounded text-xs font-medium bg-white/5 text-white border border-white/10 mb-3 capitalize">
-                              {article.category ? 
-                                article.category.charAt(0).toUpperCase() + article.category.slice(1) 
-                                : "Article"
-                              }
-                            </span>
-                            
-                            <h3 className="text-base font-semibold text-white mb-3 line-clamp-2">
-                              {article.title}
-                            </h3>
-                            
-                            <p className="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2">
-                              {article.excerpt}
-                            </p>
-                            
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-                                  <span className="text-xs font-bold">
-                                    {article.author ? article.author.split(' ')[0][0] : 'A'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <div className="text-sm text-white">{article.author || "Anonymous"}</div>
-                                  <div className="text-xs text-gray-400">
-                                    {formatDate(article.date) || "Recent"}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1 text-sm text-gray-400">
-                                <Eye className="h-3 w-3" />
-                                {article.views || "1.2K"}
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                              <div className="flex items-center space-x-2">
-                                <button 
-                                  onClick={() => toggleSaveArticle(article.id || index)}
-                                  className={`p-1.5 rounded transition-colors ${
-                                    savedArticles.includes(article.id || index)
-                                      ? 'text-white bg-white/5'
-                                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                  }`}
-                                >
-                                  <Bookmark className="h-4 w-4" />
-                                </button>
-                                <button 
-                                  onClick={() => alert('Comment functionality would be implemented with a backend')}
-                                  className="p-1.5 rounded text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
-                                >
-                                  <MessageCircle className="h-4 w-4" />
-                                </button>
-                              </div>
-                              <Link 
-                                to={`/news/${article.id || index}`}
-                                className="text-white hover:text-gray-200 text-sm font-medium flex items-center gap-1"
-                              >
-                                <span>Read</span>
-                                <ExternalLink className="h-3 w-3" />
-                              </Link>
-                            </div>
-                          </div>
+                        <div className="relative h-full w-full">
+                          <img
+                            src={breakthrough.image}
+                            alt={breakthrough.title}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error(`Error loading image: ${breakthrough.image}`);
+                              e.target.onerror = null;
+                              e.target.src = `https://via.placeholder.com/600x400/0A0F14/FFFFFF?text=${encodeURIComponent(breakthrough.title)}`;
+                            }}
+                          />
+                          {/* Subtle overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                         </div>
-                      </article>
+                      </motion.div>
                     ))}
                   </div>
-                </>
-              )}
-            </div>
 
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {/* Upcoming Events */}
-              <div>
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded bg-white/5 border border-white/10">
-                      <Calendar className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Upcoming Events</h3>
-                      <p className="text-gray-400 text-sm">Join our next gatherings</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    {newsContent.upcomingEvents.length === 0 ? (
-                      <div className="text-center py-4">
-                        <Calendar className="h-8 w-8 text-white/20 mx-auto mb-2" />
-                        <p className="text-gray-400 text-sm">No upcoming events scheduled</p>
-                       
-                      </div>
-                    ) : (
-                      newsContent.upcomingEvents.map((event, index) => (
-                        <div
-                          key={event.id || index}
-                          className="p-4 rounded-lg border border-white/10 hover:border-white/20 transition-colors bg-white/5 hover:scale-[1.02]"
+                  {/* Navigation and Progress */}
+                  <div className="mt-4 flex items-center justify-between">
+                    {/* Progress dots */}
+                    <div className="flex gap-2">
+                      {breakthroughs.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentBreakthrough(index)}
+                          className="relative"
                         >
-                          <div className="flex justify-between items-start mb-3">
-                            <h4 className="font-medium text-white text-sm line-clamp-2">{event.title}</h4>
-                            <span className="px-2 py-1 rounded text-xs font-medium bg-white text-[#0A0F14] capitalize whitespace-nowrap ml-2">
-                              {event.type || "Event"}
-                            </span>
-                          </div>
-                          <div className="space-y-2 text-xs text-gray-400">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              <span className="font-medium">
-                                {formatDate(event.date)}
-                                {event.time && ` • ${formatTime(event.time)}`}
-                              </span>
-                            </div>
-                            {event.location && (
-                              <div className="flex items-center gap-1">
-                                <MapPin className="h-3 w-3" />
-                                <span className="font-medium">{event.location}</span>
-                              </div>
-                            )}
-                            {event.speaker && (
-                              <div className="flex items-center gap-1">
-                                <User className="h-3 w-3" />
-                                <span className="font-medium">Speaker: {event.speaker}</span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              event.status === 'Registration Open' ? 'bg-green-500/20 text-green-400' :
-                              event.status === 'Sold Out' ? 'bg-red-500/20 text-red-400' :
-                              event.status === 'Upcoming' ? 'bg-blue-500/20 text-blue-400' :
-                              'bg-gray-500/20 text-gray-400'
-                            }`}>
-                              {event.status}
-                            </span>
-                            <button 
-                              onClick={() => handleRegisterEvent(event.id || index)}
-                              className="text-white hover:text-gray-200 text-xs font-medium flex items-center gap-1"
-                            >
-                              <span>Details</span>
-                              <ArrowRight className="h-3 w-3" />
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                    )}
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              index === currentBreakthrough
+                                ? "bg-white"
+                                : "bg-white/30"
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    
+                    {/* Navigation buttons */}
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() =>
+                          setCurrentBreakthrough((prev) => 
+                            (prev - 1 + breakthroughs.length) % breakthroughs.length
+                          )
+                        }
+                        className="p-2 rounded bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                      >
+                        <ChevronRight className="h-4 w-4 rotate-180 text-white" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          setCurrentBreakthrough((prev) => 
+                            (prev + 1) % breakthroughs.length
+                          )
+                        }
+                        className="p-2 rounded bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                      >
+                        <ChevronRight className="h-4 w-4 text-white" />
+                      </button>
+                    </div>
                   </div>
-                  <Link 
-                    to="/admin/upload"
-                    className="mt-6 inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-                  >
-                    <Megaphone className="h-4 w-4" />
-                    <span>Add your event to our calendar</span>
-                  </Link>
                 </div>
               </div>
-
-              {/* Newsletter */}
-              <div id="newsletter-form">
-                <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded bg-white/5 border border-white/10">
-                      <TrendingUp className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Stay Updated</h3>
-                      <p className="text-gray-400 text-sm">Get our weekly digest</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Get our weekly research digest and exclusive content delivered to your inbox.
-                  </p>
-                  <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                    <input
-                      type="email"
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white text-white text-sm placeholder-gray-500 backdrop-blur-sm"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-white text-[#0A0F14] hover:bg-gray-100 font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
-                    >
-                      <span>Subscribe Now</span>
-                    </button>
-                  </form>
-                  <p className="text-xs text-gray-500 mt-3 text-center">
-                    No spam. Unsubscribe anytime.
-                  </p>
-                </div>
-              </div>
-
-              {/* Content Stats */}
-              <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded bg-white/5 border border-white/10">
-                    <Newspaper className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Content Stats</h3>
-                    <p className="text-gray-400 text-sm">Latest updates</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-white/5 rounded-lg hover:scale-[1.02] transition-transform">
-                    <div className="text-2xl font-bold text-white mb-1">
-                      {newsContent.articles.length}
-                    </div>
-                    <div className="text-xs text-gray-400">Articles</div>
-                  </div>
-                  <div className="text-center p-3 bg-white/5 rounded-lg hover:scale-[1.02] transition-transform">
-                    <div className="text-2xl font-bold text-white mb-1">
-                      {newsContent.upcomingEvents.length}
-                    </div>
-                    <div className="text-xs text-gray-400">Events</div>
-                  </div>
-                </div>
-                <div className="mt-4 text-center">
-                  <div className="text-xs text-gray-500">
-                    Last updated: {new Date().toLocaleDateString()}
-                  </div>
-          
-                </div>
-              </div>
-            </div>
+            </motion.div>
           </div>
+
+          {/* Bottom callout */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="mt-12 text-center"
+          >
+            <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
+              <span>Ready to innovate?</span>
+              <Link 
+                to="/contact" 
+                className="text-white hover:text-gray-200 transition-colors inline-flex items-center gap-1"
+              >
+                Start a conversation
+                <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
   );
 };
 
-export default News;
+export default Home;

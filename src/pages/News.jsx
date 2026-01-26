@@ -498,8 +498,6 @@ const News = () => {
           ))}
         </div>
         
-        
-        
         {/* Main Content */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -676,7 +674,6 @@ const News = () => {
                   <p className="text-gray-400">
                     No news articles have been added yet.
                   </p>
-                
                 </div>
               ) : (
                 <>
@@ -818,7 +815,6 @@ const News = () => {
                       <div className="text-center py-4">
                         <Calendar className="h-8 w-8 text-white/20 mx-auto mb-2" />
                         <p className="text-gray-400 text-sm">No upcoming events scheduled</p>
-                       
                       </div>
                     ) : (
                       newsContent.upcomingEvents.map((event, index) => (
@@ -950,10 +946,37 @@ const News = () => {
                   <div className="text-xs text-gray-500">
                     Last updated: {new Date().toLocaleDateString()}
                   </div>
-          
                 </div>
               </div>
-            </div>
+
+              {/* Download Rulebook */}
+              <div className="bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded bg-white/5 border border-white/10">
+                    <FileText className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Competition Rules</h3>
+                    <p className="text-gray-400 text-sm">Official rulebook</p>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-sm mb-4">
+                  Download the official rulebook for the upcoming robot competition. Contains all rules, regulations, and guidelines.
+                </p>
+                <a
+                  href="/assets/pdf/Robot Competition Rulebook.pdf"
+                  download="Robot_Competition_Rulebook.pdf"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90 font-medium py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Download Rulebook (PDF)</span>
+                </a>
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  Updated: {new Date().toLocaleDateString()}
+                </p>
+              </div>
+
+            </div> {/* Closing div for the sidebar column */}
           </div>
         </div>
       </section>

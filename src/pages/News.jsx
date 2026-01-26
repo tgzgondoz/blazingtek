@@ -473,23 +473,7 @@ const News = () => {
           ))}
         </div>
         
-        {/* Progress Bar */}
-        <div className="absolute bottom-4 left-8 right-8 z-30">
-          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-white"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ 
-                duration: 8, 
-                ease: "linear",
-                repeat: Infinity,
-                repeatDelay: 0
-              }}
-              key={currentSlide}
-            />
-          </div>
-        </div>
+        
         
         {/* Main Content */}
         <motion.div 

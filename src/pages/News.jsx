@@ -241,6 +241,40 @@ const News = () => {
     localStorage.setItem('blazingtek-saved-articles', JSON.stringify(newSavedArticles));
   };
 
+  const handleRegisterEvent = (eventId) => {
+    const event = newsContent.upcomingEvents.find(e => e.id === eventId);
+    if (event) {
+      const details = [
+        `📅 **Event Details**`,
+        `Title: ${event.title || 'N/A'}`,
+        `Date: ${formatDate(event.date) || 'Date TBD'}`,
+        `Time: ${event.time ? formatTime(event.time) : 'Time TBD'}`,
+        `Location: ${event.location || 'Location TBD'}`,
+        `Type: ${event.type || 'N/A'}`,
+        `Status: ${event.status || 'N/A'}`,
+        `Speaker/Host: ${event.speaker || 'N/A'}`,
+        `Description: ${event.description || 'No description available'}`
+      ];
+      
+      if (event.registrationLink) {
+        details.push(`🔗 Registration: ${event.registrationLink}`);
+      }
+      
+      // Create a more detailed alert
+      alert(details.join('\n\n'));
+      
+      // Optional: If there's a registration link, ask if user wants to register
+      if (event.registrationLink) {
+        const shouldRegister = confirm('Would you like to register for this event?');
+        if (shouldRegister) {
+          window.open(event.registrationLink, '_blank');
+        }
+      }
+    } else {
+      alert('Event not found');
+    }
+  };
+
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     if (newsletterEmail) {
@@ -276,15 +310,6 @@ const News = () => {
   const filteredArticles = selectedCategory === 'all' 
     ? newsContent.articles
     : newsContent.articles.filter(article => article.category === selectedCategory);
-
-  const handleRegisterEvent = (eventId) => {
-    const event = newsContent.upcomingEvents.find(e => e.id === eventId);
-    if (event && event.registrationLink) {
-      window.open(event.registrationLink, '_blank');
-    } else {
-      alert(`Registration details for "${event?.title}" coming soon!`);
-    }
-  };
 
   // Format date for display
   const formatDate = (dateString) => {

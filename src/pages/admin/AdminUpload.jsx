@@ -31,7 +31,9 @@ import {
   TrendingUp,
   Star,
   Target,
-  BookOpen
+  BookOpen,
+  RefreshCw,
+  Shield
 } from 'lucide-react';
 
 // Import Firebase compatibility version
@@ -78,16 +80,14 @@ const AdminUpload = () => {
     authorRole: '',
     views: '',
     likes: '',
-    imageUrl: '', // This will store the external URL (Google Drive, etc.)
+    imageUrl: '',
     content: '',
-    // Event specific fields
     eventDate: '',
     eventLocation: '',
     eventTime: '',
     registrationLink: '',
     status: 'Upcoming',
     speaker: '',
-    // Column specific fields
     columnType: 'opinion',
     tags: []
   });
@@ -104,6 +104,7 @@ const AdminUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Gradient colors for image placeholders
   const getGradientColor = (index = 0) => {
@@ -163,102 +164,84 @@ const AdminUpload = () => {
 
   // Load existing data from Firebase
   useEffect(() => {
-    try {
-      // Load news
-      const newsRef = database.ref('news');
-      newsRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const newsArray = Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-          }));
-          setPreviewNews(newsArray);
-        } else {
-          setPreviewNews([]);
-        }
-      });
+    const loadData = async () => {
+      try {
+        // Load news
+        const newsRef = database.ref('news');
+        newsRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const newsArray = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+            setPreviewNews(newsArray);
+          } else {
+            setPreviewNews([]);
+          }
+        });
 
-      // Load community data
-      const communityRef = database.ref('community');
-      communityRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          setPreviewCommunity({
-            featured: data.featured ? Object.keys(data.featured).map(key => ({
-              id: key,
-              ...data.featured[key]
-            })) : [],
-            updates: data.updates ? Object.keys(data.updates).map(key => ({
-              id: key,
-              ...data.updates[key]
-            })) : [],
-            events: data.events ? Object.keys(data.events).map(key => ({
-              id: key,
-              ...data.events[key]
-            })) : [],
-            columns: data.columns ? Object.keys(data.columns).map(key => ({
-              id: key,
-              ...data.columns[key]
-            })) : []
-          });
-        } else {
-          setPreviewCommunity({ featured: [], updates: [], events: [], columns: [] });
-        }
-      });
+        // Load community data
+        const communityRef = database.ref('community');
+        communityRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            setPreviewCommunity({
+              featured: data.featured ? Object.keys(data.featured).map(key => ({
+                id: key,
+                ...data.featured[key]
+              })) : [],
+              updates: data.updates ? Object.keys(data.updates).map(key => ({
+                id: key,
+                ...data.updates[key]
+              })) : [],
+              events: data.events ? Object.keys(data.events).map(key => ({
+                id: key,
+                ...data.events[key]
+              })) : [],
+              columns: data.columns ? Object.keys(data.columns).map(key => ({
+                id: key,
+                ...data.columns[key]
+              })) : []
+            });
+          } else {
+            setPreviewCommunity({ featured: [], updates: [], events: [], columns: [] });
+          }
+        });
 
-      // Load events
-      const eventsRef = database.ref('events');
-      eventsRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const eventsArray = Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-          }));
-          setPreviewEvents(eventsArray);
-        } else {
-          setPreviewEvents([]);
-        }
-      });
+        // Load events
+        const eventsRef = database.ref('events');
+        eventsRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const eventsArray = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+            setPreviewEvents(eventsArray);
+          } else {
+            setPreviewEvents([]);
+          }
+        });
 
-      return () => {
-        newsRef.off();
-        communityRef.off();
-        eventsRef.off();
-      };
-    } catch (error) {
-      console.error('Error loading data from Firebase:', error);
-    }
+        return () => {
+          newsRef.off();
+          communityRef.off();
+          eventsRef.off();
+        };
+      } catch (error) {
+        console.error('Error loading data from Firebase:', error);
+        setErrorMessage('Failed to load data from Firebase');
+        setTimeout(() => setErrorMessage(''), 3000);
+      }
+    };
+
+    loadData();
   }, []);
 
   // Reset form when switching tabs
   useEffect(() => {
-    setFormData({
-      id: '',
-      title: '',
-      excerpt: '',
-      description: '',
-      summary: '',
-      category: getDefaultCategory(),
-      date: new Date().toISOString().split('T')[0],
-      type: 'article',
-      readTime: getDefaultReadTime(),
-      author: '',
-      authorRole: '',
-      views: '',
-      likes: '',
-      imageUrl: '', // Reset image URL
-      content: '',
-      eventDate: '',
-      eventLocation: '',
-      eventTime: '',
-      registrationLink: '',
-      status: 'Upcoming',
-      speaker: '',
-      columnType: 'opinion',
-      tags: []
-    });
+    resetForm();
   }, [activePage, activeCommunityTab]);
 
   // Helper functions
@@ -277,6 +260,35 @@ const AdminUpload = () => {
 
   const getDefaultReadTime = () => {
     return `${Math.floor(Math.random() * 5) + 1} min read`;
+  };
+
+  // Reset form function
+  const resetForm = () => {
+    setFormData({
+      id: '',
+      title: '',
+      excerpt: '',
+      description: '',
+      summary: '',
+      category: getDefaultCategory(),
+      date: new Date().toISOString().split('T')[0],
+      type: 'article',
+      readTime: getDefaultReadTime(),
+      author: '',
+      authorRole: '',
+      views: '',
+      likes: '',
+      imageUrl: '',
+      content: '',
+      eventDate: '',
+      eventLocation: '',
+      eventTime: '',
+      registrationLink: '',
+      status: 'Upcoming',
+      speaker: '',
+      columnType: 'opinion',
+      tags: []
+    });
   };
 
   // Handle form changes
@@ -302,46 +314,67 @@ const AdminUpload = () => {
     }
   };
 
-  // CORRECTED: Convert Google Drive URL to direct image URL
+  // Convert Google Drive URL to direct image URL
   const convertGoogleDriveUrl = (url) => {
     if (!url) return url;
     
-    console.log('Original URL:', url);
-    
     // Handle various Google Drive URL formats
-    
-    // Format 1: https://drive.google.com/file/d/FILE_ID/view
     if (url.includes('drive.google.com/file/d/')) {
       const fileIdMatch = url.match(/\/d\/([^/]+)/);
       if (fileIdMatch && fileIdMatch[1]) {
         const fileId = fileIdMatch[1];
-        const convertedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-        console.log('Converted URL (format 1):', convertedUrl);
-        return convertedUrl;
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
       }
     }
     
-    // Format 2: https://drive.google.com/uc?id=FILE_ID
     if (url.includes('drive.google.com/uc?id=')) {
-      console.log('Already direct URL:', url);
       return url;
     }
     
-    // Format 3: https://drive.google.com/open?id=FILE_ID
     if (url.includes('drive.google.com/open?id=')) {
       const fileId = url.split('id=')[1];
-      const convertedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-      console.log('Converted URL (format 3):', convertedUrl);
-      return convertedUrl;
+      return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
     
-    // For non-Google Drive URLs or direct image URLs, return as is
-    console.log('Returning original URL (not Google Drive):', url);
     return url;
   };
 
-  // Save community content with external image URL
-  const saveCommunityContent = async () => {
+  // Refresh data function
+  const refreshData = async () => {
+    setIsRefreshing(true);
+    try {
+      // Force reload from Firebase
+      const newsSnapshot = await database.ref('news').once('value');
+      const communitySnapshot = await database.ref('community').once('value');
+      const eventsSnapshot = await database.ref('events').once('value');
+      
+      // Update state with fresh data
+      const newsData = newsSnapshot.val();
+      const communityData = communitySnapshot.val();
+      const eventsData = eventsSnapshot.val();
+      
+      setPreviewNews(newsData ? Object.keys(newsData).map(key => ({ id: key, ...newsData[key] })) : []);
+      setPreviewCommunity({
+        featured: communityData?.featured ? Object.keys(communityData.featured).map(key => ({ id: key, ...communityData.featured[key] })) : [],
+        updates: communityData?.updates ? Object.keys(communityData.updates).map(key => ({ id: key, ...communityData.updates[key] })) : [],
+        events: communityData?.events ? Object.keys(communityData.events).map(key => ({ id: key, ...communityData.events[key] })) : [],
+        columns: communityData?.columns ? Object.keys(communityData.columns).map(key => ({ id: key, ...communityData.columns[key] })) : []
+      });
+      setPreviewEvents(eventsData ? Object.keys(eventsData).map(key => ({ id: key, ...eventsData[key] })) : []);
+      
+      setSuccessMessage('Data refreshed successfully!');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      setErrorMessage('Failed to refresh data');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  // Save community content
+  const saveCommunityContent = async (isUpdate = false) => {
     if (!formData.title || !formData.description || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
@@ -351,11 +384,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      // Convert Google Drive URL if needed
       const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
 
-      // Prepare data with external image URL
-      const newCommunityItem = {
+      const communityItem = {
         title: formData.title,
         description: formData.description,
         excerpt: formData.excerpt || formData.description.substring(0, 150) + '...',
@@ -364,11 +395,9 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use converted URL if provided, otherwise use gradient
         imageUrl: imageUrl || getGradientColor(getCurrentContentList().length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
-        // Event specific
         eventDate: formData.eventDate || formData.date,
         eventTime: formData.eventTime,
         eventLocation: formData.eventLocation,
@@ -377,14 +406,16 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
-        // Column specific
         columnType: formData.columnType,
         tags: formData.tags,
-        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      // Determine the Firebase path
+      // Add createdAt for new items
+      if (!isUpdate) {
+        communityItem.createdAt = new Date().toISOString();
+      }
+
       let firebasePath;
       if (activeCommunityTab === 'featured') {
         firebasePath = 'community/featured';
@@ -396,39 +427,19 @@ const AdminUpload = () => {
         firebasePath = 'community/columns';
       }
 
-      // Save to Firebase
-      const newItemRef = database.ref(firebasePath).push();
-      await newItemRef.set(newCommunityItem);
+      if (isUpdate && formData.id) {
+        // Update existing item
+        await database.ref(`${firebasePath}/${formData.id}`).update(communityItem);
+        setSuccessMessage('Community content updated successfully!');
+      } else {
+        // Create new item
+        const newItemRef = database.ref(firebasePath).push();
+        await newItemRef.set(communityItem);
+        setSuccessMessage('Community content saved successfully!');
+      }
 
-      setSuccessMessage('Community content saved to Firebase successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
-      
-      // Clear form after successful save
-      setFormData({
-        id: '',
-        title: '',
-        excerpt: '',
-        description: '',
-        summary: '',
-        category: getDefaultCategory(),
-        date: new Date().toISOString().split('T')[0],
-        type: 'article',
-        readTime: getDefaultReadTime(),
-        author: '',
-        authorRole: '',
-        views: '',
-        likes: '',
-        imageUrl: '', // Clear image URL
-        content: '',
-        eventDate: '',
-        eventLocation: '',
-        eventTime: '',
-        registrationLink: '',
-        status: 'Upcoming',
-        speaker: '',
-        columnType: 'opinion',
-        tags: []
-      });
+      resetForm();
 
     } catch (error) {
       console.error('Error saving to Firebase:', error);
@@ -439,8 +450,8 @@ const AdminUpload = () => {
     }
   };
 
-  // Save news content with external image URL
-  const saveNewsContent = async () => {
+  // Save news content
+  const saveNewsContent = async (isUpdate = false) => {
     if (!formData.title || !formData.excerpt || !formData.author) {
       setErrorMessage('Please fill in all required fields');
       setTimeout(() => setErrorMessage(''), 3000);
@@ -450,10 +461,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      // Convert Google Drive URL if needed
       const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
 
-      const newNews = {
+      const newsItem = {
         title: formData.title,
         excerpt: formData.excerpt,
         description: formData.description || formData.excerpt,
@@ -461,48 +471,29 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        // Use converted URL if provided, otherwise use gradient
         imageUrl: imageUrl || getGradientColor(previewNews.length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         views: formData.views || Math.floor(Math.random() * 5000) + 1000,
         likes: formData.likes || Math.floor(Math.random() * 300) + 50,
-        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      const newNewsRef = database.ref('news').push();
-      await newNewsRef.set(newNews);
+      if (!isUpdate) {
+        newsItem.createdAt = new Date().toISOString();
+      }
 
-      setSuccessMessage('News article saved to Firebase successfully!');
+      if (isUpdate && formData.id) {
+        await database.ref(`news/${formData.id}`).update(newsItem);
+        setSuccessMessage('News article updated successfully!');
+      } else {
+        const newNewsRef = database.ref('news').push();
+        await newNewsRef.set(newsItem);
+        setSuccessMessage('News article saved successfully!');
+      }
+
       setTimeout(() => setSuccessMessage(''), 3000);
-      
-      // Clear form
-      setFormData({
-        id: '',
-        title: '',
-        excerpt: '',
-        description: '',
-        summary: '',
-        category: getDefaultCategory(),
-        date: new Date().toISOString().split('T')[0],
-        type: 'article',
-        readTime: getDefaultReadTime(),
-        author: '',
-        authorRole: '',
-        views: '',
-        likes: '',
-        imageUrl: '', // Clear image URL
-        content: '',
-        eventDate: '',
-        eventLocation: '',
-        eventTime: '',
-        registrationLink: '',
-        status: 'Upcoming',
-        speaker: '',
-        columnType: 'opinion',
-        tags: []
-      });
+      resetForm();
 
     } catch (error) {
       console.error('Error saving news to Firebase:', error);
@@ -513,8 +504,8 @@ const AdminUpload = () => {
     }
   };
 
-  // Save event content with external image URL
-  const saveEventContent = async () => {
+  // Save event content
+  const saveEventContent = async (isUpdate = false) => {
     if (!formData.title || !formData.description || !formData.date) {
       setErrorMessage('Please fill in all required fields for the event');
       setTimeout(() => setErrorMessage(''), 3000);
@@ -524,10 +515,9 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      // Convert Google Drive URL if needed
       const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
 
-      const newEvent = {
+      const eventItem = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
@@ -537,45 +527,38 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
-        // Use converted URL if provided, otherwise use gradient
         imageUrl: imageUrl || getGradientColor(previewEvents.length),
         status: formData.status || 'Upcoming',
-        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      const newEventRef = database.ref('events').push();
-      await newEventRef.set(newEvent);
+      if (!isUpdate) {
+        eventItem.createdAt = new Date().toISOString();
+      }
 
-      setSuccessMessage('Event saved to Firebase successfully!');
+      if (activePage === 'news' && activeCommunityTab === 'events') {
+        if (isUpdate && formData.id) {
+          await database.ref(`events/${formData.id}`).update(eventItem);
+          setSuccessMessage('Event updated successfully!');
+        } else {
+          const newEventRef = database.ref('events').push();
+          await newEventRef.set(eventItem);
+          setSuccessMessage('Event saved successfully!');
+        }
+      } else {
+        // Community events
+        if (isUpdate && formData.id) {
+          await database.ref(`community/events/${formData.id}`).update(eventItem);
+          setSuccessMessage('Community event updated successfully!');
+        } else {
+          const newEventRef = database.ref('community/events').push();
+          await newEventRef.set(eventItem);
+          setSuccessMessage('Community event saved successfully!');
+        }
+      }
+
       setTimeout(() => setSuccessMessage(''), 3000);
-      
-      // Clear form
-      setFormData({
-        id: '',
-        title: '',
-        excerpt: '',
-        description: '',
-        summary: '',
-        category: getDefaultCategory(),
-        date: new Date().toISOString().split('T')[0],
-        type: 'article',
-        readTime: getDefaultReadTime(),
-        author: '',
-        authorRole: '',
-        views: '',
-        likes: '',
-        imageUrl: '', // Clear image URL
-        content: '',
-        eventDate: '',
-        eventLocation: '',
-        eventTime: '',
-        registrationLink: '',
-        status: 'Upcoming',
-        speaker: '',
-        columnType: 'opinion',
-        tags: []
-      });
+      resetForm();
 
     } catch (error) {
       console.error('Error saving event to Firebase:', error);
@@ -588,14 +571,16 @@ const AdminUpload = () => {
 
   // Handle save based on current tab
   const handleSave = () => {
+    const isUpdate = !!formData.id;
+    
     if (activePage === 'news') {
       if (activeCommunityTab === 'events') {
-        saveEventContent();
+        saveEventContent(isUpdate);
       } else {
-        saveNewsContent();
+        saveNewsContent(isUpdate);
       }
     } else {
-      saveCommunityContent();
+      saveCommunityContent(isUpdate);
     }
   };
 
@@ -603,7 +588,7 @@ const AdminUpload = () => {
   const editContent = (content) => {
     const editData = { ...content };
     
-    // Try to parse the date if it's in the Community format
+    // Parse date for form input
     if (content.date && content.date.includes(',')) {
       try {
         const dateObj = new Date(content.date);
@@ -614,19 +599,28 @@ const AdminUpload = () => {
     }
     
     setFormData({
-      ...formData,
       ...editData,
       id: content.id,
       summary: content.summary || content.description,
       excerpt: content.excerpt || content.description,
-      // Keep the existing image URL
-      imageUrl: content.imageUrl || ''
+      imageUrl: content.imageUrl || '',
+      tags: content.tags || [],
+      eventDate: content.eventDate || content.date || '',
+      eventLocation: content.eventLocation || content.location || '',
+      eventTime: content.eventTime || content.time || '',
+      registrationLink: content.registrationLink || '',
+      status: content.status || 'Upcoming',
+      speaker: content.speaker || '',
+      columnType: content.columnType || 'opinion'
     });
+
+    // Scroll to form
+    document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Delete content from Firebase
   const deleteContent = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+    if (!window.confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
 
     try {
       let firebasePath;
@@ -653,6 +647,11 @@ const AdminUpload = () => {
         await database.ref(firebasePath).remove();
         setSuccessMessage('Content deleted successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
+        
+        // If deleting the item being edited, reset form
+        if (formData.id === id) {
+          resetForm();
+        }
       }
     } catch (error) {
       console.error('Error deleting from Firebase:', error);
@@ -663,7 +662,7 @@ const AdminUpload = () => {
 
   // Clear all content from Firebase
   const clearAllContent = async () => {
-    if (!window.confirm('Are you sure you want to clear all content? This cannot be undone.')) {
+    if (!window.confirm('⚠️ DANGER: Are you absolutely sure you want to clear ALL content? This action is PERMANENT and cannot be undone!')) {
       return;
     }
 
@@ -692,6 +691,7 @@ const AdminUpload = () => {
         await database.ref(firebasePath).remove();
         setSuccessMessage('All content cleared successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
+        resetForm();
       }
     } catch (error) {
       console.error('Error clearing from Firebase:', error);
@@ -737,37 +737,35 @@ const AdminUpload = () => {
     setFormData(prev => ({ ...prev, imageUrl: url }));
   };
 
-  // Function to test Google Drive URL
-  const testGoogleDriveUrl = () => {
-    const testUrl = "https://drive.google.com/file/d/1o2LasBRns5Y592zmEyWnB49hdck6nHkl/view?usp=drive_link";
-    const converted = convertGoogleDriveUrl(testUrl);
-    console.log('Test conversion:', testUrl, '→', converted);
-    
-    // Also test with the current URL
-    if (formData.imageUrl) {
-      console.log('Current URL conversion:', formData.imageUrl, '→', convertGoogleDriveUrl(formData.imageUrl));
-    }
+  // Cancel edit
+  const cancelEdit = () => {
+    resetForm();
+    setSuccessMessage('Edit cancelled');
+    setTimeout(() => setSuccessMessage(''), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
-      <div className="bg-[#0A0F14] text-white py-6 px-4">
+      <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] text-white py-6 px-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">Content Management</h1>
-              <p className="text-gray-400">Upload and manage content for BlazingTek website</p>
+              <h1 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3">
+                <Shield className="h-8 w-8" />
+                Content Management System
+              </h1>
+              <p className="text-gray-300">Upload and manage content for BlazingTek website</p>
             </div>
             
             {/* Page Toggle */}
-            <div className="flex gap-2 bg-white/10 rounded-lg p-1">
+            <div className="flex gap-2 bg-white/10 rounded-lg p-1 backdrop-blur-sm">
               <button
                 onClick={() => setActivePage('news')}
-                className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
                   activePage === 'news' 
-                    ? 'bg-white text-[#0A0F14]' 
-                    : 'text-gray-300 hover:text-white'
+                    ? 'bg-white text-[#0A0F14] shadow-lg transform scale-105' 
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Newspaper className="h-4 w-4" />
@@ -775,10 +773,10 @@ const AdminUpload = () => {
               </button>
               <button
                 onClick={() => setActivePage('community')}
-                className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
                   activePage === 'community' 
-                    ? 'bg-white text-[#0A0F14]' 
-                    : 'text-gray-300 hover:text-white'
+                    ? 'bg-white text-[#0A0F14] shadow-lg transform scale-105' 
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Users className="h-4 w-4" />
@@ -790,27 +788,30 @@ const AdminUpload = () => {
       </div>
 
       {/* Sub-navigation for tabs */}
-      <div className="bg-white border-b">
+      <div className="bg-white border-b shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex overflow-x-auto">
             {activePage === 'news' ? (
               <>
                 <button
                   onClick={() => setActiveCommunityTab('updates')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 ${
                     activeCommunityTab === 'updates'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
-                  News Articles
+                  <span className="flex items-center gap-2">
+                    <Newspaper className="h-4 w-4" />
+                    News Articles
+                  </span>
                 </button>
                 <button
                   onClick={() => setActiveCommunityTab('events')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 flex items-center gap-2 ${
                     activeCommunityTab === 'events'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
                   <Calendar className="h-4 w-4" />
@@ -821,10 +822,10 @@ const AdminUpload = () => {
               <>
                 <button
                   onClick={() => setActiveCommunityTab('featured')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 flex items-center gap-2 ${
                     activeCommunityTab === 'featured'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
                   <Star className="h-4 w-4" />
@@ -832,10 +833,10 @@ const AdminUpload = () => {
                 </button>
                 <button
                   onClick={() => setActiveCommunityTab('updates')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 flex items-center gap-2 ${
                     activeCommunityTab === 'updates'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
                   <TrendingUp className="h-4 w-4" />
@@ -843,21 +844,21 @@ const AdminUpload = () => {
                 </button>
                 <button
                   onClick={() => setActiveCommunityTab('events')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 flex items-center gap-2 ${
                     activeCommunityTab === 'events'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
                   <Calendar className="h-4 w-4" />
-                  Upcoming Events
+                  Community Events
                 </button>
                 <button
                   onClick={() => setActiveCommunityTab('columns')}
-                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`px-4 py-3 font-medium whitespace-nowrap border-b-2 transition-all duration-300 flex items-center gap-2 ${
                     activeCommunityTab === 'columns'
-                      ? 'border-[#0A0F14] text-[#0A0F14]'
-                      : 'border-transparent text-gray-600 hover:text-[#0A0F14]'
+                      ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
+                      : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
                   }`}
                 >
                   <MessageSquare className="h-4 w-4" />
@@ -877,9 +878,9 @@ const AdminUpload = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="mb-6 bg-green-500/10 border border-green-500/20 rounded-lg p-4"
+              className="mb-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4 shadow-sm"
             >
-              <div className="flex items-center gap-3 text-green-500">
+              <div className="flex items-center gap-3 text-green-600">
                 <Check className="h-5 w-5" />
                 <span className="font-medium">{successMessage}</span>
               </div>
@@ -891,9 +892,9 @@ const AdminUpload = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="mb-6 bg-red-500/10 border border-red-500/20 rounded-lg p-4"
+              className="mb-6 bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 rounded-xl p-4 shadow-sm"
             >
-              <div className="flex items-center gap-3 text-red-500">
+              <div className="flex items-center gap-3 text-red-600">
                 <AlertCircle className="h-5 w-5" />
                 <span className="font-medium">{errorMessage}</span>
               </div>
@@ -905,39 +906,62 @@ const AdminUpload = () => {
           {/* Left Column - Form */}
           <div className="lg:col-span-2 space-y-8">
             {/* Form Section */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+            <div id="form-section" className="bg-white rounded-2xl shadow-xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-[#0A0F14]/10">
-                    {activePage === 'news' ? 
-                      activeCommunityTab === 'events' ? 
-                        <Calendar className="h-6 w-6 text-[#0A0F14]" /> :
-                        <Newspaper className="h-6 w-6 text-[#0A0F14]" />
-                      : activeCommunityTab === 'updates' ? 
-                        <TrendingUp className="h-6 w-6 text-[#0A0F14]" /> :
-                      activeCommunityTab === 'featured' ?
-                        <Star className="h-6 w-6 text-[#0A0F14]" /> :
-                      activeCommunityTab === 'events' ?
-                        <Calendar className="h-6 w-6 text-[#0A0F14]" /> :
-                        <MessageSquare className="h-6 w-6 text-[#0A0F14]" />
-                    }
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-[#0A0F14]/10 to-[#0A0F14]/5 border border-gray-200">
                       {activePage === 'news' ? 
-                        activeCommunityTab === 'events' ? 'Add Upcoming Event' : 'Add News Article'
-                        : activeCommunityTab === 'updates' ? 'Add Latest Update' :
-                        activeCommunityTab === 'featured' ? 'Add Feature Story' :
-                        activeCommunityTab === 'events' ? 'Add Community Event' : 'Add Column/Opinion'
+                        activeCommunityTab === 'events' ? 
+                          <Calendar className="h-6 w-6 text-[#0A0F14]" /> :
+                          <Newspaper className="h-6 w-6 text-[#0A0F14]" />
+                        : activeCommunityTab === 'updates' ? 
+                          <TrendingUp className="h-6 w-6 text-[#0A0F14]" /> :
+                        activeCommunityTab === 'featured' ?
+                          <Star className="h-6 w-6 text-[#0A0F14]" /> :
+                        activeCommunityTab === 'events' ?
+                          <Calendar className="h-6 w-6 text-[#0A0F14]" /> :
+                          <MessageSquare className="h-6 w-6 text-[#0A0F14]" />
                       }
-                    </h2>
-                    <p className="text-gray-600 text-sm">Fill in the details below</p>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">
+                        {formData.id ? 'Edit' : 'Add'} {
+                          activePage === 'news' ? 
+                            activeCommunityTab === 'events' ? 'Upcoming Event' : 'News Article'
+                            : activeCommunityTab === 'updates' ? 'Latest Update' :
+                            activeCommunityTab === 'featured' ? 'Feature Story' :
+                            activeCommunityTab === 'events' ? 'Community Event' : 'Column/Opinion'
+                        }
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        {formData.id ? 'Update existing content' : 'Fill in the details below'}
+                      </p>
+                    </div>
                   </div>
+                  
+                  {formData.id && (
+                    <button
+                      onClick={cancelEdit}
+                      className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel Edit
+                    </button>
+                  )}
                 </div>
+                
+                {formData.id && (
+                  <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-yellow-800">
+                      <AlertCircle className="h-4 w-4" />
+                      <span className="text-sm font-medium">Editing Mode: {formData.title}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="p-6">
-                {/* Image URL Input Section - SIMPLIFIED */}
+                {/* Image URL Input Section */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     <div className="flex items-center gap-2">
@@ -947,119 +971,96 @@ const AdminUpload = () => {
                   </label>
                   
                   <div className="space-y-4">
-                    {/* Direct URL Input */}
-                    <div>
-                      <input
-                        type="url"
-                        value={formData.imageUrl}
-                        onChange={(e) => handleDirectImageUrl(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Paste Google Drive URL or direct image URL"
-                      />
-                      <p className="text-xs text-gray-500 mt-2">
-                        Supports: Google Drive URLs, direct image URLs (JPG, PNG, GIF), video URLs
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Leave empty for automatic gradient background
-                      </p>
+                    <input
+                      type="url"
+                      value={formData.imageUrl}
+                      onChange={(e) => handleDirectImageUrl(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                      placeholder="Paste Google Drive URL or direct image URL..."
+                    />
+                    
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <Link className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-blue-900 mb-1">Google Drive Integration</p>
+                          <p className="text-xs text-blue-700 mb-2">
+                            Supports: Google Drive URLs, direct image URLs (JPG, PNG, GIF), video URLs
+                          </p>
+                          <p className="text-xs text-blue-600 font-mono bg-white/50 p-2 rounded">
+                            https://drive.google.com/file/d/YOUR_FILE_ID/view
+                          </p>
+                        </div>
+                      </div>
                     </div>
-
-                    {/* Google Drive URL Helper */}
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-xs font-medium text-blue-800 mb-1">Google Drive URL Format:</p>
-                      <p className="text-xs text-blue-600 font-mono break-all">
-                        https://drive.google.com/file/d/YOUR_FILE_ID/view
-                      </p>
-                      <p className="text-xs text-blue-600 mt-2">
-                        Example: https://drive.google.com/file/d/1o2LasBRns5Y592zmEyWnB49hdck6nHkl/view
-                      </p>
-                    </div>
-
-                    {/* Test button for debugging */}
-                    <button
-                      onClick={testGoogleDriveUrl}
-                      className="text-xs text-gray-500 underline hover:text-gray-700"
-                    >
-                      Test Google Drive URL conversion
-                    </button>
 
                     {/* Image Preview */}
-                    {formData.imageUrl && (
-                      <div className="mt-4">
-                        <div className="text-sm font-medium text-gray-700 mb-2">Preview:</div>
-                        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
-                          {/* Get the converted URL for preview */}
-                          {(() => {
-                            const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
-                            console.log('Preview URL:', formData.imageUrl, '→', convertedUrl);
-                            
-                            // Check if it's a video URL
-                            if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
-                              return (
-                                <video
-                                  src={convertedUrl}
-                                  className="w-full h-full object-cover"
-                                  controls
-                                  muted
-                                />
-                              );
-                            } else {
-                              return (
-                                <img 
-                                  src={convertedUrl}
-                                  alt="Preview" 
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    console.error('Image failed to load:', convertedUrl);
-                                    e.target.style.display = 'none';
-                                    e.target.parentElement.innerHTML = `
-                                      <div class="w-full h-48 flex flex-col items-center justify-center bg-red-50">
-                                        <div class="text-red-500 text-sm text-center">
-                                          <p>Failed to load image/video</p>
-                                          <p class="text-xs mt-1">URL: ${formData.imageUrl.substring(0, 50)}...</p>
-                                          <p class="text-xs mt-1">Converted to: ${convertedUrl.substring(0, 50)}...</p>
-                                          <p class="text-xs mt-1">Make sure file is publicly accessible</p>
-                                        </div>
-                                      </div>
-                                    `;
-                                  }}
-                                  onLoad={() => console.log('Image loaded successfully:', convertedUrl)}
-                                />
-                              );
-                            }
-                          })()}
-                          <button
-                            onClick={() => handleDirectImageUrl('')}
-                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                            title="Remove image"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* No Image Option */}
-                    {!formData.imageUrl && (
-                      <div className="mt-4">
-                        <div className="text-sm font-medium text-gray-700 mb-2">No image selected:</div>
-                        <div className="w-full h-48 rounded-lg overflow-hidden">
+                    <div>
+                      <div className="text-sm font-medium text-gray-700 mb-2">Preview:</div>
+                      <div className="relative w-full h-64 rounded-xl overflow-hidden border border-gray-300 shadow-inner">
+                        {formData.imageUrl ? (
+                          <>
+                            <div className="w-full h-full bg-gray-900">
+                              {(() => {
+                                const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
+                                if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
+                                  return (
+                                    <video
+                                      src={convertedUrl}
+                                      className="w-full h-full object-cover"
+                                      controls
+                                      muted
+                                    />
+                                  );
+                                } else {
+                                  return (
+                                    <img 
+                                      src={convertedUrl}
+                                      alt="Preview" 
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.parentElement.innerHTML = `
+                                          <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-rose-100">
+                                            <div class="text-red-600 text-sm text-center p-4">
+                                              <AlertCircle class="h-8 w-8 mx-auto mb-2" />
+                                              <p class="font-medium">Failed to load image/video</p>
+                                              <p class="text-xs mt-1">Make sure the file is publicly accessible</p>
+                                            </div>
+                                          </div>
+                                        `;
+                                      }}
+                                    />
+                                  );
+                                }
+                              })()}
+                            </div>
+                            <button
+                              onClick={() => handleDirectImageUrl('')}
+                              className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 shadow-lg transition-colors"
+                              title="Remove image"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </>
+                        ) : (
                           <div 
-                            className="w-full h-full flex items-center justify-center"
+                            className="w-full h-full flex flex-col items-center justify-center"
                             style={{ background: getGradientColor(0) }}
                           >
-                            <div className="text-white/80 text-sm text-center">
-                              <p>Automatic gradient background</p>
-                              <p className="text-xs mt-1">Will be used if no image URL is provided</p>
+                            <div className="text-white/90 text-center p-4">
+                              <Image className="h-12 w-12 mx-auto mb-3 opacity-80" />
+                              <p className="text-sm font-medium">Automatic gradient background</p>
+                              <p className="text-xs mt-1 opacity-80">Will be used if no image URL is provided</p>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Rest of the form remains the same */}
+                {/* Main Form Fields */}
                 <div className="space-y-6">
                   {/* Title Field */}
                   <div>
@@ -1070,11 +1071,11 @@ const AdminUpload = () => {
                       type="text"
                       value={formData.title}
                       onChange={(e) => handleFormChange('title', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
                       placeholder={
                         activePage === 'news' && activeCommunityTab === 'events' 
-                          ? "Enter event title" 
-                          : "Enter content title"
+                          ? "Enter event title..." 
+                          : "Enter content title..."
                       }
                     />
                   </div>
@@ -1089,8 +1090,8 @@ const AdminUpload = () => {
                         value={formData.excerpt}
                         onChange={(e) => handleFormChange('excerpt', e.target.value)}
                         rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Brief summary of the article"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        placeholder="Brief summary of the article..."
                       />
                     </div>
                   ) : (
@@ -1102,8 +1103,8 @@ const AdminUpload = () => {
                         value={formData.description}
                         onChange={(e) => handleFormChange('description', e.target.value)}
                         rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Enter description or excerpt"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        placeholder="Enter description or excerpt..."
                       />
                     </div>
                   )}
@@ -1118,8 +1119,8 @@ const AdminUpload = () => {
                         value={formData.summary}
                         onChange={(e) => handleFormChange('summary', e.target.value)}
                         rows="2"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Brief summary for featured cards"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        placeholder="Brief summary for featured cards..."
                       />
                     </div>
                   )}
@@ -1129,20 +1130,26 @@ const AdminUpload = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Category *
                     </label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {getCurrentCategories().map(cat => (
                         <button
                           key={cat.value}
                           type="button"
                           onClick={() => handleFormChange('category', cat.value)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                          className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300 ${
                             formData.category === cat.value
-                              ? 'border-[#0A0F14] bg-[#0A0F14]/5'
-                              : 'border-gray-300 hover:border-gray-400'
+                              ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10 shadow-sm transform scale-[1.02]'
+                              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                           }`}
                         >
-                          {cat.icon || getCategoryIcon(cat.value)}
-                          <span className="text-sm">{cat.label}</span>
+                          <div className={`p-2 rounded-lg ${
+                            formData.category === cat.value 
+                              ? 'bg-[#0A0F14] text-white' 
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {cat.icon || getCategoryIcon(cat.value)}
+                          </div>
+                          <span className="text-sm font-medium">{cat.label}</span>
                         </button>
                       ))}
                     </div>
@@ -1159,7 +1166,7 @@ const AdminUpload = () => {
                           <select
                             value={formData.type}
                             onChange={(e) => handleFormChange('type', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                           >
                             {eventTypes.map(type => (
                               <option key={type.value} value={type.value}>
@@ -1176,7 +1183,7 @@ const AdminUpload = () => {
                           <select
                             value={formData.status}
                             onChange={(e) => handleFormChange('status', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                           >
                             <option>Upcoming</option>
                             <option>Registration Open</option>
@@ -1197,7 +1204,7 @@ const AdminUpload = () => {
                             type="date"
                             value={formData.date}
                             onChange={(e) => handleFormChange('date', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                           />
                         </div>
 
@@ -1209,7 +1216,7 @@ const AdminUpload = () => {
                             type="time"
                             value={formData.eventTime}
                             onChange={(e) => handleFormChange('eventTime', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                           />
                         </div>
 
@@ -1221,7 +1228,7 @@ const AdminUpload = () => {
                             type="text"
                             value={formData.eventLocation}
                             onChange={(e) => handleFormChange('eventLocation', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                             placeholder="e.g., Accra, Ghana"
                           />
                         </div>
@@ -1236,7 +1243,7 @@ const AdminUpload = () => {
                             type="text"
                             value={formData.speaker}
                             onChange={(e) => handleFormChange('speaker', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                             placeholder="Event speaker or host"
                           />
                         </div>
@@ -1249,7 +1256,7 @@ const AdminUpload = () => {
                             type="url"
                             value={formData.registrationLink}
                             onChange={(e) => handleFormChange('registrationLink', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                             placeholder="https://example.com/register"
                           />
                         </div>
@@ -1267,7 +1274,7 @@ const AdminUpload = () => {
                         <select
                           value={formData.columnType}
                           onChange={(e) => handleFormChange('columnType', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                         >
                           {columnTypes.map(type => (
                             <option key={type.value} value={type.value}>
@@ -1285,7 +1292,7 @@ const AdminUpload = () => {
                           type="text"
                           value={formData.tags.join(', ')}
                           onChange={(e) => handleFormChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                           placeholder="e.g., AI, Robotics, Innovation"
                         />
                       </div>
@@ -1302,7 +1309,7 @@ const AdminUpload = () => {
                         type="text"
                         value={formData.author}
                         onChange={(e) => handleFormChange('author', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                         placeholder="Author name"
                       />
                     </div>
@@ -1315,7 +1322,7 @@ const AdminUpload = () => {
                         type="text"
                         value={formData.readTime}
                         onChange={(e) => handleFormChange('readTime', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
                         placeholder="e.g., 5 min read"
                       />
                     </div>
@@ -1329,8 +1336,8 @@ const AdminUpload = () => {
                     <textarea
                       value={formData.content}
                       onChange={(e) => handleFormChange('content', e.target.value)}
-                      rows="6"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
+                      rows="8"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm font-mono text-sm"
                       placeholder="Write the full content here (supports Markdown)..."
                     />
                   </div>
@@ -1341,42 +1348,37 @@ const AdminUpload = () => {
                   <button
                     onClick={handleSave}
                     disabled={isUploading}
-                    className={`flex-1 ${isUploading ? 'bg-gray-400' : 'bg-[#0A0F14] hover:bg-[#0A0F14]/90'} text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2`}
+                    className={`flex-1 ${isUploading ? 'bg-gray-400' : 'bg-gradient-to-r from-[#0A0F14] to-[#1a2530] hover:from-[#1a2530] hover:to-[#0A0F14]'} text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl`}
                   >
                     {isUploading ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        Saving...
+                        {formData.id ? 'Updating...' : 'Saving...'}
                       </>
                     ) : (
                       <>
                         <Save className="h-5 w-5" />
-                        Save {activeCommunityTab === 'events' ? 'Event' : 'Content'}
+                        {formData.id ? 'Update' : 'Save'} {activeCommunityTab === 'events' ? 'Event' : 'Content'}
                       </>
                     )}
                   </button>
                   
                   <button
+                    onClick={refreshData}
+                    disabled={isRefreshing}
+                    className="px-4 py-4 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl font-medium transition-colors flex items-center gap-2"
+                  >
+                    <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </button>
+                  
+                  <button
                     onClick={clearAllContent}
-                    className="px-4 py-3 border border-red-300 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors flex items-center gap-2"
+                    className="px-4 py-4 border border-red-300 text-red-600 hover:bg-red-50 rounded-xl font-medium transition-colors flex items-center gap-2"
                   >
                     <Trash2 className="h-5 w-5" />
                     Clear All
                   </button>
-                </div>
-
-                {/* Integration Note */}
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <Link className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-blue-800">Google Drive Images</p>
-                      <p className="text-xs text-blue-600 mt-1">
-                        Paste your Google Drive URL. Make sure the file is set to "Anyone with the link can view" in Google Drive sharing settings.
-                        The URL will be automatically converted for proper display.
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1385,38 +1387,31 @@ const AdminUpload = () => {
           {/* Right Column - Preview & List */}
           <div className="space-y-8">
             {/* Preview Section */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <EyeIcon className="h-5 w-5" />
-                  Preview
+                  Live Preview
                 </h3>
-                <p className="text-gray-600 text-sm">How it will appear on the page</p>
+                <p className="text-gray-600 text-sm">How it will appear on the website</p>
               </div>
               
               <div className="p-6">
-                <div className="bg-[#0A0F14] rounded-lg p-4 mb-4">
-                  <div className="text-white text-sm font-medium mb-2">
-                    {activePage === 'news' ? 
-                      activeCommunityTab === 'events' ? 'Upcoming Event Preview' : 'News Article Preview'
-                      : activeCommunityTab === 'updates' ? 'Latest Update Preview' :
-                      activeCommunityTab === 'featured' ? 'Feature Story Preview' :
-                      activeCommunityTab === 'events' ? 'Community Event Preview' : 'Column/Opinion Preview'
-                    }
+                <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] rounded-xl p-5 mb-5 shadow-inner">
+                  <div className="text-white text-sm font-medium mb-2 flex items-center gap-2">
+                    {formData.id ? '🔄 Editing Preview' : '✨ New Content Preview'}
                   </div>
-                  <div className="text-gray-400 text-xs">
+                  <div className="text-gray-300 text-sm font-semibold truncate">
                     {formData.title || 'No title yet'}
                   </div>
                 </div>
 
                 {/* Image Preview */}
-                <div className="mb-4 rounded-lg overflow-hidden">
+                <div className="mb-5 rounded-xl overflow-hidden shadow-lg">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">
                       {(() => {
                         const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
-                        
-                        // Check if it's a video URL
                         if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
                           return (
                             <video
@@ -1436,7 +1431,7 @@ const AdminUpload = () => {
                                 e.target.style.display = 'none';
                                 e.target.parentElement.innerHTML = `
                                   <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
-                                    <div class="text-white/80 text-sm text-center">
+                                    <div class="text-white/80 text-sm text-center p-4">
                                       <p>Image failed to load</p>
                                       <p class="text-xs mt-1">Using gradient instead</p>
                                     </div>
@@ -1454,18 +1449,22 @@ const AdminUpload = () => {
                       style={{ background: getGradientColor(0) }}
                     >
                       <div className="w-full h-full flex items-center justify-center text-white/80 text-sm">
-                        Gradient background (auto-generated)
+                        <div className="text-center p-4">
+                          <Image className="h-8 w-8 mx-auto mb-2 opacity-70" />
+                          <p>Gradient background</p>
+                          <p className="text-xs mt-1 opacity-70">(auto-generated)</p>
+                        </div>
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {/* Title Preview */}
                   {formData.title && (
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">Title</div>
-                      <div className="text-sm font-medium">
+                      <div className="text-xs text-gray-500 mb-1 font-medium">Title</div>
+                      <div className="text-sm font-semibold text-gray-900 bg-gray-50 p-3 rounded-lg">
                         {formData.title}
                       </div>
                     </div>
@@ -1474,10 +1473,10 @@ const AdminUpload = () => {
                   {/* Description/Excerpt Preview */}
                   {(formData.excerpt || formData.description) && (
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">
+                      <div className="text-xs text-gray-500 mb-1 font-medium">
                         {activePage === 'news' && activeCommunityTab === 'events' ? 'Description' : 'Excerpt'}
                       </div>
-                      <div className="text-sm text-gray-700 line-clamp-2">
+                      <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg leading-relaxed">
                         {formData.excerpt || formData.description}
                       </div>
                     </div>
@@ -1486,11 +1485,11 @@ const AdminUpload = () => {
                   {/* Category Preview */}
                   {formData.category && (
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">Category</div>
+                      <div className="text-xs text-gray-500 mb-1 font-medium">Category</div>
                       <div className="text-sm">
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100">
+                        <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-50 border border-gray-200">
                           {getCategoryIcon(formData.category)}
-                          {formData.category}
+                          <span className="font-medium">{formData.category}</span>
                         </span>
                       </div>
                     </div>
@@ -1500,86 +1499,119 @@ const AdminUpload = () => {
             </div>
 
             {/* Existing Content List */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <Layout className="h-5 w-5" />
-                    Existing Content
-                    <span className="text-sm font-normal text-gray-500 ml-2">
-                      ({getContentCount()} items)
-                    </span>
-                  </h3>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <Layout className="h-5 w-5" />
+                      Existing Content
+                      <span className="text-sm font-normal text-gray-500 ml-2">
+                        ({getContentCount()} items)
+                      </span>
+                    </h3>
+                    <p className="text-gray-600 text-sm mt-1">
+                      {activePage === 'news' ? 'News & Events' : 'Community Content'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={refreshData}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    title="Refresh list"
+                  >
+                    <RefreshCw className={`h-4 w-4 text-gray-500 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  </button>
                 </div>
               </div>
               
-              <div className="p-6 max-h-96 overflow-y-auto">
+              <div className="p-6 max-h-[500px] overflow-y-auto">
                 {getContentCount() === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                    <p>No content yet</p>
-                    <p className="text-sm mt-1">Start by adding content above</p>
+                  <div className="text-center py-10 text-gray-500">
+                    <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                    <p className="font-medium text-gray-600">No content yet</p>
+                    <p className="text-sm mt-1 text-gray-500">Start by adding content above</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {getCurrentContentList().map((item, index) => (
-                      <div
+                      <motion.div
                         key={item.id || index}
-                        className="p-3 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`p-4 border rounded-xl transition-all duration-300 hover:shadow-md ${
+                          formData.id === item.id
+                            ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
                       >
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs font-medium px-2 py-1 rounded bg-gray-100 capitalize">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className={`text-xs font-medium px-2 py-1 rounded-lg capitalize ${
+                                formData.id === item.id
+                                  ? 'bg-[#0A0F14] text-white'
+                                  : 'bg-gray-100 text-gray-700'
+                              }`}>
                                 {item.category || item.type || 'Content'}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {item.date || 'No date'}
+                                {item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
                               </span>
+                              {formData.id === item.id && (
+                                <span className="text-xs font-medium px-2 py-1 rounded-lg bg-yellow-100 text-yellow-800">
+                                  Editing
+                                </span>
+                              )}
                             </div>
-                            <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
+                            <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2">
                               {item.title}
                             </h4>
-                            <p className="text-xs text-gray-500 mt-1 line-clamp-1">
+                            <p className="text-xs text-gray-500 line-clamp-1 mb-2">
                               {item.excerpt || item.description || item.summary || 'No description'}
                             </p>
                             {item.author && (
-                              <p className="text-xs text-gray-400 mt-1">
-                                By {item.author}
-                              </p>
+                              <div className="flex items-center gap-1 text-xs text-gray-400">
+                                <User className="h-3 w-3" />
+                                <span>By {item.author}</span>
+                              </div>
                             )}
                           </div>
                           
-                          <div className="flex gap-1 ml-2">
+                          <div className="flex gap-1 ml-3">
                             <button
                               onClick={() => editContent(item)}
-                              className="p-1 hover:bg-gray-100 rounded"
-                              title="Edit"
+                              className={`p-2 rounded-lg transition-colors ${
+                                formData.id === item.id
+                                  ? 'bg-[#0A0F14] text-white'
+                                  : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                              }`}
+                              title={formData.id === item.id ? "Currently editing" : "Edit"}
                             >
-                              <Edit3 className="h-4 w-4 text-gray-500" />
+                              <Edit3 className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => deleteContent(item.id)}
-                              className="p-1 hover:bg-red-50 rounded"
+                              className="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
                               title="Delete"
                             >
-                              <Trash2 className="h-4 w-4 text-red-500" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-b-2xl">
                 <div className="text-center">
-                  <div className="text-xs text-gray-500 mb-2">
-                    Content is saved to Firebase Realtime Database
+                  <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mb-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Live Firebase Connection</span>
                   </div>
-                  <div className="text-xs text-green-600 mb-2">
-                    ✓ Real-time updates enabled
+                  <div className="text-xs text-gray-600">
+                    Real-time updates enabled • Auto-sync every 30s
                   </div>
                 </div>
               </div>

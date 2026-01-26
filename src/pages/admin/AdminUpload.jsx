@@ -106,15 +106,15 @@ const AdminUpload = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Gradient colors for image placeholders
+  // Simple gradient colors - simplified version
   const getGradientColor = (index = 0) => {
     const gradients = [
-      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+      '#667eea',
+      '#f5576c',
+      '#4facfe',
+      '#43e97b',
+      '#fa709a',
+      '#30cfd0',
     ];
     return gradients[index % gradients.length];
   };
@@ -314,31 +314,6 @@ const AdminUpload = () => {
     }
   };
 
-  // Convert Google Drive URL to direct image URL
-  const convertGoogleDriveUrl = (url) => {
-    if (!url) return url;
-    
-    // Handle various Google Drive URL formats
-    if (url.includes('drive.google.com/file/d/')) {
-      const fileIdMatch = url.match(/\/d\/([^/]+)/);
-      if (fileIdMatch && fileIdMatch[1]) {
-        const fileId = fileIdMatch[1];
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
-      }
-    }
-    
-    if (url.includes('drive.google.com/uc?id=')) {
-      return url;
-    }
-    
-    if (url.includes('drive.google.com/open?id=')) {
-      const fileId = url.split('id=')[1];
-      return `https://drive.google.com/uc?export=view&id=${fileId}`;
-    }
-    
-    return url;
-  };
-
   // Refresh data function
   const refreshData = async () => {
     setIsRefreshing(true);
@@ -384,8 +359,6 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
-
       const communityItem = {
         title: formData.title,
         description: formData.description,
@@ -395,7 +368,7 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        imageUrl: imageUrl || getGradientColor(getCurrentContentList().length),
+        imageUrl: formData.imageUrl || getGradientColor(getCurrentContentList().length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         eventDate: formData.eventDate || formData.date,
@@ -461,8 +434,6 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
-
       const newsItem = {
         title: formData.title,
         excerpt: formData.excerpt,
@@ -471,7 +442,7 @@ const AdminUpload = () => {
         author: formData.author,
         authorRole: formData.authorRole || 'Contributor',
         readTime: formData.readTime || getDefaultReadTime(),
-        imageUrl: imageUrl || getGradientColor(previewNews.length),
+        imageUrl: formData.imageUrl || getGradientColor(previewNews.length),
         date: formatDateForCommunity(formData.date),
         content: formData.content,
         views: formData.views || Math.floor(Math.random() * 5000) + 1000,
@@ -515,8 +486,6 @@ const AdminUpload = () => {
     try {
       setIsUploading(true);
 
-      const imageUrl = formData.imageUrl ? convertGoogleDriveUrl(formData.imageUrl) : '';
-
       const eventItem = {
         title: formData.title,
         description: formData.description,
@@ -527,7 +496,7 @@ const AdminUpload = () => {
         type: formData.type,
         speaker: formData.speaker,
         registrationLink: formData.registrationLink,
-        imageUrl: imageUrl || getGradientColor(previewEvents.length),
+        imageUrl: formData.imageUrl || getGradientColor(previewEvents.length),
         status: formData.status || 'Upcoming',
         updatedAt: new Date().toISOString()
       };
@@ -747,7 +716,7 @@ const AdminUpload = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] text-white py-6 px-4 shadow-lg">
+      <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] text-white py-6 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
@@ -764,7 +733,7 @@ const AdminUpload = () => {
                 onClick={() => setActivePage('news')}
                 className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
                   activePage === 'news' 
-                    ? 'bg-white text-[#0A0F14] shadow-lg transform scale-105' 
+                    ? 'bg-white text-[#0A0F14] transform scale-105' 
                     : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -775,7 +744,7 @@ const AdminUpload = () => {
                 onClick={() => setActivePage('community')}
                 className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
                   activePage === 'community' 
-                    ? 'bg-white text-[#0A0F14] shadow-lg transform scale-105' 
+                    ? 'bg-white text-[#0A0F14] transform scale-105' 
                     : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -788,7 +757,7 @@ const AdminUpload = () => {
       </div>
 
       {/* Sub-navigation for tabs */}
-      <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+      <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex overflow-x-auto">
             {activePage === 'news' ? (
@@ -878,7 +847,7 @@ const AdminUpload = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="mb-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4 shadow-sm"
+              className="mb-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-4"
             >
               <div className="flex items-center gap-3 text-green-600">
                 <Check className="h-5 w-5" />
@@ -892,7 +861,7 @@ const AdminUpload = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="mb-6 bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 rounded-xl p-4 shadow-sm"
+              className="mb-6 bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 rounded-xl p-4"
             >
               <div className="flex items-center gap-3 text-red-600">
                 <AlertCircle className="h-5 w-5" />
@@ -906,7 +875,7 @@ const AdminUpload = () => {
           {/* Left Column - Form */}
           <div className="lg:col-span-2 space-y-8">
             {/* Form Section */}
-            <div id="form-section" className="bg-white rounded-2xl shadow-xl border border-gray-200">
+            <div id="form-section" className="bg-white rounded-2xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -961,7 +930,7 @@ const AdminUpload = () => {
               </div>
 
               <div className="p-6">
-                {/* Image URL Input Section */}
+                {/* Image URL Input Section - Simplified */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     <div className="flex items-center gap-2">
@@ -975,20 +944,17 @@ const AdminUpload = () => {
                       type="url"
                       value={formData.imageUrl}
                       onChange={(e) => handleDirectImageUrl(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
-                      placeholder="Paste Google Drive URL or direct image URL..."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
+                      placeholder="Paste direct image URL..."
                     />
                     
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
                       <div className="flex items-start gap-3">
                         <Link className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium text-blue-900 mb-1">Google Drive Integration</p>
+                          <p className="text-sm font-medium text-blue-900 mb-1">Simple Image Upload</p>
                           <p className="text-xs text-blue-700 mb-2">
-                            Supports: Google Drive URLs, direct image URLs (JPG, PNG, GIF), video URLs
-                          </p>
-                          <p className="text-xs text-blue-600 font-mono bg-white/50 p-2 rounded">
-                            https://drive.google.com/file/d/YOUR_FILE_ID/view
+                            Use direct image URLs. If left empty, a gradient color will be used.
                           </p>
                         </div>
                       </div>
@@ -997,47 +963,31 @@ const AdminUpload = () => {
                     {/* Image Preview */}
                     <div>
                       <div className="text-sm font-medium text-gray-700 mb-2">Preview:</div>
-                      <div className="relative w-full h-64 rounded-xl overflow-hidden border border-gray-300 shadow-inner">
+                      <div className="relative w-full h-64 rounded-xl overflow-hidden border border-gray-300">
                         {formData.imageUrl ? (
                           <>
                             <div className="w-full h-full bg-gray-900">
-                              {(() => {
-                                const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
-                                if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
-                                  return (
-                                    <video
-                                      src={convertedUrl}
-                                      className="w-full h-full object-cover"
-                                      controls
-                                      muted
-                                    />
-                                  );
-                                } else {
-                                  return (
-                                    <img 
-                                      src={convertedUrl}
-                                      alt="Preview" 
-                                      className="w-full h-full object-cover"
-                                      onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.parentElement.innerHTML = `
-                                          <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-rose-100">
-                                            <div class="text-red-600 text-sm text-center p-4">
-                                              <AlertCircle class="h-8 w-8 mx-auto mb-2" />
-                                              <p class="font-medium">Failed to load image/video</p>
-                                              <p class="text-xs mt-1">Make sure the file is publicly accessible</p>
-                                            </div>
-                                          </div>
-                                        `;
-                                      }}
-                                    />
-                                  );
-                                }
-                              })()}
+                              <img 
+                                src={formData.imageUrl}
+                                alt="Preview" 
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.parentElement.innerHTML = `
+                                    <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-rose-100">
+                                      <div class="text-red-600 text-sm text-center p-4">
+                                        <AlertCircle class="h-8 w-8 mx-auto mb-2" />
+                                        <p class="font-medium">Failed to load image</p>
+                                        <p class="text-xs mt-1">Using gradient color instead</p>
+                                      </div>
+                                    </div>
+                                  `;
+                                }}
+                              />
                             </div>
                             <button
                               onClick={() => handleDirectImageUrl('')}
-                              className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 shadow-lg transition-colors"
+                              className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
                               title="Remove image"
                             >
                               <X className="h-4 w-4" />
@@ -1046,11 +996,11 @@ const AdminUpload = () => {
                         ) : (
                           <div 
                             className="w-full h-full flex flex-col items-center justify-center"
-                            style={{ background: getGradientColor(0) }}
+                            style={{ backgroundColor: getGradientColor(0) }}
                           >
                             <div className="text-white/90 text-center p-4">
                               <Image className="h-12 w-12 mx-auto mb-3 opacity-80" />
-                              <p className="text-sm font-medium">Automatic gradient background</p>
+                              <p className="text-sm font-medium">Color background</p>
                               <p className="text-xs mt-1 opacity-80">Will be used if no image URL is provided</p>
                             </div>
                           </div>
@@ -1071,7 +1021,7 @@ const AdminUpload = () => {
                       type="text"
                       value={formData.title}
                       onChange={(e) => handleFormChange('title', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
                       placeholder={
                         activePage === 'news' && activeCommunityTab === 'events' 
                           ? "Enter event title..." 
@@ -1090,7 +1040,7 @@ const AdminUpload = () => {
                         value={formData.excerpt}
                         onChange={(e) => handleFormChange('excerpt', e.target.value)}
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
                         placeholder="Brief summary of the article..."
                       />
                     </div>
@@ -1103,7 +1053,7 @@ const AdminUpload = () => {
                         value={formData.description}
                         onChange={(e) => handleFormChange('description', e.target.value)}
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
                         placeholder="Enter description or excerpt..."
                       />
                     </div>
@@ -1119,7 +1069,7 @@ const AdminUpload = () => {
                         value={formData.summary}
                         onChange={(e) => handleFormChange('summary', e.target.value)}
                         rows="2"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm transition-all duration-300"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
                         placeholder="Brief summary for featured cards..."
                       />
                     </div>
@@ -1138,7 +1088,7 @@ const AdminUpload = () => {
                           onClick={() => handleFormChange('category', cat.value)}
                           className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300 ${
                             formData.category === cat.value
-                              ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10 shadow-sm transform scale-[1.02]'
+                              ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10 transform scale-[1.02]'
                               : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
                           }`}
                         >
@@ -1166,7 +1116,7 @@ const AdminUpload = () => {
                           <select
                             value={formData.type}
                             onChange={(e) => handleFormChange('type', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           >
                             {eventTypes.map(type => (
                               <option key={type.value} value={type.value}>
@@ -1183,7 +1133,7 @@ const AdminUpload = () => {
                           <select
                             value={formData.status}
                             onChange={(e) => handleFormChange('status', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           >
                             <option>Upcoming</option>
                             <option>Registration Open</option>
@@ -1204,7 +1154,7 @@ const AdminUpload = () => {
                             type="date"
                             value={formData.date}
                             onChange={(e) => handleFormChange('date', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           />
                         </div>
 
@@ -1216,7 +1166,7 @@ const AdminUpload = () => {
                             type="time"
                             value={formData.eventTime}
                             onChange={(e) => handleFormChange('eventTime', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           />
                         </div>
 
@@ -1228,7 +1178,7 @@ const AdminUpload = () => {
                             type="text"
                             value={formData.eventLocation}
                             onChange={(e) => handleFormChange('eventLocation', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="e.g., Accra, Ghana"
                           />
                         </div>
@@ -1243,7 +1193,7 @@ const AdminUpload = () => {
                             type="text"
                             value={formData.speaker}
                             onChange={(e) => handleFormChange('speaker', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="Event speaker or host"
                           />
                         </div>
@@ -1256,7 +1206,7 @@ const AdminUpload = () => {
                             type="url"
                             value={formData.registrationLink}
                             onChange={(e) => handleFormChange('registrationLink', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                             placeholder="https://example.com/register"
                           />
                         </div>
@@ -1274,7 +1224,7 @@ const AdminUpload = () => {
                         <select
                           value={formData.columnType}
                           onChange={(e) => handleFormChange('columnType', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                         >
                           {columnTypes.map(type => (
                             <option key={type.value} value={type.value}>
@@ -1292,7 +1242,7 @@ const AdminUpload = () => {
                           type="text"
                           value={formData.tags.join(', ')}
                           onChange={(e) => handleFormChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           placeholder="e.g., AI, Robotics, Innovation"
                         />
                       </div>
@@ -1309,7 +1259,7 @@ const AdminUpload = () => {
                         type="text"
                         value={formData.author}
                         onChange={(e) => handleFormChange('author', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                         placeholder="Author name"
                       />
                     </div>
@@ -1322,7 +1272,7 @@ const AdminUpload = () => {
                         type="text"
                         value={formData.readTime}
                         onChange={(e) => handleFormChange('readTime', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                         placeholder="e.g., 5 min read"
                       />
                     </div>
@@ -1337,7 +1287,7 @@ const AdminUpload = () => {
                       value={formData.content}
                       onChange={(e) => handleFormChange('content', e.target.value)}
                       rows="8"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent shadow-sm font-mono text-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
                       placeholder="Write the full content here (supports Markdown)..."
                     />
                   </div>
@@ -1348,7 +1298,7 @@ const AdminUpload = () => {
                   <button
                     onClick={handleSave}
                     disabled={isUploading}
-                    className={`flex-1 ${isUploading ? 'bg-gray-400' : 'bg-gradient-to-r from-[#0A0F14] to-[#1a2530] hover:from-[#1a2530] hover:to-[#0A0F14]'} text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl`}
+                    className={`flex-1 ${isUploading ? 'bg-gray-400' : 'bg-gradient-to-r from-[#0A0F14] to-[#1a2530] hover:from-[#1a2530] hover:to-[#0A0F14]'} text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3`}
                   >
                     {isUploading ? (
                       <>
@@ -1387,7 +1337,7 @@ const AdminUpload = () => {
           {/* Right Column - Preview & List */}
           <div className="space-y-8">
             {/* Preview Section */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
+            <div className="bg-white rounded-2xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <EyeIcon className="h-5 w-5" />
@@ -1397,7 +1347,7 @@ const AdminUpload = () => {
               </div>
               
               <div className="p-6">
-                <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] rounded-xl p-5 mb-5 shadow-inner">
+                <div className="bg-gradient-to-r from-[#0A0F14] to-[#1a2530] rounded-xl p-5 mb-5">
                   <div className="text-white text-sm font-medium mb-2 flex items-center gap-2">
                     {formData.id ? '🔄 Editing Preview' : '✨ New Content Preview'}
                   </div>
@@ -1407,51 +1357,35 @@ const AdminUpload = () => {
                 </div>
 
                 {/* Image Preview */}
-                <div className="mb-5 rounded-xl overflow-hidden shadow-lg">
+                <div className="mb-5 rounded-xl overflow-hidden">
                   {formData.imageUrl ? (
                     <div className="w-full h-48 bg-gray-900 relative">
-                      {(() => {
-                        const convertedUrl = convertGoogleDriveUrl(formData.imageUrl);
-                        if (convertedUrl.match(/\.(mp4|webm|avi|mov)$/i)) {
-                          return (
-                            <video
-                              src={convertedUrl}
-                              className="absolute inset-0 w-full h-full object-cover"
-                              controls
-                              muted
-                            />
-                          );
-                        } else {
-                          return (
-                            <img 
-                              src={convertedUrl}
-                              alt="Preview" 
-                              className="absolute inset-0 w-full h-full object-cover"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentElement.innerHTML = `
-                                  <div class="w-full h-48 flex items-center justify-center" style="background: ${getGradientColor(0)}">
-                                    <div class="text-white/80 text-sm text-center p-4">
-                                      <p>Image failed to load</p>
-                                      <p class="text-xs mt-1">Using gradient instead</p>
-                                    </div>
-                                  </div>
-                                `;
-                              }}
-                            />
-                          );
-                        }
-                      })()}
+                      <img 
+                        src={formData.imageUrl}
+                        alt="Preview" 
+                        className="absolute inset-0 w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = `
+                            <div class="w-full h-48 flex items-center justify-center" style="background-color: ${getGradientColor(0)}">
+                              <div class="text-white/80 text-sm text-center p-4">
+                                <p>Image failed to load</p>
+                                <p class="text-xs mt-1">Using color instead</p>
+                              </div>
+                            </div>
+                          `;
+                        }}
+                      />
                     </div>
                   ) : (
                     <div 
                       className="w-full h-48"
-                      style={{ background: getGradientColor(0) }}
+                      style={{ backgroundColor: getGradientColor(0) }}
                     >
                       <div className="w-full h-full flex items-center justify-center text-white/80 text-sm">
                         <div className="text-center p-4">
                           <Image className="h-8 w-8 mx-auto mb-2 opacity-70" />
-                          <p>Gradient background</p>
+                          <p>Color background</p>
                           <p className="text-xs mt-1 opacity-70">(auto-generated)</p>
                         </div>
                       </div>
@@ -1499,7 +1433,7 @@ const AdminUpload = () => {
             </div>
 
             {/* Existing Content List */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200">
+            <div className="bg-white rounded-2xl border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                   <div>
@@ -1538,7 +1472,7 @@ const AdminUpload = () => {
                         key={item.id || index}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 border rounded-xl transition-all duration-300 hover:shadow-md ${
+                        className={`p-4 border rounded-xl transition-all duration-300 ${
                           formData.id === item.id
                             ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10'
                             : 'border-gray-200 hover:border-gray-300'

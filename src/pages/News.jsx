@@ -39,7 +39,9 @@ const News = () => {
   const [savedArticles, setSavedArticles] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [playingVideo, setPlayingVideo] = useState(null);
   const videoRefs = useRef([]);
+  const videoSectionRefs = useRef([]);
   const [videoLoaded, setVideoLoaded] = useState([]);
   const [newsContent, setNewsContent] = useState({
     articles: [],
@@ -75,7 +77,7 @@ const News = () => {
     setVideoLoaded(new Array(slideshowVideos.length).fill(false));
   }, []);
   
-  // Handle video playback - AUTO-PLAY ENABLED
+  // Handle video playback for slideshow - AUTO-PLAY ENABLED
   useEffect(() => {
     const currentVideo = videoRefs.current[currentSlide];
     if (currentVideo) {
@@ -92,6 +94,25 @@ const News = () => {
       playVideo();
     }
   }, [currentSlide]);
+  
+  // Handle video events for full videos section
+  useEffect(() => {
+    videoSectionRefs.current.forEach((video, index) => {
+      if (video) {
+        video.onended = () => {
+          setPlayingVideo(null);
+        };
+        video.onpause = () => {
+          if (playingVideo === index) {
+            setPlayingVideo(null);
+          }
+        };
+        video.onplay = () => {
+          setPlayingVideo(index);
+        };
+      }
+    });
+  }, [playingVideo]);
   
   // Auto-play and slideshow interval
   useEffect(() => {
@@ -986,7 +1007,7 @@ const News = () => {
         </div>
       </section>
 
-      {/* Full Videos Section */}
+      {/* Full Videos Section - Enhanced with Play/Pause Controls */}
       <section id="videos-section" className="py-16 md:py-20 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-10">
@@ -1005,16 +1026,60 @@ const News = () => {
                 <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden hover:scale-[1.02]">
                   <div className="relative h-48 overflow-hidden">
                     <video
+                      ref={el => videoSectionRefs.current[index] = el}
                       src={video.video}
                       className="w-full h-full object-cover"
                       muted
+                      loop
+                      playsInline
                       poster={video.fallback}
+                      onClick={() => {
+                        const videoElement = videoSectionRefs.current[index];
+                        if (videoElement) {
+                          if (videoElement.paused) {
+                            videoElement.play();
+                            setPlayingVideo(index);
+                          } else {
+                            videoElement.pause();
+                            setPlayingVideo(null);
+                          }
+                        }
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    
+                    {/* Video Controls Overlay */}
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                      onClick={() => {
+                        const videoElement = videoSectionRefs.current[index];
+                        if (videoElement) {
+                          if (videoElement.paused) {
+                            videoElement.play();
+                            setPlayingVideo(index);
+                          } else {
+                            videoElement.pause();
+                            setPlayingVideo(null);
+                          }
+                        }
+                      }}
+                    >
+                      <div className={`transition-all duration-300 ${playingVideo === index ? 'opacity-0' : 'opacity-100'}`}>
+                        <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+                          {playingVideo === index ? (
+                            <Pause className="h-8 w-8 text-white" />
+                          ) : (
+                            <Play className="h-8 w-8 text-white" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Video Information */}
                     <div className="absolute bottom-4 left-4">
                       <div className="flex items-center gap-2">
                         <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
-                          <Play className="h-4 w-4 text-white" />
+                          <Video className="h-4 w-4 text-white" />
                         </div>
                         <span className="text-white text-sm font-medium">
                           Video {index + 1}
@@ -1022,6 +1087,7 @@ const News = () => {
                       </div>
                     </div>
                   </div>
+                  
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-white mb-3">
                       {index === 0 && "Research Breakthrough Demo"}
@@ -1033,21 +1099,55 @@ const News = () => {
                       {index === 1 && "Complete coverage of our recent technology conference and key takeaways."}
                       {index === 2 && "Behind-the-scenes look at our team's collaborative projects and innovations."}
                     </p>
+                    
                     <div className="flex items-center justify-between">
-                      <div className="text-xs text-gray-500">
-                        {index === 0 && "Duration: 3:45"}
-                        {index === 1 && "Duration: 5:20"}
-                        {index === 2 && "Duration: 4:15"}
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => {
+                            const videoElement = videoSectionRefs.current[index];
+                            if (videoElement) {
+                              if (videoElement.paused) {
+                                videoElement.play();
+                                setPlayingVideo(index);
+                              } else {
+                                videoElement.pause();
+                                setPlayingVideo(null);
+                              }
+                            }
+                          }}
+                          className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
+                        >
+                          {playingVideo === index ? (
+                            <>
+                              <Pause className="h-4 w-4" />
+                              <span>Pause</span>
+                            </>
+                          ) : (
+                            <>
+                              <Play className="h-4 w-4" />
+                              <span>Play Video</span>
+                            </>
+                          )}
+                        </button>
                       </div>
+                      
                       <a
                         href={video.video}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <span>Watch Full</span>
+                        <span>Download</span>
                         <ExternalLink className="h-3 w-3" />
                       </a>
+                    </div>
+                    
+                    {/* Video Duration Info */}
+                    <div className="mt-4 text-xs text-gray-500">
+                      {index === 0 && "Duration: 3:45 • Size: 48MB"}
+                      {index === 1 && "Duration: 5:20 • Size: 72MB"}
+                      {index === 2 && "Duration: 4:15 • Size: 56MB"}
                     </div>
                   </div>
                 </div>

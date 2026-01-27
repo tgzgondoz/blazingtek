@@ -12,18 +12,10 @@ import {
   Tag,
   Eye,
   Heart,
-  ChevronLeft,
-  Search,
-  Filter,
-  Grid,
-  List,
-  ExternalLink,
-  Home,
   ArrowLeft,
-  Maximize2,
-  Minimize2,
-  Volume2,
-  VolumeX
+  Search,
+  Home,
+  X
 } from 'lucide-react';
 
 // Import only the actual video files you have
@@ -86,11 +78,8 @@ const VideoLibrary = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [playingVideo, setPlayingVideo] = useState(null);
-  const [fullscreenVideo, setFullscreenVideo] = useState(null);
   const [mutedVideos, setMutedVideos] = useState({});
-  const [viewMode, setViewMode] = useState('grid');
   const videoRefs = useRef([]);
-  const containerRefs = useRef([]);
 
   const categories = [
     { id: 'all', name: 'All Videos', count: videos.length },
@@ -111,33 +100,9 @@ const VideoLibrary = () => {
             setPlayingVideo(null);
           }
         };
-        video.onplay = () => {
-          setPlayingVideo(index);
-        };
       }
     });
   }, [playingVideo]);
-
-  // Handle fullscreen change
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement) {
-        setFullscreenVideo(null);
-      }
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-    };
-  }, []);
 
   // Filter videos based on search and category
   useEffect(() => {
@@ -160,66 +125,25 @@ const VideoLibrary = () => {
   }, [searchTerm, selectedCategory, videos]);
 
   const handleVideoClick = (index) => {
-    const videoElement = videoRefs.current[index];
-    if (videoElement) {
-      // Pause currently playing video
-      if (playingVideo !== null && playingVideo !== index) {
-        const currentVideo = videoRefs.current[playingVideo];
-        if (currentVideo) {
-          currentVideo.pause();
-        }
-      }
-      
-      // Play/pause clicked video
-      if (videoElement.paused) {
-        videoElement.play();
-        setPlayingVideo(index);
-      } else {
-        videoElement.pause();
+    // Pause currently playing video
+    if (playingVideo !== null && playingVideo !== index) {
+      const currentVideo = videoRefs.current[playingVideo];
+      if (currentVideo) {
+        currentVideo.pause();
       }
     }
+    
+    // Set new playing video
+    setPlayingVideo(index);
   };
 
-  const toggleFullscreen = async (index) => {
-    const container = containerRefs.current[index];
-    const videoElement = videoRefs.current[index];
-    
-    if (!container || !videoElement) return;
-
-    try {
-      if (fullscreenVideo === index) {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-          await document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          await document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          await document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          await document.msExitFullscreen();
-        }
-        setFullscreenVideo(null);
-      } else {
-        // Enter fullscreen
-        if (container.requestFullscreen) {
-          await container.requestFullscreen();
-        } else if (container.webkitRequestFullscreen) {
-          await container.webkitRequestFullscreen();
-        } else if (container.mozRequestFullScreen) {
-          await container.mozRequestFullScreen();
-        } else if (container.msRequestFullscreen) {
-          await container.msRequestFullscreen();
-        }
-        setFullscreenVideo(index);
-        
-        // Ensure video plays in fullscreen
-        if (videoElement.paused) {
-          videoElement.play();
-          setPlayingVideo(index);
-        }
+  const closeFullscreen = () => {
+    if (playingVideo !== null) {
+      const currentVideo = videoRefs.current[playingVideo];
+      if (currentVideo) {
+        currentVideo.pause();
       }
-    } catch (error) {
-      console.error('Fullscreen error:', error);
+      setPlayingVideo(null);
     }
   };
 
@@ -252,97 +176,64 @@ const VideoLibrary = () => {
     document.body.removeChild(link);
   };
 
-  // Fullscreen Video Player Component
-  const FullscreenPlayer = ({ video, index }) => {
-    if (fullscreenVideo !== index) return null;
-
-    return (
-      <div className="fixed inset-0 z-50 bg-black">
-        <div className="relative w-full h-full flex items-center justify-center">
-          <video
-            ref={el => {
-              videoRefs.current[index] = el;
-              if (el && fullscreenVideo === index) {
-                el.play().catch(console.error);
-              }
-            }}
-            src={video.videoSrc}
-            className="w-full h-full object-contain"
-            controls
-            autoPlay
-            muted={mutedVideos[index]}
-          />
-          
-          {/* Custom Controls */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-            <div className="max-w-7xl mx-auto">
-              <h3 className="text-xl font-bold text-white mb-2">{video.title}</h3>
-              <div className="flex items-center justify-between">
+  return (
+    <div className="min-h-screen bg-[#0A0F14] text-white">
+      {/* Fullscreen Video Overlay */}
+      {playingVideo !== null && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+        >
+          <div className="relative w-full max-w-6xl">
+            {/* Close Button */}
+            <button
+              onClick={closeFullscreen}
+              className="absolute -top-12 right-0 p-2 text-white hover:text-gray-300 transition-colors z-10"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            
+            {/* Video Player */}
+            <div className="relative rounded-lg overflow-hidden bg-black">
+              <video
+                ref={el => videoRefs.current[playingVideo] = el}
+                src={videos[playingVideo]?.videoSrc}
+                className="w-full h-auto max-h-[80vh] object-contain"
+                controls
+                autoPlay
+                muted={mutedVideos[playingVideo]}
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              {/* Video Info Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {videos[playingVideo]?.title}
+                </h3>
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => handleVideoClick(index)}
+                    onClick={() => toggleMute(playingVideo)}
                     className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                   >
-                    {playingVideo === index ? (
-                      <Pause className="h-6 w-6 text-white" />
-                    ) : (
-                      <Play className="h-6 w-6 text-white" />
-                    )}
+                    {mutedVideos[playingVideo] ? "🔇" : "🔊"}
                   </button>
-                  
-                  <button
-                    onClick={() => toggleMute(index)}
-                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                  >
-                    {mutedVideos[index] ? (
-                      <VolumeX className="h-6 w-6 text-white" />
-                    ) : (
-                      <Volume2 className="h-6 w-6 text-white" />
-                    )}
-                  </button>
-                  
                   <span className="text-white font-medium">
-                    {video.duration}
+                    {videos[playingVideo]?.duration}
                   </span>
-                </div>
-                
-                <div className="flex items-center gap-4">
                   <button
-                    onClick={() => toggleFullscreen(index)}
-                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    onClick={() => handleDownload(videos[playingVideo]?.videoSrc, videos[playingVideo]?.title)}
+                    className="ml-auto p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                   >
-                    <Minimize2 className="h-6 w-6 text-white" />
-                  </button>
-                  
-                  <button
-                    onClick={() => handleDownload(video.videoSrc, video.title)}
-                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                  >
-                    <Download className="h-6 w-6 text-white" />
+                    <Download className="h-5 w-5 text-white" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Close Button */}
-          <button
-            onClick={() => toggleFullscreen(index)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-          >
-            <span className="text-white text-sm">Press ESC to exit</span>
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="min-h-screen bg-[#0A0F14] text-white">
-      {/* Fullscreen Video Players */}
-      {videos.map((video, index) => (
-        <FullscreenPlayer key={`fullscreen-${video.id}`} video={video} index={index} />
-      ))}
+        </motion.div>
+      )}
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[#0A0F14]/95 backdrop-blur-sm border-b border-white/10">
@@ -392,20 +283,15 @@ const VideoLibrary = () => {
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">Video Library</h1>
               <p className="text-gray-400 text-lg">
-                Watch our videos in fullscreen mode for the best experience
+                Click any video to play in fullscreen
               </p>
             </div>
           </div>
           
-          <div className="flex items-center justify-between mb-8">
+          <div className="mb-8">
             <p className="text-gray-400">
               <span className="text-white font-semibold">{filteredVideos.length}</span> video{filteredVideos.length !== 1 ? 's' : ''} available
             </p>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <span>Click the fullscreen button </span>
-              <Maximize2 className="h-4 w-4" />
-              <span> for immersive viewing</span>
-            </div>
           </div>
         </div>
 
@@ -455,90 +341,21 @@ const VideoLibrary = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                ref={el => containerRefs.current[index] = el}
-                className="relative bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full hover:scale-[1.02]"
+                className="relative bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full hover:scale-[1.02] cursor-pointer"
+                onClick={() => handleVideoClick(index)}
               >
                 {/* Video Thumbnail */}
-                <div className="relative h-48 w-full overflow-hidden rounded-t-xl cursor-pointer group">
-                  <video
-                    ref={el => videoRefs.current[index] = el}
-                    src={video.videoSrc}
+                <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
                     className="w-full h-full object-cover"
-                    muted={mutedVideos[index]}
-                    loop
-                    playsInline
-                    poster={video.thumbnail}
-                    onClick={() => handleVideoClick(index)}
                   />
                   
-                  {/* Video Overlay */}
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent group-hover:from-black/40 transition-all duration-300"
-                    onClick={() => handleVideoClick(index)}
-                  />
-                  
-                  {/* Play/Pause Button */}
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                    onClick={() => handleVideoClick(index)}
-                  >
-                    <div className={`transition-all duration-300 ${playingVideo === index ? 'opacity-0' : 'opacity-100'} group-hover:scale-110`}>
-                      <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
-                        {playingVideo === index ? (
-                          <Pause className="h-8 w-8" />
-                        ) : (
-                          <Play className="h-8 w-8" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Video Controls Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleVideoClick(index);
-                          }}
-                          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                        >
-                          {playingVideo === index ? (
-                            <Pause className="h-4 w-4 text-white" />
-                          ) : (
-                            <Play className="h-4 w-4 text-white" />
-                          )}
-                        </button>
-                        
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleMute(index);
-                          }}
-                          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                        >
-                          {mutedVideos[index] ? (
-                            <VolumeX className="h-4 w-4 text-white" />
-                          ) : (
-                            <Volume2 className="h-4 w-4 text-white" />
-                          )}
-                        </button>
-                        
-                        <span className="text-white text-sm font-medium">
-                          {video.duration}
-                        </span>
-                      </div>
-                      
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFullscreen(index);
-                        }}
-                        className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                      >
-                        <Maximize2 className="h-4 w-4 text-white" />
-                      </button>
+                  {/* Play Overlay */}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
+                      <Play className="h-8 w-8" />
                     </div>
                   </div>
                   
@@ -555,11 +372,9 @@ const VideoLibrary = () => {
                 
                 {/* Video Info */}
                 <div className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold text-white line-clamp-2">
-                      {video.title}
-                    </h3>
-                  </div>
+                  <h3 className="text-lg font-semibold text-white line-clamp-2 mb-3">
+                    {video.title}
+                  </h3>
                   
                   <p className="text-gray-400 text-sm mb-4 line-clamp-3">
                     {video.description}
@@ -578,7 +393,7 @@ const VideoLibrary = () => {
                   </div>
                   
                   {/* Video Metadata */}
-                  <div className="flex flex-wrap gap-4 text-xs text-gray-400 mb-4">
+                  <div className="flex flex-wrap gap-4 text-xs text-gray-400">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {formatDate(video.uploadDate)}
@@ -591,71 +406,12 @@ const VideoLibrary = () => {
                       <Heart className="h-3 w-3" />
                       {video.likes}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {video.duration}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Tag className="h-3 w-3" />
-                      {video.fileSize}
-                    </div>
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleVideoClick(index)}
-                        className="px-4 py-2 bg-white text-[#0A0F14] hover:bg-gray-100 rounded-lg font-medium transition-colors flex items-center gap-2"
-                      >
-                        {playingVideo === index ? (
-                          <>
-                            <Pause className="h-4 w-4" />
-                            <span>Pause</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="h-4 w-4" />
-                            <span>Play Video</span>
-                          </>
-                        )}
-                      </button>
-                      
-                      <button
-                        onClick={() => handleDownload(video.videoSrc, video.title)}
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg transition-colors flex items-center gap-2"
-                      >
-                        <Download className="h-4 w-4" />
-                        <span>Download</span>
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => toggleFullscreen(index)}
-                        className="p-2 rounded bg-white/5 hover:bg-white/10 transition-colors"
-                        title="Fullscreen"
-                      >
-                        <Maximize2 className="h-4 w-4" />
-                      </button>
-                      
-                      <a
-                        href={video.videoSrc}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors p-2 rounded hover:bg-white/5"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
         )}
-
-       
       </main>
     </div>
   );

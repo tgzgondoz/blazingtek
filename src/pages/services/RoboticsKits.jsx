@@ -5,26 +5,21 @@ import { CheckCircle, Zap, Package } from 'lucide-react';
 const RoboticsKits = () => {
   const kits = [
     {
-      name: "Beginner Kit",
+      name: "Arduino Starter Kit",
       level: "Introductory",
       description: "Perfect for students starting their robotics journey",
       features: ["Basic sensors", "Motor controllers", "Arduino-based", "Learning materials"],
-      price: "$299"
+      price: "$40"
     },
     {
-      name: "Advanced Kit",
+      name: "Advanced Raspberry Pi Kit",
       level: "University Level",
       description: "For university labs and advanced research",
       features: ["ROS integration", "Advanced sensors", "Customizable modules", "Documentation"],
-      price: "$899"
+      price: "$250"
     },
-    {
-      name: "Research Kit",
-      level: "Professional",
-      description: "For cutting-edge research institutions",
-      features: ["AI capabilities", "Cloud integration", "Multi-robot support", "Priority support"],
-      price: "$1,999"
-    }
+  
+   
   ];
 
   return (

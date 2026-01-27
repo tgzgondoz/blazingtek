@@ -464,6 +464,17 @@ const News = () => {
           </button>
         </div>
         
+        {/* Watch Full Video Link */}
+        <div className="absolute top-8 left-8 z-30">
+          <a
+            href="#videos-section"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
+          >
+            <Video className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
+            <span className="text-white font-medium text-sm">Watch Full Videos</span>
+          </a>
+        </div>
+        
         {/* Slideshow Navigation */}
         <div className="absolute inset-0 flex items-center justify-between px-4 z-20">
           <button
@@ -870,13 +881,7 @@ const News = () => {
                       ))
                     )}
                   </div>
-                  <Link 
-                    to="/admin/upload"
-                    className="mt-6 inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-                  >
-                    <Megaphone className="h-4 w-4" />
-                    <span>Add your event to our calendar</span>
-                  </Link>
+                  
                 </div>
               </div>
 
@@ -977,6 +982,89 @@ const News = () => {
               </div>
 
             </div> {/* Closing div for the sidebar column */}
+          </div>
+        </div>
+      </section>
+
+      {/* Full Videos Section */}
+      <section id="videos-section" className="py-16 md:py-20 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="p-3 rounded-full bg-white/5 border border-white/10">
+              <Video className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-white">Full Videos</h2>
+              <p className="text-gray-400">Watch our complete video content</p>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {slideshowVideos.map((video, index) => (
+              <div key={index} className="group">
+                <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden hover:scale-[1.02]">
+                  <div className="relative h-48 overflow-hidden">
+                    <video
+                      src={video.video}
+                      className="w-full h-full object-cover"
+                      muted
+                      poster={video.fallback}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-4 left-4">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
+                          <Play className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-white text-sm font-medium">
+                          Video {index + 1}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-white mb-3">
+                      {index === 0 && "Research Breakthrough Demo"}
+                      {index === 1 && "Technology Conference Highlights"}
+                      {index === 2 && "Team Collaboration Showcase"}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                      {index === 0 && "Watch the full demonstration of our latest research breakthrough in action."}
+                      {index === 1 && "Complete coverage of our recent technology conference and key takeaways."}
+                      {index === 2 && "Behind-the-scenes look at our team's collaborative projects and innovations."}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-gray-500">
+                        {index === 0 && "Duration: 3:45"}
+                        {index === 1 && "Duration: 5:20"}
+                        {index === 2 && "Duration: 4:15"}
+                      </div>
+                      <a
+                        href={video.video}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
+                      >
+                        <span>Watch Full</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <p className="text-gray-400 mb-6">Looking for more video content?</p>
+            <a
+              href="/videos"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+            >
+              <Video className="h-5 w-5" />
+              <span>View All Videos</span>
+              <ChevronRight className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </section>

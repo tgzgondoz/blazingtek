@@ -1,31 +1,59 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Settings, Factory, Cpu, Shield } from 'lucide-react';
+import { Settings, Home, Sun, Camera, Lock, Factory } from 'lucide-react';
 
 const CustomSolutions = () => {
   const solutions = [
     {
-      industry: "Manufacturing",
+      industry: "Home Automation",
+      icon: <Home className="w-8 h-8" />,
+      applications: ["Smart Lighting", "Climate Control", "Voice Integration", "Entertainment Systems"]
+    },
+    {
+      industry: "Solar Installations",
+      icon: <Sun className="w-8 h-8" />,
+      applications: ["Residential Solar", "Commercial PV Systems", "Solar Monitoring", "Battery Storage"]
+    },
+    {
+      industry: "CCTV Installation",
+      icon: <Camera className="w-8 h-8" />,
+      applications: ["HD Surveillance", "Remote Monitoring", "Motion Detection", "Cloud Storage"]
+    },
+    {
+      industry: "Access Control",
+      icon: <Lock className="w-8 h-8" />,
+      applications: ["Biometric Systems", "Keycard Access", "Visitor Management", "Time & Attendance"]
+    },
+    {
+      industry: "Industrial Automation",
       icon: <Factory className="w-8 h-8" />,
-      applications: ["Automated Assembly", "Quality Inspection", "Material Handling"]
-    },
-    {
-      industry: "Healthcare",
-      icon: <Shield className="w-8 h-8" />,
-      applications: ["Surgical Assistance", "Rehabilitation", "Hospital Logistics"]
-    },
-    {
-      industry: "Agriculture",
-      icon: <Cpu className="w-8 h-8" />,
-      applications: ["Precision Farming", "Harvest Automation", "Crop Monitoring"]
+      applications: ["PLC Systems", "Process Control", "Machine Integration", "SCADA Systems"]
     }
   ];
 
   const processSteps = [
-    { step: "Discovery", description: "Understand requirements" },
-    { step: "Design", description: "Create solution blueprint" },
-    { step: "Development", description: "Build and test system" },
-    { step: "Deployment", description: "Implement and support" }
+    { step: "Consultation", description: "Needs assessment and site survey" },
+    { step: "Design", description: "Custom solution blueprint" },
+    { step: "Installation", description: "Professional implementation" },
+    { step: "Support", description: "Ongoing maintenance and support" }
+  ];
+
+  const caseStudies = [
+    {
+      title: "Smart Office Complex",
+      description: "Complete automation system for 50,000 sq ft commercial building",
+      features: ["Energy Management", "Integrated Security", "Centralized Control"]
+    },
+    {
+      title: "Industrial Facility",
+      description: "Automation solution for manufacturing plant with 24/7 monitoring",
+      features: ["Process Automation", "Safety Systems", "Remote Access"]
+    },
+    {
+      title: "Residential Smart Home",
+      description: "Full home automation for luxury residence",
+      features: ["Voice Control", "Energy Efficiency", "Security Integration"]
+    }
   ];
 
   return (
@@ -39,66 +67,59 @@ const CustomSolutions = () => {
           <div className="inline-flex items-center gap-3 mb-8">
             <Settings className="w-12 h-12" />
             <h1 className="text-4xl md:text-5xl font-bold">
-              Custom <span className="text-gray-300">Solutions</span>
+              Custom <span className="text-gray-300">Automation Solutions</span>
             </h1>
           </div>
-          <p className="text-gray-300 max-w-2xl mx-auto">
-            Bespoke robotic systems for industrial, research, and specialized applications.
+          <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+            Tailored automation systems for residential, commercial, and industrial applications.
           </p>
+          <div className="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
+            <span className="px-4 py-2 bg-white/10 rounded-full">Smart Homes</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full">Solar Energy</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full">Security Systems</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full">Access Control</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full">Industrial IoT</span>
+          </div>
         </motion.div>
       </section>
 
-      {/* Solutions */}
+      {/* Solutions Grid */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <h2 className="text-3xl font-bold text-center mb-12">Our Specialized Solutions</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {solutions.map((solution, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="bg-gray-900/50 border border-gray-800 rounded-xl p-6"
+              viewport={{ once: true }}
+              className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-blue-500/50 transition-colors"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-white/10 rounded-lg">
+                <div className="p-3 bg-blue-500/20 rounded-lg">
                   {solution.icon}
                 </div>
                 <h3 className="text-xl font-bold">{solution.industry}</h3>
               </div>
               
               <div className="space-y-2 mb-8">
-                <h4 className="font-medium text-gray-300">Applications:</h4>
+                <h4 className="font-medium text-gray-300 mb-3">Key Applications:</h4>
                 {solution.applications.map((app, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-white" />
+                  <div key={idx} className="flex items-center gap-3 py-1">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
                     <span className="text-gray-300">{app}</span>
                   </div>
                 ))}
               </div>
               
-              <button className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200">
-                Request Consultation
+              <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+                Request Quote
               </button>
             </motion.div>
           ))}
         </div>
 
-        {/* Process */}
-        <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-8 mb-12">
-          <h3 className="text-2xl font-bold text-center mb-8">Our Process</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            {processSteps.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/10 border border-white/20 flex items-center justify-center font-bold text-xl">
-                  {index + 1}
-                </div>
-                <h4 className="font-medium mb-2">{step.step}</h4>
-                <p className="text-sm text-gray-300">
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* Back Link */}
         <div className="text-center">

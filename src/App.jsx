@@ -16,6 +16,8 @@ import AdminUpload from './pages/admin/AdminUpload';
 import RoboticsKits from './pages/services/RoboticsKits';
 import Workshops from './pages/services/Workshops';
 import CustomSolutions from './pages/services/CustomSolutions';
+// Import VideoLibrary page
+import VideoLibrary from './pages/VideoLibrary';
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/partnerships" element={<Partnerships />} />
             <Route path="/news" element={<News />} />
+            <Route path="/videos" element={<VideoLibrary />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/research" element={<Research />} />
             <Route path="/research/sustainability" element={<SustainableRobotics />} />

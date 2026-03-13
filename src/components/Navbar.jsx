@@ -51,12 +51,12 @@ const Navbar = () => {
     e.preventDefault();
     setLoginError('');
 
-    // Simple authentication - username: "admin", password: "admin"
-    if (loginForm.username === 'admin' && loginForm.password === 'admin') {
+    // Updated authentication - username: "blazingtek.zw@gmail.com", password: "blazing2030"
+    if (loginForm.username === 'blazingtek.zw@gmail.com' && loginForm.password === 'blazing2030') {
       // Store login state in localStorage
       const adminData = {
         isLoggedIn: true,
-        username: 'admin',
+        username: 'blazingtek.zw@gmail.com',
         loginTime: new Date().toISOString()
       };
       localStorage.setItem('blazingtek-admin', JSON.stringify(adminData));
@@ -389,15 +389,15 @@ const Navbar = () => {
                 <form onSubmit={handleLoginSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-400 mb-2">
-                      Username
+                      Email
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       name="username"
                       value={loginForm.username}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                      placeholder="Enter username"
+                      placeholder="Enter email"
                       autoComplete="username"
                       required
                     />

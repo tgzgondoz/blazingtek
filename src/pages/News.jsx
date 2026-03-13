@@ -25,10 +25,8 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Import video files from src/assets/videos/
-import vid1 from '../assets/videos/vid1.mp4';
-import vid2 from '../assets/videos/vid2.mp4';
-import vid3 from '../assets/videos/vid3.mp4';
+// Import background image
+import newsBg from '../assets/news.jpg';
 
 // Fallback images in case videos don't load
 import s1 from '../assets/s1.jpg';
@@ -56,17 +54,17 @@ const News = () => {
   // Video slideshow with professional content
   const slideshowVideos = [
     {
-      video: vid1,
-      fallback: s1,
+      video: null, // No video, using background image instead
+      fallback: newsBg,
       color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
     },
     {
-      video: vid2,
+      video: null,
       fallback: s,
       color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
     },
     {
-      video: vid3,
+      video: null,
       fallback: slide1,
       color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
     }
@@ -416,84 +414,34 @@ const News = () => {
         )}
       </AnimatePresence>
 
-      {/* Hero Section with Video Slideshow */}
+      {/* Hero Section with Image Slideshow */}
       <section className="relative text-white py-20 md:py-28 overflow-hidden">
-        {/* Video Slideshow Background */}
+        {/* Image Slideshow Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 1.2 }}
                 className="absolute inset-0"
               >
-                {/* Video Element - AUTO-PLAY ENABLED */}
-                <video
-                  ref={el => videoRefs.current[currentSlide] = el}
-                  src={slideshowVideos[currentSlide].video}
-                  className="w-full h-full object-cover"
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  onLoadedData={() => handleVideoLoad(currentSlide)}
-                  onError={(e) => {
-                    console.error("Video failed to load:", e);
-                    // Fallback to image
-                    e.target.style.display = 'none';
-                    const fallbackDiv = document.createElement('div');
-                    fallbackDiv.className = 'absolute inset-0';
-                    fallbackDiv.style.backgroundImage = `url(${slideshowVideos[currentSlide].fallback})`;
-                    fallbackDiv.style.backgroundSize = 'cover';
-                    fallbackDiv.style.backgroundPosition = 'center';
-                    e.target.parentElement.appendChild(fallbackDiv);
+                {/* Background Image */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ 
+                    backgroundImage: `url(${slideshowVideos[currentSlide].fallback})`,
                   }}
                 />
                 
-                {/* Loading overlay */}
-                {!videoLoaded[currentSlide] && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white/20 border-t-white mb-4"></div>
-                      <p className="text-white/60">Loading video...</p>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Video overlay gradient */}
+                {/* Image overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0A0F14]/90 via-[#0A0F14]/70 to-transparent"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F14]/90 to-transparent"></div>
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
-        
-        {/* Play/Pause Control */}
-        <div className="absolute top-8 right-8 z-30">
-          <button
-            onClick={togglePlayPause}
-            className="p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-          >
-            {isPlaying ? (
-              <Pause className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
-            ) : (
-              <Play className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
-            )}
-          </button>
-        </div>
-        
-        {/* Watch Full Video Link */}
-        <div className="absolute top-8 left-8 z-30">
-          <a
-            href="#videos-section"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 group"
-          >
-            <Video className="h-5 w-5 text-white group-hover:scale-110 transition-transform" />
-            <span className="text-white font-medium text-sm">Watch Full Videos</span>
-          </a>
         </div>
         
         {/* Slideshow Navigation */}
@@ -1025,55 +973,64 @@ const News = () => {
               <div key={index} className="group">
                 <div className="bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden hover:scale-[1.02]">
                   <div className="relative h-48 overflow-hidden">
-                    <video
-                      ref={el => videoSectionRefs.current[index] = el}
-                      src={video.video}
-                      className="w-full h-full object-cover"
-                      muted
-                      loop
-                      playsInline
-                      poster={video.fallback}
-                      onClick={() => {
-                        const videoElement = videoSectionRefs.current[index];
-                        if (videoElement) {
-                          if (videoElement.paused) {
-                            videoElement.play();
-                            setPlayingVideo(index);
-                          } else {
-                            videoElement.pause();
-                            setPlayingVideo(null);
+                    {video.video ? (
+                      <video
+                        ref={el => videoSectionRefs.current[index] = el}
+                        src={video.video}
+                        className="w-full h-full object-cover"
+                        muted
+                        loop
+                        playsInline
+                        poster={video.fallback}
+                        onClick={() => {
+                          const videoElement = videoSectionRefs.current[index];
+                          if (videoElement) {
+                            if (videoElement.paused) {
+                              videoElement.play();
+                              setPlayingVideo(index);
+                            } else {
+                              videoElement.pause();
+                              setPlayingVideo(null);
+                            }
                           }
-                        }
-                      }}
-                    />
+                        }}
+                      />
+                    ) : (
+                      <div 
+                        className="w-full h-full bg-cover bg-center"
+                        style={{ backgroundImage: `url(${video.fallback})` }}
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     
-                    {/* Video Controls Overlay */}
-                    <div 
-                      className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                      onClick={() => {
-                        const videoElement = videoSectionRefs.current[index];
-                        if (videoElement) {
-                          if (videoElement.paused) {
-                            videoElement.play();
-                            setPlayingVideo(index);
-                          } else {
-                            videoElement.pause();
-                            setPlayingVideo(null);
+                    {/* Video Controls Overlay - Only show if video exists */}
+                    {video.video && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                        onClick={() => {
+                          const videoElement = videoSectionRefs.current[index];
+                          if (videoElement) {
+                            if (videoElement.paused) {
+                              videoElement.play();
+                              setPlayingVideo(index);
+                            } else {
+                              videoElement.pause();
+                              setPlayingVideo(null);
+                            }
                           }
-                        }
-                      }}
-                    >
-                      <div className={`transition-all duration-300 ${playingVideo === index ? 'opacity-0' : 'opacity-100'}`}>
-                        <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
-                          {playingVideo === index ? (
-                            <Pause className="h-8 w-8 text-white" />
-                          ) : (
-                            <Play className="h-8 w-8 text-white" />
-                          )}
+                        }}
+                      >
+                        <div className={`transition-all duration-300 ${playingVideo === index ? 'opacity-0' : 'opacity-100'}`}>
+                          <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+                            {playingVideo === index ? (
+                              <Pause className="h-8 w-8 text-white" />
+                            ) : (
+                              <Play className="h-8 w-8 text-white" />
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                     
                     {/* Video Information */}
                     <div className="absolute bottom-4 left-4">
@@ -1082,7 +1039,7 @@ const News = () => {
                           <Video className="h-4 w-4 text-white" />
                         </div>
                         <span className="text-white text-sm font-medium">
-                          Video {index + 1}
+                          {video.video ? `Video ${index + 1}` : `Image ${index + 1}`}
                         </span>
                       </div>
                     </div>
@@ -1101,54 +1058,64 @@ const News = () => {
                     </p>
                     
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => {
-                            const videoElement = videoSectionRefs.current[index];
-                            if (videoElement) {
-                              if (videoElement.paused) {
-                                videoElement.play();
-                                setPlayingVideo(index);
-                              } else {
-                                videoElement.pause();
-                                setPlayingVideo(null);
+                      {video.video ? (
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => {
+                              const videoElement = videoSectionRefs.current[index];
+                              if (videoElement) {
+                                if (videoElement.paused) {
+                                  videoElement.play();
+                                  setPlayingVideo(index);
+                                } else {
+                                  videoElement.pause();
+                                  setPlayingVideo(null);
+                                }
                               }
-                            }
-                          }}
-                          className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
-                        >
-                          {playingVideo === index ? (
-                            <>
-                              <Pause className="h-4 w-4" />
-                              <span>Pause</span>
-                            </>
-                          ) : (
-                            <>
-                              <Play className="h-4 w-4" />
-                              <span>Play Video</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
+                            }}
+                            className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
+                          >
+                            {playingVideo === index ? (
+                              <>
+                                <Pause className="h-4 w-4" />
+                                <span>Pause</span>
+                              </>
+                            ) : (
+                              <>
+                                <Play className="h-4 w-4" />
+                                <span>Play Video</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-4">
+                          <span className="text-gray-400 text-sm">Image Preview</span>
+                        </div>
+                      )}
                       
-                      <a
-                        href={video.video}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <span>Download</span>
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
+                      {video.video && (
+                        <a
+                          href={video.video}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-white hover:text-gray-200 text-sm font-medium"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span>Download</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
                     </div>
                     
-                    {/* Video Duration Info */}
-                    <div className="mt-4 text-xs text-gray-500">
-                      {index === 0 && "Duration: 3:45 • Size: 48MB"}
-                      {index === 1 && "Duration: 5:20 • Size: 72MB"}
-                      {index === 2 && "Duration: 4:15 • Size: 56MB"}
-                    </div>
+                    {/* Video Duration Info - Only show for videos */}
+                    {video.video && (
+                      <div className="mt-4 text-xs text-gray-500">
+                        {index === 0 && "Duration: 3:45 • Size: 48MB"}
+                        {index === 1 && "Duration: 5:20 • Size: 72MB"}
+                        {index === 2 && "Duration: 4:15 • Size: 56MB"}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

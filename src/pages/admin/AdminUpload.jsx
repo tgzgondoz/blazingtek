@@ -33,7 +33,19 @@ import {
   Target,
   BookOpen,
   RefreshCw,
-  Shield
+  Shield,
+  Code,
+  Brain,
+  Cpu,
+  GraduationCap,
+  Wifi,
+  DollarSign,
+  Clock as ClockIcon,
+  Calendar as CalendarIcon,
+  MapPin,
+  Users as UsersIcon,
+  Layers,
+  CheckCircle
 } from 'lucide-react';
 
 // Import Firebase compatibility version
@@ -62,7 +74,7 @@ const database = firebase.database();
 
 const AdminUpload = () => {
   // State for active page type
-  const [activePage, setActivePage] = useState('community');
+  const [activePage, setActivePage] = useState('workshops'); // Default to workshops
   const [activeCommunityTab, setActiveCommunityTab] = useState('featured');
   
   // Form states
@@ -89,7 +101,22 @@ const AdminUpload = () => {
     status: 'Upcoming',
     speaker: '',
     columnType: 'opinion',
-    tags: []
+    tags: [],
+    
+    // Workshop specific fields
+    duration: '3 Days',
+    price: '$1,200',
+    topics: [],
+    includes: [],
+    icon: 'Brain',
+    skillLevel: 'All Levels',
+    maxParticipants: '',
+    prerequisites: '',
+    syllabus: '',
+    startDate: '',
+    endDate: '',
+    format: 'In-Person',
+    location: ''
   });
 
   // Preview and lists
@@ -101,10 +128,42 @@ const AdminUpload = () => {
     columns: []
   });
   const [previewEvents, setPreviewEvents] = useState([]);
+  const [previewWorkshops, setPreviewWorkshops] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Workshop icons mapping
+  const workshopIcons = [
+    { value: 'Brain', label: 'Brain (AI)', icon: <Brain className="h-4 w-4" /> },
+    { value: 'Cpu', label: 'CPU (ROS)', icon: <Cpu className="h-4 w-4" /> },
+    { value: 'GraduationCap', label: 'Graduation Cap (Educators)', icon: <GraduationCap className="h-4 w-4" /> },
+    { value: 'Shield', label: 'Shield (Drone)', icon: <Shield className="h-4 w-4" /> },
+    { value: 'Code', label: 'Code (Programming)', icon: <Code className="h-4 w-4" /> },
+    { value: 'Users', label: 'Users (Team)', icon: <Users className="h-4 w-4" /> },
+    { value: 'Target', label: 'Target (Goals)', icon: <Target className="h-4 w-4" /> },
+    { value: 'Award', label: 'Award (Certification)', icon: <Award className="h-4 w-4" /> }
+  ];
+
+  // Workshop categories
+  const workshopCategories = [
+    { value: 'AI & Machine Learning', label: 'AI & Machine Learning', icon: <Brain className="h-4 w-4" /> },
+    { value: 'Robotics', label: 'Robotics', icon: <Cpu className="h-4 w-4" /> },
+    { value: 'Drone Programming', label: 'Drone Programming', icon: <Shield className="h-4 w-4" /> },
+    { value: 'Educator Training', label: 'Educator Training', icon: <GraduationCap className="h-4 w-4" /> },
+    { value: 'Embedded Systems', label: 'Embedded Systems', icon: <Code className="h-4 w-4" /> },
+    { value: 'IoT', label: 'IoT', icon: <Wifi className="h-4 w-4" /> }
+  ];
+
+  // Workshop formats
+  const workshopFormats = [
+    'In-Person',
+    'Virtual',
+    'Hybrid',
+    'On-Site Corporate',
+    'Bootcamp'
+  ];
 
   // Simple gradient colors - simplified version
   const getGradientColor = (index = 0) => {
@@ -159,6 +218,21 @@ const AdminUpload = () => {
       case 'COLUMNS & OPINION': return <MessageSquare className="h-4 w-4" />;
       case 'UPCOMING EVENTS': return <Calendar className="h-4 w-4" />;
       default: return <Newspaper className="h-4 w-4" />;
+    }
+  };
+
+  // Get workshop icon component
+  const getWorkshopIcon = (iconName) => {
+    switch(iconName) {
+      case 'Brain': return <Brain className="h-5 w-5" />;
+      case 'Cpu': return <Cpu className="h-5 w-5" />;
+      case 'GraduationCap': return <GraduationCap className="h-5 w-5" />;
+      case 'Shield': return <Shield className="h-5 w-5" />;
+      case 'Code': return <Code className="h-5 w-5" />;
+      case 'Users': return <Users className="h-5 w-5" />;
+      case 'Target': return <Target className="h-5 w-5" />;
+      case 'Award': return <Award className="h-5 w-5" />;
+      default: return <Brain className="h-5 w-5" />;
     }
   };
 
@@ -224,10 +298,26 @@ const AdminUpload = () => {
           }
         });
 
+        // Load workshops
+        const workshopsRef = database.ref('workshops');
+        workshopsRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const workshopsArray = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+            setPreviewWorkshops(workshopsArray);
+          } else {
+            setPreviewWorkshops([]);
+          }
+        });
+
         return () => {
           newsRef.off();
           communityRef.off();
           eventsRef.off();
+          workshopsRef.off();
         };
       } catch (error) {
         console.error('Error loading data from Firebase:', error);
@@ -246,7 +336,9 @@ const AdminUpload = () => {
 
   // Helper functions
   const getDefaultCategory = () => {
-    if (activePage === 'community') {
+    if (activePage === 'workshops') {
+      return 'AI & Machine Learning';
+    } else if (activePage === 'community') {
       switch(activeCommunityTab) {
         case 'featured': return 'FEATURE STORIES';
         case 'updates': return 'UPDATE';
@@ -287,13 +379,35 @@ const AdminUpload = () => {
       status: 'Upcoming',
       speaker: '',
       columnType: 'opinion',
-      tags: []
+      tags: [],
+      
+      // Workshop specific fields
+      duration: '3 Days',
+      price: '$1,200',
+      topics: [],
+      includes: [],
+      icon: 'Brain',
+      skillLevel: 'All Levels',
+      maxParticipants: '',
+      prerequisites: '',
+      syllabus: '',
+      startDate: '',
+      endDate: '',
+      format: 'In-Person',
+      location: ''
     });
   };
 
   // Handle form changes
   const handleFormChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Handle array fields (topics, includes)
+  const handleArrayChange = (field, value) => {
+    // Split by comma and trim
+    const items = value.split(',').map(item => item.trim()).filter(item => item !== '');
+    setFormData(prev => ({ ...prev, [field]: items }));
   };
 
   // Format date for display
@@ -322,11 +436,13 @@ const AdminUpload = () => {
       const newsSnapshot = await database.ref('news').once('value');
       const communitySnapshot = await database.ref('community').once('value');
       const eventsSnapshot = await database.ref('events').once('value');
+      const workshopsSnapshot = await database.ref('workshops').once('value');
       
       // Update state with fresh data
       const newsData = newsSnapshot.val();
       const communityData = communitySnapshot.val();
       const eventsData = eventsSnapshot.val();
+      const workshopsData = workshopsSnapshot.val();
       
       setPreviewNews(newsData ? Object.keys(newsData).map(key => ({ id: key, ...newsData[key] })) : []);
       setPreviewCommunity({
@@ -336,6 +452,7 @@ const AdminUpload = () => {
         columns: communityData?.columns ? Object.keys(communityData.columns).map(key => ({ id: key, ...communityData.columns[key] })) : []
       });
       setPreviewEvents(eventsData ? Object.keys(eventsData).map(key => ({ id: key, ...eventsData[key] })) : []);
+      setPreviewWorkshops(workshopsData ? Object.keys(workshopsData).map(key => ({ id: key, ...workshopsData[key] })) : []);
       
       setSuccessMessage('Data refreshed successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -345,6 +462,72 @@ const AdminUpload = () => {
       setTimeout(() => setErrorMessage(''), 3000);
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  // Save workshop content
+  const saveWorkshopContent = async (isUpdate = false) => {
+    if (!formData.title || !formData.description || !formData.duration || !formData.price) {
+      setErrorMessage('Please fill in all required fields (Title, Description, Duration, Price)');
+      setTimeout(() => setErrorMessage(''), 3000);
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+
+      const workshopItem = {
+        title: formData.title,
+        description: formData.description,
+        excerpt: formData.excerpt || formData.description.substring(0, 150) + '...',
+        duration: formData.duration,
+        price: formData.price,
+        topics: Array.isArray(formData.topics) ? formData.topics : [],
+        includes: Array.isArray(formData.includes) ? formData.includes : [],
+        icon: formData.icon || 'Brain',
+        category: formData.category || 'AI & Machine Learning',
+        skillLevel: formData.skillLevel || 'All Levels',
+        maxParticipants: formData.maxParticipants || '',
+        prerequisites: formData.prerequisites || '',
+        syllabus: formData.syllabus || '',
+        startDate: formData.startDate || '',
+        endDate: formData.endDate || '',
+        format: formData.format || 'In-Person',
+        location: formData.location || formData.eventLocation || '',
+        registrationLink: formData.registrationLink || '',
+        imageUrl: formData.imageUrl || getGradientColor(previewWorkshops.length),
+        status: formData.status || 'Available',
+        author: formData.author || 'BlazingTek Team',
+        authorRole: formData.authorRole || 'Training Department',
+        date: formatDateForCommunity(formData.date),
+        updatedAt: new Date().toISOString()
+      };
+
+      // Add createdAt for new items
+      if (!isUpdate) {
+        workshopItem.createdAt = new Date().toISOString();
+      }
+
+      if (isUpdate && formData.id) {
+        // Update existing workshop
+        await database.ref(`workshops/${formData.id}`).update(workshopItem);
+        setSuccessMessage('Workshop updated successfully!');
+      } else {
+        // Create new workshop
+        const newWorkshopRef = database.ref('workshops').push();
+        await newWorkshopRef.set(workshopItem);
+        setSuccessMessage('Workshop saved successfully!');
+      }
+
+      setTimeout(() => setSuccessMessage(''), 3000);
+      resetForm();
+
+    } catch (error) {
+      console.error('Error saving workshop to Firebase:', error);
+      setErrorMessage('Error saving workshop. Please try again.');
+      setTimeout(() => setErrorMessage(''), 3000);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -542,7 +725,9 @@ const AdminUpload = () => {
   const handleSave = () => {
     const isUpdate = !!formData.id;
     
-    if (activePage === 'news') {
+    if (activePage === 'workshops') {
+      saveWorkshopContent(isUpdate);
+    } else if (activePage === 'news') {
       if (activeCommunityTab === 'events') {
         saveEventContent(isUpdate);
       } else {
@@ -580,7 +765,20 @@ const AdminUpload = () => {
       registrationLink: content.registrationLink || '',
       status: content.status || 'Upcoming',
       speaker: content.speaker || '',
-      columnType: content.columnType || 'opinion'
+      columnType: content.columnType || 'opinion',
+      
+      // Workshop specific fields
+      topics: content.topics || [],
+      includes: content.includes || [],
+      icon: content.icon || 'Brain',
+      skillLevel: content.skillLevel || 'All Levels',
+      maxParticipants: content.maxParticipants || '',
+      prerequisites: content.prerequisites || '',
+      syllabus: content.syllabus || '',
+      startDate: content.startDate || '',
+      endDate: content.endDate || '',
+      format: content.format || 'In-Person',
+      location: content.location || ''
     });
 
     // Scroll to form
@@ -594,7 +792,9 @@ const AdminUpload = () => {
     try {
       let firebasePath;
       
-      if (activePage === 'news') {
+      if (activePage === 'workshops') {
+        firebasePath = `workshops/${id}`;
+      } else if (activePage === 'news') {
         if (activeCommunityTab === 'events') {
           firebasePath = `events/${id}`;
         } else {
@@ -638,7 +838,9 @@ const AdminUpload = () => {
     try {
       let firebasePath;
       
-      if (activePage === 'news') {
+      if (activePage === 'workshops') {
+        firebasePath = 'workshops';
+      } else if (activePage === 'news') {
         if (activeCommunityTab === 'events') {
           firebasePath = 'events';
         } else {
@@ -671,7 +873,9 @@ const AdminUpload = () => {
 
   // Get current content list
   const getCurrentContentList = () => {
-    if (activePage === 'news') {
+    if (activePage === 'workshops') {
+      return previewWorkshops;
+    } else if (activePage === 'news') {
       return activeCommunityTab === 'events' ? previewEvents : previewNews;
     } else {
       if (activeCommunityTab === 'featured') return previewCommunity.featured;
@@ -690,7 +894,9 @@ const AdminUpload = () => {
 
   // Get current category options
   const getCurrentCategories = () => {
-    if (activePage === 'community') {
+    if (activePage === 'workshops') {
+      return workshopCategories;
+    } else if (activePage === 'community') {
       return communityCategories;
     }
     return [
@@ -730,6 +936,17 @@ const AdminUpload = () => {
             {/* Page Toggle */}
             <div className="flex gap-2 bg-white/10 rounded-lg p-1 backdrop-blur-sm">
               <button
+                onClick={() => setActivePage('workshops')}
+                className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
+                  activePage === 'workshops' 
+                    ? 'bg-white text-[#0A0F14] transform scale-105' 
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Brain className="h-4 w-4" />
+                Workshops
+              </button>
+              <button
                 onClick={() => setActivePage('news')}
                 className={`px-4 py-2 rounded-md font-medium transition-all duration-300 flex items-center gap-2 ${
                   activePage === 'news' 
@@ -760,7 +977,14 @@ const AdminUpload = () => {
       <div className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex overflow-x-auto">
-            {activePage === 'news' ? (
+            {activePage === 'workshops' ? (
+              <div className="px-4 py-3 font-medium text-[#0A0F14] border-b-2 border-[#0A0F14]">
+                <span className="flex items-center gap-2">
+                  <Brain className="h-4 w-4" />
+                  Workshop Management
+                </span>
+              </div>
+            ) : activePage === 'news' ? (
               <>
                 <button
                   onClick={() => setActiveCommunityTab('updates')}
@@ -768,7 +992,7 @@ const AdminUpload = () => {
                     activeCommunityTab === 'updates'
                       ? 'border-[#0A0F14] text-[#0A0F14] bg-gray-50'
                       : 'border-transparent text-gray-600 hover:text-[#0A0F14] hover:bg-gray-50'
-                  }`}
+                }`}
                 >
                   <span className="flex items-center gap-2">
                     <Newspaper className="h-4 w-4" />
@@ -880,7 +1104,9 @@ const AdminUpload = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-3 rounded-xl bg-gradient-to-br from-[#0A0F14]/10 to-[#0A0F14]/5 border border-gray-200">
-                      {activePage === 'news' ? 
+                      {activePage === 'workshops' ? (
+                        <Brain className="h-6 w-6 text-[#0A0F14]" />
+                      ) : activePage === 'news' ? 
                         activeCommunityTab === 'events' ? 
                           <Calendar className="h-6 w-6 text-[#0A0F14]" /> :
                           <Newspaper className="h-6 w-6 text-[#0A0F14]" />
@@ -896,6 +1122,7 @@ const AdminUpload = () => {
                     <div>
                       <h2 className="text-xl font-bold text-gray-900">
                         {formData.id ? 'Edit' : 'Add'} {
+                          activePage === 'workshops' ? 'Workshop' :
                           activePage === 'news' ? 
                             activeCommunityTab === 'events' ? 'Upcoming Event' : 'News Article'
                             : activeCommunityTab === 'updates' ? 'Latest Update' :
@@ -1023,6 +1250,7 @@ const AdminUpload = () => {
                       onChange={(e) => handleFormChange('title', e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
                       placeholder={
+                        activePage === 'workshops' ? "Enter workshop title..." :
                         activePage === 'news' && activeCommunityTab === 'events' 
                           ? "Enter event title..." 
                           : "Enter content title..."
@@ -1031,7 +1259,20 @@ const AdminUpload = () => {
                   </div>
 
                   {/* Description/Excerpt Field */}
-                  {activePage === 'news' && activeCommunityTab !== 'events' ? (
+                  {activePage === 'workshops' ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Description *
+                      </label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => handleFormChange('description', e.target.value)}
+                        rows="3"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent transition-all duration-300"
+                        placeholder="Detailed description of the workshop..."
+                      />
+                    </div>
+                  ) : activePage === 'news' && activeCommunityTab !== 'events' ? (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Excerpt *
@@ -1075,38 +1316,307 @@ const AdminUpload = () => {
                     </div>
                   )}
 
-                  {/* Category/Type Selection */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category *
-                    </label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {getCurrentCategories().map(cat => (
-                        <button
-                          key={cat.value}
-                          type="button"
-                          onClick={() => handleFormChange('category', cat.value)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300 ${
-                            formData.category === cat.value
-                              ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10 transform scale-[1.02]'
-                              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className={`p-2 rounded-lg ${
-                            formData.category === cat.value 
-                              ? 'bg-[#0A0F14] text-white' 
-                              : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {cat.icon || getCategoryIcon(cat.value)}
+                  {/* Workshop Specific Fields */}
+                  {activePage === 'workshops' && (
+                    <>
+                      {/* Duration and Price */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Duration *
+                          </label>
+                          <div className="relative">
+                            <ClockIcon className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
+                            <input
+                              type="text"
+                              value={formData.duration}
+                              onChange={(e) => handleFormChange('duration', e.target.value)}
+                              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                              placeholder="e.g., 3 Days"
+                            />
                           </div>
-                          <span className="text-sm font-medium">{cat.label}</span>
-                        </button>
-                      ))}
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Price *
+                          </label>
+                          <div className="relative">
+                            <DollarSign className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
+                            <input
+                              type="text"
+                              value={formData.price}
+                              onChange={(e) => handleFormChange('price', e.target.value)}
+                              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                              placeholder="e.g., $1,200"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Icon Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Icon
+                        </label>
+                        <div className="grid grid-cols-4 gap-3">
+                          {workshopIcons.map(icon => (
+                            <button
+                              key={icon.value}
+                              type="button"
+                              onClick={() => handleFormChange('icon', icon.value)}
+                              className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-300 ${
+                                formData.icon === icon.value
+                                  ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10'
+                                  : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                              }`}
+                            >
+                              <div className={`p-2 rounded-lg ${
+                                formData.icon === icon.value 
+                                  ? 'bg-[#0A0F14] text-white' 
+                                  : 'bg-gray-100 text-gray-600'
+                              }`}>
+                                {icon.icon}
+                              </div>
+                              <span className="text-xs text-gray-600 text-center">{icon.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Topics */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Topics (comma separated) *
+                        </label>
+                        <input
+                          type="text"
+                          value={Array.isArray(formData.topics) ? formData.topics.join(', ') : ''}
+                          onChange={(e) => handleArrayChange('topics', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="e.g., Neural Networks, Computer Vision, NLP"
+                        />
+                      </div>
+
+                      {/* Includes */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Includes (comma separated) *
+                        </label>
+                        <input
+                          type="text"
+                          value={Array.isArray(formData.includes) ? formData.includes.join(', ') : ''}
+                          onChange={(e) => handleArrayChange('includes', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="e.g., Materials, Projects, Certificate"
+                        />
+                      </div>
+
+                      {/* Category and Skill Level */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Category
+                          </label>
+                          <select
+                            value={formData.category}
+                            onChange={(e) => handleFormChange('category', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          >
+                            {workshopCategories.map(cat => (
+                              <option key={cat.value} value={cat.value}>{cat.label}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Skill Level
+                          </label>
+                          <select
+                            value={formData.skillLevel}
+                            onChange={(e) => handleFormChange('skillLevel', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          >
+                            <option>All Levels</option>
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Format and Location */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Format
+                          </label>
+                          <select
+                            value={formData.format}
+                            onChange={(e) => handleFormChange('format', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          >
+                            {workshopFormats.map(format => (
+                              <option key={format} value={format}>{format}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Location
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.location}
+                            onChange={(e) => handleFormChange('location', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                            placeholder="e.g., Accra, Ghana"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Dates */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Start Date
+                          </label>
+                          <input
+                            type="date"
+                            value={formData.startDate}
+                            onChange={(e) => handleFormChange('startDate', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            End Date
+                          </label>
+                          <input
+                            type="date"
+                            value={formData.endDate}
+                            onChange={(e) => handleFormChange('endDate', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Max Participants */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Max Participants
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.maxParticipants}
+                          onChange={(e) => handleFormChange('maxParticipants', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="e.g., 20"
+                        />
+                      </div>
+
+                      {/* Prerequisites */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Prerequisites
+                        </label>
+                        <textarea
+                          value={formData.prerequisites}
+                          onChange={(e) => handleFormChange('prerequisites', e.target.value)}
+                          rows="2"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="Any prerequisites for attending this workshop..."
+                        />
+                      </div>
+
+                      {/* Syllabus */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Syllabus / Full Content
+                        </label>
+                        <textarea
+                          value={formData.syllabus || formData.content}
+                          onChange={(e) => {
+                            handleFormChange('syllabus', e.target.value);
+                            handleFormChange('content', e.target.value);
+                          }}
+                          rows="6"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
+                          placeholder="Detailed syllabus or content of the workshop..."
+                        />
+                      </div>
+
+                      {/* Registration Link */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Registration Link
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.registrationLink}
+                          onChange={(e) => handleFormChange('registrationLink', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="https://example.com/register"
+                        />
+                      </div>
+
+                      {/* Status */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Status
+                        </label>
+                        <select
+                          value={formData.status}
+                          onChange={(e) => handleFormChange('status', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                        >
+                          <option>Available</option>
+                          <option>Registration Open</option>
+                          <option>Limited Spots</option>
+                          <option>Sold Out</option>
+                          <option>Coming Soon</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Category/Type Selection (for non-workshop pages) */}
+                  {activePage !== 'workshops' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category *
+                      </label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {getCurrentCategories().map(cat => (
+                          <button
+                            key={cat.value}
+                            type="button"
+                            onClick={() => handleFormChange('category', cat.value)}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300 ${
+                              formData.category === cat.value
+                                ? 'border-[#0A0F14] bg-gradient-to-r from-[#0A0F14]/5 to-[#0A0F14]/10 transform scale-[1.02]'
+                                : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                            }`}
+                          >
+                            <div className={`p-2 rounded-lg ${
+                              formData.category === cat.value 
+                                ? 'bg-[#0A0F14] text-white' 
+                                : 'bg-gray-100 text-gray-600'
+                            }`}>
+                              {cat.icon || getCategoryIcon(cat.value)}
+                            </div>
+                            <span className="text-sm font-medium">{cat.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Event specific fields */}
-                  {(activeCommunityTab === 'events' || (activePage === 'news' && activeCommunityTab === 'events')) && (
+                  {activePage !== 'workshops' && (activeCommunityTab === 'events' || (activePage === 'news' && activeCommunityTab === 'events')) && (
                     <>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
@@ -1215,7 +1725,7 @@ const AdminUpload = () => {
                   )}
 
                   {/* Column specific fields */}
-                  {activeCommunityTab === 'columns' && (
+                  {activePage !== 'workshops' && activeCommunityTab === 'columns' && (
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1240,7 +1750,7 @@ const AdminUpload = () => {
                         </label>
                         <input
                           type="text"
-                          value={formData.tags.join(', ')}
+                          value={Array.isArray(formData.tags) ? formData.tags.join(', ') : ''}
                           onChange={(e) => handleFormChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
                           placeholder="e.g., AI, Robotics, Innovation"
@@ -1249,48 +1759,52 @@ const AdminUpload = () => {
                     </div>
                   )}
 
-                  {/* Author and Read Time */}
-                  <div className="grid md:grid-cols-2 gap-6">
+                  {/* Author and Read Time (for non-workshop pages) */}
+                  {activePage !== 'workshops' && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Author *
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.author}
+                          onChange={(e) => handleFormChange('author', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="Author name"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Read Time
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.readTime}
+                          onChange={(e) => handleFormChange('readTime', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
+                          placeholder="e.g., 5 min read"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Full Content (for non-workshop pages) */}
+                  {activePage !== 'workshops' && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Author *
+                        Full Content (Optional)
                       </label>
-                      <input
-                        type="text"
-                        value={formData.author}
-                        onChange={(e) => handleFormChange('author', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="Author name"
+                      <textarea
+                        value={formData.content}
+                        onChange={(e) => handleFormChange('content', e.target.value)}
+                        rows="8"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
+                        placeholder="Write the full content here (supports Markdown)..."
                       />
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Read Time
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.readTime}
-                        onChange={(e) => handleFormChange('readTime', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent"
-                        placeholder="e.g., 5 min read"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Full Content */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Content (Optional)
-                    </label>
-                    <textarea
-                      value={formData.content}
-                      onChange={(e) => handleFormChange('content', e.target.value)}
-                      rows="8"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0A0F14] focus:border-transparent font-mono text-sm"
-                      placeholder="Write the full content here (supports Markdown)..."
-                    />
-                  </div>
+                  )}
                 </div>
 
                 {/* Save Button */}
@@ -1308,7 +1822,10 @@ const AdminUpload = () => {
                     ) : (
                       <>
                         <Save className="h-5 w-5" />
-                        {formData.id ? 'Update' : 'Save'} {activeCommunityTab === 'events' ? 'Event' : 'Content'}
+                        {formData.id ? 'Update' : 'Save'} {
+                          activePage === 'workshops' ? 'Workshop' :
+                          activeCommunityTab === 'events' ? 'Event' : 'Content'
+                        }
                       </>
                     )}
                   </button>
@@ -1408,12 +1925,67 @@ const AdminUpload = () => {
                   {(formData.excerpt || formData.description) && (
                     <div>
                       <div className="text-xs text-gray-500 mb-1 font-medium">
-                        {activePage === 'news' && activeCommunityTab === 'events' ? 'Description' : 'Excerpt'}
+                        {activePage === 'workshops' ? 'Description' :
+                         activePage === 'news' && activeCommunityTab === 'events' ? 'Description' : 'Excerpt'}
                       </div>
                       <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg leading-relaxed">
                         {formData.excerpt || formData.description}
                       </div>
                     </div>
+                  )}
+
+                  {/* Workshop Specific Preview */}
+                  {activePage === 'workshops' && (
+                    <>
+                      {(formData.duration || formData.price) && (
+                        <div className="grid grid-cols-2 gap-3">
+                          {formData.duration && (
+                            <div>
+                              <div className="text-xs text-gray-500 mb-1 font-medium">Duration</div>
+                              <div className="text-sm bg-gray-50 p-2 rounded-lg flex items-center gap-2">
+                                <ClockIcon className="h-4 w-4 text-gray-400" />
+                                {formData.duration}
+                              </div>
+                            </div>
+                          )}
+                          {formData.price && (
+                            <div>
+                              <div className="text-xs text-gray-500 mb-1 font-medium">Price</div>
+                              <div className="text-sm bg-gray-50 p-2 rounded-lg flex items-center gap-2">
+                                <DollarSign className="h-4 w-4 text-gray-400" />
+                                {formData.price}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {Array.isArray(formData.topics) && formData.topics.length > 0 && (
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1 font-medium">Topics</div>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.topics.map((topic, idx) => (
+                              <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {topic}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {Array.isArray(formData.includes) && formData.includes.length > 0 && (
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1 font-medium">Includes</div>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.includes.map((item, idx) => (
+                              <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   {/* Category Preview */}
@@ -1422,8 +1994,17 @@ const AdminUpload = () => {
                       <div className="text-xs text-gray-500 mb-1 font-medium">Category</div>
                       <div className="text-sm">
                         <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-50 border border-gray-200">
-                          {getCategoryIcon(formData.category)}
-                          <span className="font-medium">{formData.category}</span>
+                          {activePage === 'workshops' ? (
+                            <>
+                              {getWorkshopIcon(formData.icon)}
+                              <span className="font-medium">{formData.category}</span>
+                            </>
+                          ) : (
+                            <>
+                              {getCategoryIcon(formData.category)}
+                              <span className="font-medium">{formData.category}</span>
+                            </>
+                          )}
                         </span>
                       </div>
                     </div>
@@ -1445,7 +2026,8 @@ const AdminUpload = () => {
                       </span>
                     </h3>
                     <p className="text-gray-600 text-sm mt-1">
-                      {activePage === 'news' ? 'News & Events' : 'Community Content'}
+                      {activePage === 'workshops' ? 'Workshops' :
+                       activePage === 'news' ? 'News & Events' : 'Community Content'}
                     </p>
                   </div>
                   <button
@@ -1486,11 +2068,19 @@ const AdminUpload = () => {
                                   ? 'bg-[#0A0F14] text-white'
                                   : 'bg-gray-100 text-gray-700'
                               }`}>
-                                {item.category || item.type || 'Content'}
+                                {activePage === 'workshops' ? 'Workshop' : (item.category || item.type || 'Content')}
                               </span>
-                              <span className="text-xs text-gray-500">
-                                {item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
-                              </span>
+                              {activePage === 'workshops' && item.duration && (
+                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                  <ClockIcon className="h-3 w-3" />
+                                  {item.duration}
+                                </span>
+                              )}
+                              {item.date && (
+                                <span className="text-xs text-gray-500">
+                                  {new Date(item.date).toLocaleDateString()}
+                                </span>
+                              )}
                               {formData.id === item.id && (
                                 <span className="text-xs font-medium px-2 py-1 rounded-lg bg-yellow-100 text-yellow-800">
                                   Editing
@@ -1503,7 +2093,12 @@ const AdminUpload = () => {
                             <p className="text-xs text-gray-500 line-clamp-1 mb-2">
                               {item.excerpt || item.description || item.summary || 'No description'}
                             </p>
-                            {item.author && (
+                            {activePage === 'workshops' ? (
+                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <DollarSign className="h-3 w-3" />
+                                <span>{item.price || 'Price TBD'}</span>
+                              </div>
+                            ) : item.author && (
                               <div className="flex items-center gap-1 text-xs text-gray-400">
                                 <User className="h-3 w-3" />
                                 <span>By {item.author}</span>

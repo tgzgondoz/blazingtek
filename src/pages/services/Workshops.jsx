@@ -100,7 +100,7 @@ const Workshops = () => {
         >
           <div className="flex flex-col items-center gap-4 mb-8">
             <div className="p-4 bg-white/10 rounded-full">
-              <Users className="w-12 h-12" />
+              <Users className="w-12 h-12 text-white/80" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold">
               Workshops & <span className="text-gray-300">Training</span>
@@ -116,12 +116,12 @@ const Workshops = () => {
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <div key={i} className="flex items-start gap-3 p-4 bg-white/5 rounded-lg">
+              <div key={i} className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/5 hover:border-white/20 transition">
                 <div className="p-2 bg-white/10 rounded">
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-5 h-5 text-white/80" />
                 </div>
                 <div>
-                  <h3 className="font-bold">{feature.title}</h3>
+                  <h3 className="font-bold text-white">{feature.title}</h3>
                   <p className="text-sm text-gray-400">{feature.description}</p>
                 </div>
               </div>
@@ -132,12 +132,15 @@ const Workshops = () => {
 
       {/* Workshops */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
-        <h2 className="text-3xl font-bold text-center mb-12">Featured Workshops</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">
+          <span className="text-white">Featured</span>
+          <span className="text-gray-300 ml-3">Workshops</span>
+        </h2>
         
         {workshops.length === 0 ? (
           <div className="text-center py-12 bg-gray-900/50 rounded-xl border border-gray-800">
             <Brain className="h-16 w-16 text-gray-700 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">No Workshops Available</h3>
+            <h3 className="text-xl font-bold mb-2 text-white">No Workshops Available</h3>
             <p className="text-gray-400">Check back soon for upcoming training programs.</p>
           </div>
         ) : (
@@ -149,20 +152,20 @@ const Workshops = () => {
                   key={workshop.id || i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-all duration-300"
+                  className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-white/30 transition-all duration-300"
                 >
                   <div className="flex items-center gap-4 mb-6">
                     <div className="p-3 bg-white/10 rounded-lg">
-                      <Icon className="w-8 h-8" />
+                      <Icon className="w-8 h-8 text-white/80" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">{workshop.title}</h3>
+                      <h3 className="text-xl font-bold text-white">{workshop.title}</h3>
                       <div className="flex items-center gap-4 mt-2">
                         <span className="text-sm text-gray-400 flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {workshop.duration || '3 Days'}
                         </span>
-                        <span className="text-lg font-bold flex items-center gap-1">
+                        <span className="text-lg font-bold flex items-center gap-1 text-white">
                           <DollarSign className="h-4 w-4" />
                           {workshop.price || '$1,200'}
                         </span>
@@ -178,10 +181,10 @@ const Workshops = () => {
 
                   {workshop.topics && workshop.topics.length > 0 && (
                     <div className="mb-6">
-                      <h4 className="font-bold mb-3">Topics Covered:</h4>
+                      <h4 className="font-bold mb-3 text-white">Topics Covered:</h4>
                       <div className="flex flex-wrap gap-2">
                         {workshop.topics.map((topic, idx) => (
-                          <span key={idx} className="px-3 py-1 text-sm bg-white/10 rounded-full">
+                          <span key={idx} className="px-3 py-1 text-sm bg-white/10 rounded-full text-gray-300 border border-white/5">
                             {topic}
                           </span>
                         ))}
@@ -191,10 +194,10 @@ const Workshops = () => {
 
                   {workshop.includes && workshop.includes.length > 0 && (
                     <div className="mb-6">
-                      <h4 className="font-bold mb-3">Includes:</h4>
+                      <h4 className="font-bold mb-3 text-white">Includes:</h4>
                       <div className="flex flex-wrap gap-2">
                         {workshop.includes.map((item, idx) => (
-                          <span key={idx} className="px-3 py-1 text-sm bg-white/5 rounded">
+                          <span key={idx} className="px-3 py-1 text-sm bg-white/5 rounded text-gray-300 border border-white/5">
                             {item}
                           </span>
                         ))}
@@ -225,16 +228,16 @@ const Workshops = () => {
         )}
 
         {/* Custom Training */}
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-800/50 rounded-xl p-8 mt-12">
+        <div className="bg-gradient-to-r from-gray-900/80 to-gray-900/60 border border-gray-800 rounded-xl p-8 mt-12">
           <div className="md:flex items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Need Custom Training?</h3>
+              <h3 className="text-2xl font-bold mb-4 text-white">Need Custom Training?</h3>
               <p className="text-gray-300">
                 Tailored programs for your organization's specific needs.
               </p>
             </div>
             <Link to="/contact">
-              <button className="mt-4 md:mt-0 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200">
+              <button className="mt-4 md:mt-0 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition">
                 Request Proposal
               </button>
             </Link>
@@ -245,7 +248,7 @@ const Workshops = () => {
         <div className="text-center mt-12">
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-white/40 transition"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-white/30 hover:text-white transition text-gray-400"
           >
             ← Back to Services
           </Link>

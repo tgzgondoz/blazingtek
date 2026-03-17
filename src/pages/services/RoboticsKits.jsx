@@ -158,7 +158,7 @@ const RoboticsKits = () => {
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6 text-orange-400" />
+              <ShoppingCart className="w-6 h-6 text-white" />
               Cart ({getTotalItems()})
             </h2>
             <button 
@@ -188,7 +188,7 @@ const RoboticsKits = () => {
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold text-sm">{item.name}</h3>
-                        <p className="text-sm text-orange-400 font-bold">${item.price}</p>
+                        <p className="text-sm text-white font-bold">${item.price}</p>
                         
                         <div className="flex items-center gap-2 mt-2">
                           <button 
@@ -206,7 +206,7 @@ const RoboticsKits = () => {
                           </button>
                           <button 
                             onClick={() => removeFromCart(item.uniqueId)}
-                            className="ml-auto p-1 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition"
+                            className="ml-auto p-1 bg-white/10 text-gray-400 rounded hover:bg-white/20 transition"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
@@ -220,9 +220,9 @@ const RoboticsKits = () => {
               <div className="border-t border-gray-800 pt-4">
                 <div className="flex justify-between text-lg font-bold mb-4">
                   <span>Total:</span>
-                  <span className="text-orange-400">${getTotalPrice().toFixed(2)}</span>
+                  <span className="text-white">${getTotalPrice().toFixed(2)}</span>
                 </div>
-                <button className="w-full py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition flex items-center justify-center gap-2">
+                <button className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
                   <CreditCard className="w-4 h-4" />
                   Proceed to Checkout
                 </button>
@@ -242,8 +242,9 @@ const RoboticsKits = () => {
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10"
         >
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-            Robotics Kits & Components
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+            <span className="text-white">Robotics Kits</span>
+            <span className="text-gray-300 ml-3">& Components</span>
           </h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
             Complete kits and individual components with transparent pricing
@@ -252,12 +253,12 @@ const RoboticsKits = () => {
           {/* Cart Button */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="mt-8 inline-flex items-center gap-2 px-8 py-4 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition relative group"
+            className="mt-8 inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition relative group"
           >
             <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition" />
             View Cart
             {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-sm rounded-full flex items-center justify-center animate-pulse">
+              <span className="absolute -top-2 -right-2 w-6 h-6 bg-white text-black text-sm rounded-full flex items-center justify-center animate-pulse">
                 {getTotalItems()}
               </span>
             )}
@@ -268,9 +269,8 @@ const RoboticsKits = () => {
       {/* Complete Kits Section */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
         <h2 className="text-3xl font-bold text-center mb-12">
-          <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-            Complete Kits
-          </span>
+          <span className="text-white">Complete</span>
+          <span className="text-gray-300 ml-3">Kits</span>
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {kits.map((kit, i) => (
@@ -279,7 +279,7 @@ const RoboticsKits = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-orange-600/50 transition-all hover:shadow-lg hover:shadow-orange-600/10"
+              className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-white/30 transition-all hover:shadow-lg hover:shadow-white/5"
             >
               <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
                 <img 
@@ -287,14 +287,14 @@ const RoboticsKits = () => {
                   alt={kit.name}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                 />
-                <span className="absolute top-2 right-2 px-3 py-1 text-xs bg-orange-600 text-white rounded-full">
+                <span className="absolute top-2 right-2 px-3 py-1 text-xs bg-white/20 text-white border border-white/30 rounded-full">
                   {kit.level}
                 </span>
               </div>
               
               <div className="flex justify-between items-start mb-3">
                 <h3 className="text-xl font-bold">{kit.name}</h3>
-                <Package className="w-5 h-5 text-orange-400" />
+                <Package className="w-5 h-5 text-white/60" />
               </div>
               
               <p className="text-gray-400 text-sm mb-4">{kit.description}</p>
@@ -302,7 +302,7 @@ const RoboticsKits = () => {
               <div className="grid grid-cols-2 gap-2 mb-4">
                 {kit.components.slice(0, 4).map((comp, idx) => (
                   <div key={idx} className="flex items-center gap-1 text-xs text-gray-400">
-                    <comp.icon className="w-3 h-3 text-orange-400" />
+                    <comp.icon className="w-3 h-3 text-white/60" />
                     <span>{comp.name}</span>
                   </div>
                 ))}
@@ -313,12 +313,12 @@ const RoboticsKits = () => {
 
               <div className="flex justify-between items-center pt-4 border-t border-gray-800">
                 <div>
-                  <p className="text-2xl font-bold text-orange-400">${kit.price}</p>
+                  <p className="text-2xl font-bold text-white">${kit.price}</p>
                   <p className="text-xs text-gray-500">Complete kit</p>
                 </div>
                 <button
                   onClick={() => addToCart({...kit, id: kit.id}, 'kit')}
-                  className="px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700 transition flex items-center gap-2"
+                  className="px-4 py-2 bg-white/10 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/10"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Add to Cart
@@ -333,9 +333,8 @@ const RoboticsKits = () => {
       <section className="bg-gray-900/30 py-16">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
-            <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-              Individual Components
-            </span>
+            <span className="text-white">Individual</span>
+            <span className="text-gray-300 ml-3">Components</span>
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -347,7 +346,7 @@ const RoboticsKits = () => {
                 transition={{ delay: i * 0.1 }}
                 className="bg-gray-900/50 border border-gray-800 rounded-xl p-6"
               >
-                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-800 text-orange-400">
+                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-800 text-white">
                   {cat.category}
                 </h3>
                 
@@ -367,10 +366,10 @@ const RoboticsKits = () => {
                       </div>
                       
                       <div className="flex justify-between items-center pl-15">
-                        <span className="text-orange-400 font-bold">${item.price}</span>
+                        <span className="text-white font-bold">${item.price}</span>
                         <button
                           onClick={() => addToCart(item, 'component')}
-                          className="px-3 py-1 bg-orange-600/20 text-orange-400 text-xs rounded hover:bg-orange-600/30 transition flex items-center gap-1"
+                          className="px-3 py-1 bg-white/10 text-white text-xs rounded hover:bg-white/20 transition flex items-center gap-1 border border-white/10"
                         >
                           <ShoppingCart className="w-3 h-3" />
                           Add
@@ -387,7 +386,7 @@ const RoboticsKits = () => {
           <div className="text-center mt-12">
             <Link
               to="/services"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-orange-600/50 hover:text-orange-400 transition"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-white/30 hover:text-white transition text-gray-400"
             >
               ← Back to Services
             </Link>

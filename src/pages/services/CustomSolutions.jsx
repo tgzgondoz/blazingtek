@@ -97,27 +97,31 @@ const CustomSolutions = () => {
           className="relative z-10"
         >
           <div className="inline-flex items-center justify-center gap-3 mb-6">
-            <Settings className="w-12 h-12 text-orange-400" />
+            <Settings className="w-12 h-12 text-white/60" />
             <h1 className="text-4xl md:text-5xl font-bold">
-              Custom <span className="text-orange-400">Automation</span> Solutions
+              Custom <span className="text-white">Automation</span> 
+              <span className="text-gray-300 ml-3">Solutions</span>
             </h1>
           </div>
           <p className="text-gray-300 max-w-2xl mx-auto mb-6">
             Tailored automation systems for residential, commercial, and industrial applications.
           </p>
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
-            <span className="px-4 py-2 bg-white/10 rounded-full text-sm">Smart Homes</span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-sm">Solar Energy</span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-sm">Security Systems</span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-sm">Access Control</span>
-            <span className="px-4 py-2 bg-white/10 rounded-full text-sm">Industrial IoT</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full text-sm border border-white/5">Smart Homes</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full text-sm border border-white/5">Solar Energy</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full text-sm border border-white/5">Security Systems</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full text-sm border border-white/5">Access Control</span>
+            <span className="px-4 py-2 bg-white/10 rounded-full text-sm border border-white/5">Industrial IoT</span>
           </div>
         </motion.div>
       </section>
 
       {/* Solutions Grid */}
       <section className="max-w-6xl mx-auto px-4 pb-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Solutions</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">
+          <span className="text-white">Our</span>
+          <span className="text-gray-300 ml-3">Solutions</span>
+        </h2>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {solutions.map((solution, index) => (
@@ -127,7 +131,7 @@ const CustomSolutions = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden hover:border-orange-400/50 transition-all group"
+              className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden hover:border-white/30 transition-all group"
             >
               <div className="relative h-40 overflow-hidden">
                 <img 
@@ -136,8 +140,8 @@ const CustomSolutions = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-                <div className="absolute top-3 right-3 p-2 bg-orange-400/20 rounded-lg">
-                  <div className="text-orange-400">{solution.icon}</div>
+                <div className="absolute top-3 right-3 p-2 bg-white/10 rounded-lg border border-white/10">
+                  <div className="text-white/60">{solution.icon}</div>
                 </div>
               </div>
               
@@ -148,7 +152,7 @@ const CustomSolutions = () => {
                 <div className="space-y-2 mb-5">
                   {solution.applications.map((app, idx) => (
                     <div key={idx} className="flex items-start gap-2 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-1.5"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-white/40 mt-1.5"></div>
                       <span className="text-gray-300">{app}</span>
                     </div>
                   ))}
@@ -156,7 +160,7 @@ const CustomSolutions = () => {
                 
                 <button 
                   onClick={() => setSelectedSolution(solution)}
-                  className="w-full py-2.5 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 group"
+                  className="w-full py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 group border border-white/10"
                 >
                   Request Quote
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
@@ -170,7 +174,7 @@ const CustomSolutions = () => {
         <div className="text-center mt-12">
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-orange-400/50 transition"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-gray-700 rounded-lg hover:border-white/30 hover:text-white transition text-gray-400"
           >
             ← Back to Services
           </Link>
@@ -179,11 +183,11 @@ const CustomSolutions = () => {
 
       {/* Quote Request Modal */}
       {selectedSolution && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gray-900 rounded-xl max-w-md w-full p-6 border border-gray-800"
+            className="bg-gray-900 rounded-xl max-w-md w-full p-6 border border-gray-800 shadow-2xl"
           >
             <h3 className="text-2xl font-bold mb-1">Request Quote</h3>
             <p className="text-gray-400 text-sm mb-5">for {selectedSolution.industry}</p>
@@ -192,31 +196,31 @@ const CustomSolutions = () => {
               <input 
                 type="text" 
                 placeholder="Your Name" 
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-orange-400 outline-none text-sm"
+                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-white/30 outline-none text-sm text-white placeholder-gray-500"
               />
               <input 
                 type="email" 
                 placeholder="Email Address" 
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-orange-400 outline-none text-sm"
+                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-white/30 outline-none text-sm text-white placeholder-gray-500"
               />
               <input 
                 type="tel" 
                 placeholder="Phone Number" 
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-orange-400 outline-none text-sm"
+                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-white/30 outline-none text-sm text-white placeholder-gray-500"
               />
               <textarea 
                 placeholder="Tell us about your project..." 
                 rows="3"
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-orange-400 outline-none text-sm"
+                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:border-white/30 outline-none text-sm text-white placeholder-gray-500"
               ></textarea>
               
               <div className="flex gap-3 pt-3">
-                <button className="flex-1 px-4 py-2.5 bg-orange-400 hover:bg-orange-500 rounded-lg font-semibold text-sm transition">
+                <button className="flex-1 px-4 py-2.5 bg-white text-black hover:bg-gray-200 rounded-lg font-semibold text-sm transition">
                   Submit
                 </button>
                 <button 
                   onClick={() => setSelectedSolution(null)}
-                  className="px-4 py-2.5 border border-gray-700 hover:border-gray-600 rounded-lg text-sm transition"
+                  className="px-4 py-2.5 border border-gray-700 hover:border-gray-600 rounded-lg text-sm transition text-gray-400 hover:text-white"
                 >
                   Cancel
                 </button>

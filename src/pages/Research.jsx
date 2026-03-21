@@ -26,7 +26,6 @@ const database = getDatabase(app);
 const Research = () => {
   const [researchProjects, setResearchProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [breakthrough, setBreakthrough] = useState(null);
 
   // Load research projects from Firebase
   useEffect(() => {
@@ -46,25 +45,8 @@ const Research = () => {
             // Sort by date or progress
             projectsArray.sort((a, b) => b.progress - a.progress);
             setResearchProjects(projectsArray);
-            
-            // Set first project as breakthrough achievement if available
-            if (projectsArray.length > 0) {
-              setBreakthrough({
-                title: "Breakthrough Achievement",
-                description: `${projectsArray[0].title} - Our team recently achieved ${projectsArray[0].progress}% progress in this cutting-edge research project.`,
-                date: projectsArray[0].date || new Date().toISOString().split('T')[0],
-                award: "Active Research Project"
-              });
-            }
           } else {
             setResearchProjects([]);
-            // Default breakthrough if no data
-            setBreakthrough({
-              title: "Breakthrough Achievement",
-              description: "Our team recently achieved 95% accuracy in detecting crop diseases using AI and drone imagery, helping farmers reduce losses by 40%.",
-              date: "March 2024",
-              award: "Industry Award Winner"
-            });
           }
           setIsLoading(false);
         });
@@ -182,7 +164,7 @@ const Research = () => {
           transition={{ duration: 0.8 }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-1 gap-12 items-center text-center">
             <div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
                 <span className="text-white">
@@ -208,13 +190,13 @@ const Research = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
-                className="text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl"
+                className="text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl mx-auto"
               >
                 Pioneering interdisciplinary research at the intersection of AI, robotics, 
                 and sustainable technology to solve Africa's most pressing challenges.
               </motion.p>
               
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 justify-center">
                 <motion.div
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -241,32 +223,6 @@ const Research = () => {
                 </motion.div>
               </div>
             </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="relative"
-            >
-              <div className="relative bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
-                <h3 className="text-2xl font-bold mb-4 text-white">
-                  {breakthrough?.title || "Breakthrough Achievement"}
-                </h3>
-                
-                <p className="text-gray-300 leading-relaxed mb-6">
-                  {breakthrough?.description || "Our team recently achieved 95% accuracy in detecting crop diseases using AI and drone imagery, helping farmers reduce losses by 40%."}
-                </p>
-                
-                <div className="flex items-center justify-between text-sm text-gray-400">
-                  <div>
-                    <span>Latest breakthrough: {breakthrough?.date || "March 2024"}</span>
-                  </div>
-                  <div>
-                    <span>{breakthrough?.award || "Industry Award Winner"}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
           </div>
         </motion.div>
       </section>

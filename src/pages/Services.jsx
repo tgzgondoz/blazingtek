@@ -74,6 +74,7 @@ const Services = () => {
             Professional engineering solutions tailored for your needs
           </motion.p>
         </motion.div>
+
       </section>
 
       {/* Services Grid */}
@@ -85,12 +86,6 @@ const Services = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Professional Engineering Solutions
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Comprehensive robotics solutions for education, industry, and research
-            </p>
           </motion.div>
 
           {/* Services Cards */}

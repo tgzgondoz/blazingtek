@@ -424,6 +424,4 @@ const RoboticsKits = () => {
     </div>
   );
 };
-
-
 export default RoboticsKits;

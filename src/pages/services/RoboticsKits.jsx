@@ -37,6 +37,9 @@ import bg2 from '../../assets/bg2.jpg';
 import bg3 from '../../assets/bg3.jpg';
 import bg4 from '../../assets/bg4.jpg';
 
+// Placeholder image for components without specific images
+import defaultComponentImg from '../../assets/ArduinoUno.jpg';
+
 const RoboticsKits = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -155,25 +158,89 @@ const RoboticsKits = () => {
     {
       category: "Sensors",
       items: [
-        { id: 'ultrasonic', name: "Ultrasonic Sensor", price: 4, image: ultrasonicSensor, description: "HC-SR04 Distance Sensor" },
-        { id: 'pir', name: "PIR Motion Sensor", price: 3, image: pirSensor, description: "Infrared Motion Detector" },
-        { id: 'temp', name: "Temperature Sensor", price: 6, image: temperatureSensor, description: "DHT22 Digital Sensor" },
+        // Temperature & Humidity
+        { id: 'lm35', name: "LM35 Temperature Sensor", price: 3, image: temperatureSensor, description: "Precision temperature sensor" },
+        { id: 'ds18b20', name: "DS18B20 Temperature Sensor", price: 4, image: temperatureSensor, description: "Waterproof digital temperature sensor" },
+        { id: 'dht11', name: "DHT11 Sensor", price: 3, image: temperatureSensor, description: "Temperature & Humidity Sensor" },
+        { id: 'dht22', name: "DHT22 Sensor", price: 6, image: temperatureSensor, description: "High precision Temp & Humidity" },
+        { id: 'bme280', name: "BME280 / BMP280", price: 8, image: temperatureSensor, description: "Pressure, Temp & Humidity Sensor" },
+        // Light & Optical
+        { id: 'ldr', name: "LDR Sensor", price: 3, image: defaultComponentImg, description: "Light Dependent Resistor" },
+        { id: 'photodiode', name: "Photodiode", price: 2, image: defaultComponentImg, description: "Light detection diode" },
+        { id: 'ir-obstacle', name: "IR Obstacle Sensor", price: 3, image: defaultComponentImg, description: "Infrared obstacle detection" },
+        { id: 'ir-line', name: "IR Line Sensor", price: 4, image: defaultComponentImg, description: "Line following sensor module" },
+        { id: 'ov7670', name: "Camera Module (OV7670)", price: 8, image: defaultComponentImg, description: "VGA camera module" },
+        { id: 'esp32-cam', name: "ESP32-CAM", price: 15, image: esp32Board, description: "Camera module with ESP32" },
+        // Distance & Motion
+        { id: 'ultrasonic', name: "Ultrasonic Sensor (HC-SR04)", price: 3, image: ultrasonicSensor, description: "Distance measuring sensor" },
+        { id: 'pir', name: "PIR Motion Sensor", price: 4, image: pirSensor, description: "Infrared Motion Detector" },
+        { id: 'adxl345', name: "Accelerometer (ADXL345)", price: 7, image: defaultComponentImg, description: "3-axis accelerometer" },
+        { id: 'mpu6050', name: "Gyroscope + Accelerometer (MPU6050)", price: 6, image: defaultComponentImg, description: "6-axis motion tracking" },
+        { id: 'tilt', name: "Tilt Sensor", price: 2, image: defaultComponentImg, description: "Ball tilt switch sensor" },
+        { id: 'rotary-encoder', name: "Rotary Encoder", price: 4, image: defaultComponentImg, description: "Rotary position encoder" },
+        // Pressure, Force & Touch
+        { id: 'fsr', name: "Force Sensitive Resistor (FSR)", price: 8, image: defaultComponentImg, description: "Force/pressure sensor" },
+        { id: 'piezo', name: "Piezoelectric Sensor", price: 4, image: defaultComponentImg, description: "Vibration/pressure sensor" },
+        { id: 'ttp223', name: "Capacitive Touch Sensor (TTP223)", price: 4, image: defaultComponentImg, description: "Touch detection module" },
+        { id: 'strain-gauge', name: "Strain Gauge", price: 7, image: defaultComponentImg, description: "Strain measurement sensor" },
+        // Environmental & Gas
+        { id: 'mq-gas', name: "MQ Series Gas Sensors", price: 5, image: defaultComponentImg, description: "Gas detection (MQ-2, MQ-135, etc.)" },
+        { id: 'co2', name: "CO2 Sensor (MH-Z19)", price: 20, image: defaultComponentImg, description: "CO2 concentration sensor" },
+        { id: 'ccs811', name: "Air Quality Sensor (CCS811)", price: 15, image: defaultComponentImg, description: "Air quality monitoring" },
+        { id: 'rain', name: "Rain Sensor", price: 3, image: defaultComponentImg, description: "Rain/water detection" },
+        { id: 'soil-moisture', name: "Soil Moisture Sensor", price: 4, image: defaultComponentImg, description: "Soil humidity detection" },
+        { id: 'flame', name: "Flame Sensor", price: 4, image: defaultComponentImg, description: "Flame/fire detection" },
+        // Sound & Vibration
+        { id: 'microphone', name: "Microphone / Sound Sensor", price: 3, image: defaultComponentImg, description: "Sound detection module" },
+        { id: 'vibration', name: "Vibration Sensor (SW-420)", price: 3, image: defaultComponentImg, description: "Vibration detection" },
+        // Specialty
+        { id: 'gps', name: "GPS Module (NEO-6M)", price: 15, image: defaultComponentImg, description: "GPS positioning module" },
+        { id: 'rfid', name: "RFID / NFC Reader (RC522)", price: 5, image: defaultComponentImg, description: "RFID/NFC card reader" },
+        { id: 'magnetometer', name: "Magnetometer (HMC5883L)", price: 7, image: defaultComponentImg, description: "3-axis magnetic field sensor" },
+        { id: 'compass', name: "Compass Module", price: 7, image: defaultComponentImg, description: "Digital compass module" },
+        { id: 'heartbeat', name: "Heartbeat / Pulse Sensor", price: 12, image: defaultComponentImg, description: "Heart rate monitoring" },
       ]
     },
     {
       category: "Controllers",
       items: [
-        { id: 'arduino', name: "Arduino Uno", price: 12, image: arduinoUno, description: "ATmega328P Development Board" },
-        { id: 'esp32', name: "ESP32 Board", price: 8, image: esp32Board, description: "WiFi + Bluetooth Module" },
-        { id: 'raspberry', name: "Raspberry Pi Pico", price: 6, image: raspberryPiPico, description: "RP2040 Microcontroller" },
+        // Core Arduino Boards
+        { id: 'arduino-uno', name: "Arduino Uno R3", price: 10, image: arduinoUno, description: "ATmega328P Development Board" },
+        { id: 'arduino-mega', name: "Arduino Mega 2560", price: 15, image: arduinoUno, description: "ATmega2560 Development Board" },
+        { id: 'arduino-nano', name: "Arduino Nano", price: 8, image: arduinoUno, description: "Compact ATmega328P Board" },
+        // Communication & IoT Controllers
+        { id: 'esp8266', name: "ESP8266 (NodeMCU)", price: 10, image: esp32Board, description: "WiFi IoT Development Board" },
+        { id: 'esp32', name: "ESP32", price: 10, image: esp32Board, description: "WiFi + Bluetooth IoT Board" },
+        // Raspberry Pi Boards
+        { id: 'rpi-zero', name: "Raspberry Pi Zero 2 W", price: 50, image: raspberryPiPico, description: "Mini Raspberry Pi with WiFi" },
+        { id: 'rpi-3b', name: "Raspberry Pi 3 Model B+", price: 80, image: raspberryPiPico, description: "Quad-core 1.4GHz" },
+        { id: 'rpi-4-4gb', name: "Raspberry Pi 4 Model B (4GB RAM)", price: 100, image: raspberryPiPico, description: "Quad-core 1.5GHz, 4GB RAM" },
+        { id: 'rpi-4-8gb', name: "Raspberry Pi 4 Model B (8GB RAM)", price: 150, image: raspberryPiPico, description: "Quad-core 1.5GHz, 8GB RAM" },
       ]
     },
     {
       category: "Actuators",
       items: [
-        { id: 'servo', name: "Servo Motor", price: 3, image: servoMotor, description: "SG90 Micro Servo" },
+        // Motors
+        { id: 'dc-motor', name: "DC Motor", price: 2, image: servoMotor, description: "Standard DC motor" },
+        { id: 'servo-sg90', name: "Servo Motor SG90", price: 5, image: servoMotor, description: "Micro servo motor" },
+        { id: 'stepper-motor', name: "Stepper Motor", price: 7, image: servoMotor, description: "NEMA 17 Stepper Motor" },
+        { id: 'geared-dc', name: "Geared DC Motor", price: 5, image: servoMotor, description: "DC motor with gearbox" },
+        // Sound & Vibration
+        { id: 'piezo-buzzer', name: "Piezo Buzzer", price: 2, image: defaultComponentImg, description: "Sound generator module" },
+        { id: 'speaker', name: "Speaker Module", price: 10, image: defaultComponentImg, description: "Audio speaker module" },
+        { id: 'vibration-motor', name: "Vibration Motor", price: 5, image: defaultComponentImg, description: "Haptic feedback motor" },
+        // Light & Display
+        { id: 'led', name: "LEDs (basic)", price: 1, image: defaultComponentImg, description: "Basic LED pack" },
+        { id: 'rgb-led', name: "RGB LED Module", price: 3, image: defaultComponentImg, description: "RGB LED with controller" },
+        { id: 'led-matrix', name: "LED Matrix (8x8, 16x16)", price: 10, image: defaultComponentImg, description: "Dot matrix display" },
+        { id: 'lcd', name: "LCD Display (16x2, 20x4)", price: 7, image: defaultComponentImg, description: "Character LCD display" },
+        { id: 'oled', name: "OLED Display (0.96\", 1.3\")", price: 12, image: defaultComponentImg, description: "OLED graphic display" },
+        // Mechanical & Control
         { id: 'relay', name: "Relay Module", price: 5, image: relayModule, description: "2-Channel Relay" },
-        { id: 'stepper', name: "Stepper Motor", price: 5, image: roboticsImg, description: "28BYJ-48 + Driver" },
+        { id: 'solenoid', name: "Solenoid Lock", price: 8, image: defaultComponentImg, description: "Electric lock actuator" },
+        { id: 'continuous-servo', name: "Continuous Rotation Servo", price: 6, image: servoMotor, description: "360 degree servo motor" },
+        { id: 'high-torque-servo', name: "High Torque Servo", price: 5, image: servoMotor, description: "Heavy duty servo for robot arms" },
       ]
     }
   ];
@@ -442,7 +509,7 @@ const RoboticsKits = () => {
 
       {/* Individual Components Section */}
       <section className="bg-gray-900/30 py-16">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
             <span className="text-white">Individual</span>
             <span className="text-gray-300 ml-3">Components</span>
@@ -461,7 +528,7 @@ const RoboticsKits = () => {
                   {cat.category}
                 </h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                   {cat.items.map((item, idx) => (
                     <div key={idx} className="group hover:bg-white/5 p-2 rounded-lg transition">
                       <div className="flex gap-3 mb-2">

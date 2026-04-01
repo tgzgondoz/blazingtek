@@ -21,6 +21,13 @@ import raspberryPiPico from '../../assets/RaspberryPiPico.jpg';
 import servoMotor from '../../assets/ServoMotor.jpg';
 import temperatureSensor from '../../assets/TemperatureSensor.jpg';
 
+// Import new kit images
+import advancedRoverKitFrame from '../../assets/advancedroverkitframe.png';
+import boomGateKitFrame from '../../assets/BoomGateKitFrame.png';
+import carouselKitFrame from '../../assets/carouselkitframe.png';
+import elevatorKitFrame from '../../assets/ElevatorKitFrame.png';
+import roverKitChassisWithWheels from '../../assets/RoverKitChassisWithWheels.png';
+
 // Import background images
 import bg from '../../assets/bg.jpg';
 import bg2 from '../../assets/bg2.jpg';
@@ -34,47 +41,68 @@ const RoboticsKits = () => {
 
   const kits = [
     {
-      id: 'kit1',
-      name: "Arduino Starter Kit",
-      level: "Introductory",
-      price: 40,
-      image: arduinoStarter,
-      description: "Perfect for beginners to learn electronics and programming",
+      id: 'rover-chassis',
+      name: "Rover Kit Chassis with Wheels",
+      level: "Beginner",
+      price: 20,
+      image: roverKitChassisWithWheels,
+      description: "Sturdy rover chassis with wheels, perfect for mobile robotics projects",
       components: [
-        { name: "Arduino Uno", price: 12, icon: Cpu, image: arduinoUno },
-        { name: "Ultrasonic Sensor", price: 4, icon: AlertCircle, image: ultrasonicSensor },
-        { name: "Relay Module", price: 5, icon: Radio, image: relayModule },
-        { name: "PIR Sensor", price: 3, icon: Camera, image: pirSensor }
+        { name: "Chassis Frame", price: 12, icon: Cpu, image: roverKitChassisWithWheels },
+        { name: "Wheels (4 pcs)", price: 5, icon: AlertCircle, image: roverKitChassisWithWheels },
+        { name: "Motor Mounts", price: 3, icon: Radio, image: roverKitChassisWithWheels }
       ]
     },
     {
-      id: 'kit2',
-      name: "Advanced Robotics Kit",
-      level: "University Level",
-      price: 89,
-      image: roboticsImg,
-      description: "Advanced components for complex robotics projects",
+      id: 'elevator-kit',
+      name: "Elevator Kit Frame",
+      level: "Intermediate",
+      price: 25,
+      image: elevatorKitFrame,
+      description: "Mechanical elevator frame for vertical lift mechanisms",
       components: [
-        { name: "Arduino Uno", price: 12, icon: Cpu, image: arduinoUno },
-        { name: "Servo Motor", price: 7, icon: Zap, image: servoMotor },
-        { name: "Ultrasonic Sensor", price: 4, icon: AlertCircle, image: ultrasonicSensor },
-        { name: "Relay Module", price: 5, icon: Radio, image: relayModule },
-        { name: "PIR Sensor", price: 3, icon: Camera, image: pirSensor }
+        { name: "Elevator Frame", price: 15, icon: Cpu, image: elevatorKitFrame },
+        { name: "Pulley System", price: 6, icon: Zap, image: elevatorKitFrame },
+        { name: "Guide Rails", price: 4, icon: AlertCircle, image: elevatorKitFrame }
       ]
     },
     {
-      id: 'kit3',
-      name: "IoT Workshop Kit",
-      level: "Professional",
-      price: 129,
-      image: workshopImg,
-      description: "Complete IoT solution with WiFi modules and sensors",
+      id: 'boom-gate',
+      name: "Boom Gate Kit Frame",
+      level: "Beginner",
+      price: 15,
+      image: boomGateKitFrame,
+      description: "Boom gate mechanism frame for access control projects",
       components: [
-        { name: "ESP32 Board", price: 12, icon: Wifi, image: esp32Board },
-        { name: "Temperature Sensor", price: 6, icon: Cpu, image: temperatureSensor },
-        { name: "Ultrasonic Sensor", price: 4, icon: AlertCircle, image: ultrasonicSensor },
-        { name: "Relay Module", price: 5, icon: Radio, image: relayModule },
-        { name: "PIR Sensor", price: 3, icon: Camera, image: pirSensor }
+        { name: "Boom Arm", price: 6, icon: Wifi, image: boomGateKitFrame },
+        { name: "Housing Frame", price: 5, icon: Cpu, image: boomGateKitFrame },
+        { name: "Mounting Bracket", price: 4, icon: AlertCircle, image: boomGateKitFrame }
+      ]
+    },
+    {
+      id: 'carousel-kit',
+      name: "Carousel Kit Frame",
+      level: "Intermediate",
+      price: 20,
+      image: carouselKitFrame,
+      description: "Rotating carousel frame for storage or display systems",
+      components: [
+        { name: "Rotating Platform", price: 10, icon: Cpu, image: carouselKitFrame },
+        { name: "Support Frame", price: 6, icon: Zap, image: carouselKitFrame },
+        { name: "Bearing Assembly", price: 4, icon: AlertCircle, image: carouselKitFrame }
+      ]
+    },
+    {
+      id: 'advanced-rover',
+      name: "Advanced Rover Kit Frame",
+      level: "Advanced",
+      price: 30,
+      image: advancedRoverKitFrame,
+      description: "Advanced rover frame with enhanced suspension and mounting options",
+      components: [
+        { name: "Advanced Chassis", price: 15, icon: Cpu, image: advancedRoverKitFrame },
+        { name: "Suspension System", price: 8, icon: Zap, image: advancedRoverKitFrame },
+        { name: "All-Terrain Wheels", price: 7, icon: AlertCircle, image: advancedRoverKitFrame }
       ]
     }
   ];

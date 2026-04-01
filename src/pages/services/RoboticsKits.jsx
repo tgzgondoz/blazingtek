@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { 
   CheckCircle, Package, Cpu, Camera, AlertCircle, 
   Radio, Zap, Wifi, ShoppingCart, Plus, Minus, 
-  Trash2, X, CreditCard 
+  Trash2, X, CreditCard, Maximize2 
 } from 'lucide-react';
 
 // Import local images from assets folder
@@ -27,6 +27,9 @@ import boomGateKitFrame from '../../assets/BoomGateKitFrame.png';
 import carouselKitFrame from '../../assets/carouselkitframe.png';
 import elevatorKitFrame from '../../assets/ElevatorKitFrame.png';
 import roverKitChassisWithWheels from '../../assets/RoverKitChassisWithWheels.png';
+import servoradarkitframe from '../../assets/servoradarkitframe.png';
+import conveyorkitframe from '../../assets/conveyorkitframe.png';
+import stepperradarkitframe from '../../assets/stepperradarkitframe.png';
 
 // Import background images
 import bg from '../../assets/bg.jpg';
@@ -38,6 +41,7 @@ const RoboticsKits = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [quantities, setQuantities] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const kits = [
     {
@@ -103,6 +107,46 @@ const RoboticsKits = () => {
         { name: "Advanced Chassis", price: 15, icon: Cpu, image: advancedRoverKitFrame },
         { name: "Suspension System", price: 8, icon: Zap, image: advancedRoverKitFrame },
         { name: "All-Terrain Wheels", price: 7, icon: AlertCircle, image: advancedRoverKitFrame }
+      ]
+    },
+    {
+      id: 'servo-radar',
+      name: "Servo Radar Kit Frame",
+      level: "Intermediate",
+      price: 15,
+      image: servoradarkitframe,
+      description: "Servo-controlled radar frame for obstacle detection and scanning",
+      components: [
+        { name: "Servo Motor Mount", price: 5, icon: Zap, image: servoradarkitframe },
+        { name: "Radar Base Frame", price: 6, icon: Cpu, image: servoradarkitframe },
+        { name: "Sensor Mount", price: 4, icon: AlertCircle, image: servoradarkitframe }
+      ]
+    },
+    {
+      id: 'stepper-radar',
+      name: "Stepper Radar Kit Frame",
+      level: "Advanced",
+      price: 15,
+      image: stepperradarkitframe,
+      description: "Stepper motor-based radar frame for precise angular positioning",
+      components: [
+        { name: "Stepper Motor Mount", price: 6, icon: Zap, image: stepperradarkitframe },
+        { name: "Precision Radar Frame", price: 6, icon: Cpu, image: stepperradarkitframe },
+        { name: "Control Bracket", price: 3, icon: Radio, image: stepperradarkitframe }
+      ]
+    },
+    {
+      id: 'conveyor-kit',
+      name: "Conveyor Kit Frame",
+      level: "Intermediate",
+      price: 18,
+      image: conveyorkitframe,
+      description: "Mini conveyor belt frame for automation and sorting projects",
+      components: [
+        { name: "Conveyor Frame", price: 8, icon: Cpu, image: conveyorkitframe },
+        { name: "Roller System", price: 5, icon: Zap, image: conveyorkitframe },
+        { name: "Belt Tensioner", price: 3, icon: AlertCircle, image: conveyorkitframe },
+        { name: "Motor Mount", price: 2, icon: Radio, image: conveyorkitframe }
       ]
     }
   ];
@@ -176,6 +220,37 @@ const RoboticsKits = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Image Modal */}
+      {selectedImage && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setSelectedImage(null)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative max-w-5xl max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={selectedImage} 
+              alt="Full size view"
+              className="w-full h-full object-contain rounded-lg"
+            />
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 p-2 bg-black/50 rounded-full hover:bg-black/70 transition text-white"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Cart Sidebar */}
       <motion.div
         initial={{ x: '100%' }}
@@ -212,7 +287,8 @@ const RoboticsKits = () => {
                       <img 
                         src={item.image} 
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
+                        className="w-16 h-16 object-cover rounded cursor-pointer"
+                        onClick={() => setSelectedImage(item.image)}
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold text-sm">{item.name}</h3>
@@ -309,12 +385,19 @@ const RoboticsKits = () => {
               transition={{ delay: i * 0.1 }}
               className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 hover:border-white/30 transition-all hover:shadow-lg hover:shadow-white/5"
             >
-              <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
+              <div className="relative h-48 mb-6 overflow-hidden rounded-lg group cursor-pointer">
                 <img 
                   src={kit.image} 
                   alt={kit.name}
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  onClick={() => setSelectedImage(kit.image)}
                 />
+                <div 
+                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  onClick={() => setSelectedImage(kit.image)}
+                >
+                  <Maximize2 className="w-8 h-8 text-white" />
+                </div>
                 <span className="absolute top-2 right-2 px-3 py-1 text-xs bg-white/20 text-white border border-white/30 rounded-full">
                   {kit.level}
                 </span>
@@ -382,11 +465,17 @@ const RoboticsKits = () => {
                   {cat.items.map((item, idx) => (
                     <div key={idx} className="group hover:bg-white/5 p-2 rounded-lg transition">
                       <div className="flex gap-3 mb-2">
-                        <img 
-                          src={item.image} 
-                          alt={item.name}
-                          className="w-12 h-12 object-cover rounded-lg"
-                        />
+                        <div className="relative cursor-pointer group/img">
+                          <img 
+                            src={item.image} 
+                            alt={item.name}
+                            className="w-12 h-12 object-cover rounded-lg"
+                            onClick={() => setSelectedImage(item.image)}
+                          />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 rounded-lg transition-opacity flex items-center justify-center">
+                            <Maximize2 className="w-3 h-3 text-white" />
+                          </div>
+                        </div>
                         <div className="flex-1">
                           <h4 className="font-semibold text-sm">{item.name}</h4>
                           <p className="text-xs text-gray-400">{item.description}</p>

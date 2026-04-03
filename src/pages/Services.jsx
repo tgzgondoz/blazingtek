@@ -11,7 +11,7 @@ const Services = () => {
   const services = [
     {
       title: "Robotics Kits",
-      description: "Educational and development kits for universities and research institutions.",
+      description: "Educational and development kits for everyone",
       image: RoboticsImage,
       link: "/services/robotics-kits"  // Changed to kebab-case
     },
@@ -23,7 +23,7 @@ const Services = () => {
     },
     {
       title: "Custom Solutions",
-      description: "Bespoke robotic systems for industrial and research applications.",
+      description: "All engineering maintenance , installation and designs",
       image: SolutionsImage,
       link: "/services/custom-solutions"
     }

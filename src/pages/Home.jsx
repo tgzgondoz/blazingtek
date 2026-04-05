@@ -168,10 +168,10 @@ const Home = () => {
                 transition={{ delay: 0.6 }}
               >
                 <Link
-                  to="/research"
+                  to="/services/robotics-kits"
                   className="inline-flex items-center gap-3 bg-white text-[#0A0F14] hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition-colors duration-300"
                 >
-                  <span>Explore Research</span>
+                  <span>Buy Kits</span>
                   <ArrowRight className="h-5 w-5" />
                 </Link>
               </motion.div>

@@ -81,7 +81,7 @@ const Abouts = () => {
               </svg>
             </motion.div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-7 leading-tight">
               <span className="text-white">About</span>
               <span className="text-gray-300 ml-3">BlazingTek</span>
             </h1>

@@ -4,7 +4,7 @@ const Abouts = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Hero & About Section */}
-      <section className="relative text-white py-24 overflow-hidden">
+      <section className="relative text-white py-12 overflow-hidden">
         {/* Simplified Background */}
         <div className="absolute inset-0">
           {/* Dark overlay */}
@@ -66,14 +66,14 @@ const Abouts = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-20"
+            className="text-center mb-12"
           >
             {/* Simple Icon */}
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 0.1, scale: 1 }}
               transition={{ duration: 1 }}
-              className="w-24 h-24 mx-auto mb-8"
+              className="w-24 h-24 mx-auto mb-6"
             >
               <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="40" stroke="#FFFFFF" strokeWidth="1" strokeOpacity="0.3"/>
@@ -81,7 +81,7 @@ const Abouts = () => {
               </svg>
             </motion.div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-7 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               <span className="text-white">About</span>
               <span className="text-gray-300 ml-3">BlazingTek</span>
             </h1>
@@ -95,7 +95,7 @@ const Abouts = () => {
           </motion.div>
 
           {/* Mission & Values Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
             {/* Mission Statement */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -155,7 +155,7 @@ const Abouts = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-12"
             >
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Get In <span className="text-gray-300">Touch</span>
@@ -167,7 +167,7 @@ const Abouts = () => {
             </motion.div>
 
             {/* Contact Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {/* Phone */}
               <motion.a
                 href="tel:+263788605607"

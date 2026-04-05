@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 // Import the image directly (adjust the path based on your project structure)
-import bgImage from '../assets/bg4.jpg'; // Assuming bg4.jpg is in the assets folder
+import bgImage from '../assets/contact.png'; // Assuming bg4.jpg is in the assets folder
 
 const Contact = () => {
   const [formData, setFormData] = useState({

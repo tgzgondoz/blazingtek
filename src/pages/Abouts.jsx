@@ -4,7 +4,7 @@ const Abouts = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Hero & About Section */}
-      <section className="relative text-white py-12 overflow-hidden">
+      <section className="relative text-white py-20 overflow-hidden">
         {/* Simplified Background */}
         <div className="absolute inset-0">
           {/* Dark overlay */}
@@ -66,7 +66,7 @@ const Abouts = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
             {/* Simple Icon */}
             <motion.div

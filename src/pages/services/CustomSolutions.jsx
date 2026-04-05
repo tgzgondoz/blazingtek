@@ -9,7 +9,7 @@ import industrialAutomation from '../../assets/Industrial Automation.jpg';
 import cctvInstallation from '../../assets/CCTVInstallation.jpg';
 import accessControl from '../../assets/AccessControl.webp';
 import solarInstallations from '../../assets/SolarInstallations.jpg';
-import bg4 from '../../assets/bg4.jpg';
+import bg4 from '../../assets/solutions.jpg';
 
 const CustomSolutions = () => {
   const [selectedSolution, setSelectedSolution] = useState(null);
@@ -97,7 +97,6 @@ const CustomSolutions = () => {
           className="relative z-10"
         >
           <div className="inline-flex items-center justify-center gap-3 mb-6">
-            <Settings className="w-12 h-12 text-white/60" />
             <h1 className="text-4xl md:text-5xl font-bold">
               Custom <span className="text-white">Automation</span> 
               <span className="text-gray-300 ml-3">Solutions</span>

@@ -26,12 +26,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Import background image
-import newsBg from '../assets/news.jpg';
+import newsBg from '../assets/news1.jpg';
 
 // Fallback images in case videos don't load
 import s1 from '../assets/s1.jpg';
 import s from '../assets/s.jpg';
-import slide1 from '../assets/slide1.jpg';
+import slide1 from '../assets/s1.jpg';
 
 const News = () => {
   const [savedArticles, setSavedArticles] = useState([]);

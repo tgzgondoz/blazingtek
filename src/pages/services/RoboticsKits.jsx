@@ -243,7 +243,7 @@ const RoboticsKits = () => {
       uniqueId: `${item.id || item.name}-${Date.now()}-${Math.random()}`,
       type,
       kitId,
-      price: 0 // Keep price as 0 internally for cart calculations
+      price: 0
     };
     setCartItems([...cartItems, cartItem]);
     setQuantities(prev => ({
@@ -311,90 +311,6 @@ const RoboticsKits = () => {
         </motion.div>
       )}
 
-      {/* Cart Sidebar */}
-      <motion.div
-        initial={{ x: '100%' }}
-        animate={{ x: isCartOpen ? 0 : '100%' }}
-        transition={{ type: 'tween' }}
-        className="fixed right-0 top-0 h-full w-96 bg-gray-900 border-l border-gray-800 z-50 overflow-y-auto shadow-2xl"
-      >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <ShoppingCart className="w-6 h-6 text-white" />
-              Cart ({getTotalItems()})
-            </h2>
-            <button 
-              onClick={() => setIsCartOpen(false)}
-              className="p-2 hover:bg-white/10 rounded-full transition"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {cartItems.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <ShoppingCart className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p>Your cart is empty</p>
-              <p className="text-sm mt-2">Add items to get started</p>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4 mb-6 max-h-[60vh] overflow-y-auto pr-2">
-                {cartItems.map((item) => (
-                  <div key={item.uniqueId} className="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition">
-                    <div className="flex gap-3">
-                      <img 
-                        src={item.image} 
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded cursor-pointer"
-                        onClick={() => setSelectedImage(item.image)}
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-sm">{item.name}</h3>
-                        {/* Price display removed from cart */}
-                        <div className="flex items-center gap-2 mt-2">
-                          <button 
-                            onClick={() => updateQuantity(item.uniqueId, -1)}
-                            className="p-1 bg-white/10 rounded hover:bg-white/20 transition"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="text-sm w-6 text-center">{quantities[item.uniqueId]}</span>
-                          <button 
-                            onClick={() => updateQuantity(item.uniqueId, 1)}
-                            className="p-1 bg-white/10 rounded hover:bg-white/20 transition"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                          <button 
-                            onClick={() => removeFromCart(item.uniqueId)}
-                            className="ml-auto p-1 bg-white/10 text-gray-400 rounded hover:bg-white/20 transition"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="border-t border-gray-800 pt-4">
-                <div className="flex justify-between text-lg font-bold mb-4">
-                  <span>Total:</span>
-                  <span className="text-white">${getTotalPrice().toFixed(2)}</span>
-                </div>
-                <button className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-                  <CreditCard className="w-4 h-4" />
-                  Proceed to Checkout
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </motion.div>
-
       {/* Hero Section */}
       <section className="py-20 px-4 text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -412,20 +328,6 @@ const RoboticsKits = () => {
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
             Complete kits and individual components
           </p>
-          
-          {/* Cart Button */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="mt-8 inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition relative group"
-          >
-            <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition" />
-            View Cart
-            {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 w-6 h-6 bg-white text-black text-sm rounded-full flex items-center justify-center animate-pulse">
-                {getTotalItems()}
-              </span>
-            )}
-          </button>
         </motion.div>
       </section>
 
@@ -469,7 +371,7 @@ const RoboticsKits = () => {
               
               <p className="text-gray-400 text-sm mb-4">{kit.description}</p>
               
-              <div className="grid grid-cols-2 gap-2 mb-4">
+              <div className="grid grid-cols-2 gap-2">
                 {kit.components.slice(0, 4).map((comp, idx) => (
                   <div key={idx} className="flex items-center gap-1 text-xs text-gray-400">
                     <comp.icon className="w-3 h-3 text-white/60" />
@@ -479,16 +381,6 @@ const RoboticsKits = () => {
                 {kit.components.length > 4 && (
                   <div className="text-xs text-gray-500">+{kit.components.length - 4} more</div>
                 )}
-              </div>
-
-              <div className="flex justify-end pt-4 border-t border-gray-800">
-                <button
-                  onClick={() => addToCart({...kit, id: kit.id, price: 0}, 'kit')}
-                  className="px-4 py-2 bg-white/10 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/10"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  Add to Cart
-                </button>
               </div>
             </motion.div>
           ))}
@@ -519,7 +411,7 @@ const RoboticsKits = () => {
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                   {cat.items.map((item, idx) => (
                     <div key={idx} className="group hover:bg-white/5 p-2 rounded-lg transition">
-                      <div className="flex gap-3 mb-2">
+                      <div className="flex gap-3">
                         <div className="relative cursor-pointer group/img">
                           <img 
                             src={item.image} 
@@ -535,16 +427,6 @@ const RoboticsKits = () => {
                           <h4 className="font-semibold text-sm">{item.name}</h4>
                           <p className="text-xs text-gray-400">{item.description}</p>
                         </div>
-                      </div>
-                      
-                      <div className="flex justify-end items-center">
-                        <button
-                          onClick={() => addToCart({...item, price: 0}, 'component')}
-                          className="px-3 py-1 bg-white/10 text-white text-xs rounded hover:bg-white/20 transition flex items-center gap-1 border border-white/10"
-                        >
-                          <ShoppingCart className="w-3 h-3" />
-                          Add
-                        </button>
                       </div>
                     </div>
                   ))}

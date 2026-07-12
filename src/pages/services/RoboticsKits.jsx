@@ -242,7 +242,8 @@ const RoboticsKits = () => {
       ...item,
       uniqueId: `${item.id || item.name}-${Date.now()}-${Math.random()}`,
       type,
-      kitId
+      kitId,
+      price: 0 // Keep price as 0 internally for cart calculations
     };
     setCartItems([...cartItems, cartItem]);
     setQuantities(prev => ({
@@ -351,8 +352,7 @@ const RoboticsKits = () => {
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold text-sm">{item.name}</h3>
-                        <p className="text-sm text-white font-bold">${item.price}</p>
-                        
+                        {/* Price display removed from cart */}
                         <div className="flex items-center gap-2 mt-2">
                           <button 
                             onClick={() => updateQuantity(item.uniqueId, -1)}
@@ -481,11 +481,7 @@ const RoboticsKits = () => {
                 )}
               </div>
 
-              <div className="flex justify-between items-center pt-4 border-t border-gray-800">
-                <div>
-                  <p className="text-2xl font-bold text-white">Free</p>
-                  <p className="text-xs text-gray-500">Complete kit</p>
-                </div>
+              <div className="flex justify-end pt-4 border-t border-gray-800">
                 <button
                   onClick={() => addToCart({...kit, id: kit.id, price: 0}, 'kit')}
                   className="px-4 py-2 bg-white/10 text-white text-sm font-semibold rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/10"
@@ -541,8 +537,7 @@ const RoboticsKits = () => {
                         </div>
                       </div>
                       
-                      <div className="flex justify-between items-center pl-15">
-                        <span className="text-white font-bold">Free</span>
+                      <div className="flex justify-end items-center">
                         <button
                           onClick={() => addToCart({...item, price: 0}, 'component')}
                           className="px-3 py-1 bg-white/10 text-white text-xs rounded hover:bg-white/20 transition flex items-center gap-1 border border-white/10"
